@@ -2,14 +2,330 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
-    <script>
-        // Replace with your target URL
-        window.location.replace("https://instagram.com/itesteye");
-    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            padding: 20px;
+        }
+
+        /* ── Logo ── */
+        .logo-area {
+            margin-bottom: 40px;
+        }
+
+        .logo-area img {
+            max-width: 160px;
+            height: auto;
+            border-radius: 16px;
+            /* If no image, this placeholder shows */
+        }
+
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* ── Countdown Card ── */
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 48px 56px;
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .message {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 8px;
+        }
+
+        .destination {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 32px;
+            word-break: break-all;
+        }
+
+        .destination a {
+            color: #7c83ff;
+            text-decoration: none;
+        }
+
+        /* ── Countdown Ring ── */
+        .countdown-wrap {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 28px;
+        }
+
+        .countdown-ring {
+            transform: rotate(-90deg);
+        }
+
+        .countdown-ring circle {
+            fill: none;
+            stroke-width: 6;
+        }
+
+        .ring-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .ring-progress {
+            stroke: #7c83ff;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .countdown-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 42px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+        }
+
+        /* ── Link Bar ── */
+        .link-bar {
+            margin-top: 48px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .link-bar a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .link-bar a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .link-bar a .link-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            background: rgba(124, 131, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #7c83ff;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 48px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #fff;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 520px) {
+            .card {
+                padding: 36px 28px;
+            }
+            .destination {
+                font-size: 18px;
+            }
+            .link-bar a {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Fallback for users with JavaScript disabled -->
-    <p>If you are not redirected automatically, <a href="https://instagram.com/itesteye">click here</a>.</p>
+
+    <!-- ══════════════════════════════════════
+         LOGO — Replace src with your logo URL
+         ══════════════════════════════════════ -->
+    <div class="logo-area">
+        <!-- OPTION A: Use an image -->
+        <!-- <img src="your-logo.png" alt="Logo"> -->
+
+        <!-- OPTION B: Placeholder (remove when you add a logo) -->
+        <div class="logo-placeholder">Your Logo</div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         COUNTDOWN CARD
+         ══════════════════════════════════════ -->
+    <div class="card">
+        <p class="message">Redirecting you to</p>
+        <p class="destination">
+            <a href="https://instagram.com/itesteye" id="targetLink">instagram.com/itesteye</a>
+        </p>
+
+        <!-- Countdown Ring -->
+        <div class="countdown-wrap">
+            <svg class="countdown-ring" width="120" height="120" viewBox="0 0 120 120">
+                <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                <circle class="ring-progress" id="progress" cx="60" cy="60" r="52"
+                        stroke-dasharray="326.73"
+                        stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="countdown-number" id="countNum">5</div>
+        </div>
+
+        <button class="cancel-btn" id="cancelBtn">Cancel</button>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         LINK BAR — Add/remove as many as you want
+         ══════════════════════════════════════ -->
+    <div class="link-bar">
+        <a href="https://instagram.com/itesteye" target="_blank">
+            <span class="link-icon">1</span> Instagram
+        </a>
+        <a href="https://facebook.com/itesteye" target="_blank">
+            <span class="link-icon">2</span> Facebook
+        </a>
+        <a href="https://tiktok.com/@itesteye" target="_blank">
+            <span class="link-icon">3</span> TikTok
+        </a>
+        <a href="https://wa.me/27000000000" target="_blank">
+            <span class="link-icon">4</span> WhatsApp
+        </a>
+        <a href="https://akhtar.co.za" target="_blank">
+            <span class="link-icon">5</span> Website
+        </a>
+        <!-- ✏️ Add more links here:
+        <a href="YOUR_URL" target="_blank">
+            <span class="link-icon">6</span> Label
+        </a>
+        -->
+    </div>
+
+    <!-- ══════════════════════════════════════
+         FOOTER
+         ══════════════════════════════════════ -->
+    <div class="footer">
+        &copy; 2026 <a href="https://akhtar.co.za">Akhtar.co.za</a>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         REDIRECT LOGIC
+         ══════════════════════════════════════ -->
+    <script>
+        const TARGET_URL   = "https://instagram.com/itesteye";
+        const COUNTDOWN    = 5; // seconds
+
+        const countNum  = document.getElementById("countNum");
+        const progress  = document.getElementById("progress");
+        const cancelBtn = document.getElementById("cancelBtn");
+        const circumference = 2 * Math.PI * 52; // r=52
+
+        let remaining = COUNTDOWN;
+        let timer = null;
+
+        function tick() {
+            remaining--;
+            countNum.textContent = remaining;
+
+            // Animate ring
+            const offset = circumference * (1 - remaining / COUNTDOWN);
+            progress.style.strokeDashoffset = offset;
+
+            if (remaining <= 0) {
+                clearInterval(timer);
+                window.location.replace(TARGET_URL);
+            }
+        }
+
+        // Start countdown
+        timer = setInterval(tick, 1000);
+
+        // Cancel button
+        cancelBtn.addEventListener("click", () => {
+            clearInterval(timer);
+            countNum.textContent = "—";
+            progress.style.strokeDashoffset = circumference;
+            cancelBtn.textContent = "Redirect cancelled";
+            cancelBtn.disabled = true;
+            cancelBtn.style.opacity = "0.5";
+            cancelBtn.style.cursor = "default";
+        });
+    </script>
+
 </body>
 </html>
