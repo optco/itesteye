@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -18,8 +20,8 @@
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #fff;
+            background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+            color: #2d3748;
             padding: 20px;
         }
 
@@ -38,47 +40,51 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            border: 2px dashed rgba(255,255,255,0.3);
+            border: 2px dashed rgba(45, 55, 72, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
-            color: rgba(255,255,255,0.4);
+            color: rgba(45, 55, 72, 0.5);
             text-align: center;
             padding: 10px;
         }
 
         /* ── Countdown Card ── */
         .card {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.55);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             border-radius: 24px;
             padding: 48px 56px;
             text-align: center;
             max-width: 480px;
             width: 100%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
         }
 
         .message {
             font-size: 18px;
-            color: rgba(255, 255, 255, 0.75);
+            color: #4a5568;
             margin-bottom: 8px;
         }
 
         .destination {
             font-size: 22px;
             font-weight: 700;
-            color: #fff;
+            color: #2d3748;
             margin-bottom: 32px;
             word-break: break-all;
         }
 
         .destination a {
-            color: #7c83ff;
+            color: #5a67d8;
             text-decoration: none;
+        }
+
+        .destination a:hover {
+            text-decoration: underline;
         }
 
         /* ── Countdown Ring ── */
@@ -99,11 +105,11 @@
         }
 
         .ring-bg {
-            stroke: rgba(255, 255, 255, 0.1);
+            stroke: rgba(90, 103, 216, 0.15);
         }
 
         .ring-progress {
-            stroke: #7c83ff;
+            stroke: #5a67d8;
             stroke-linecap: round;
             transition: stroke-dashoffset 1s linear;
         }
@@ -115,44 +121,35 @@
             transform: translate(-50%, -50%);
             font-size: 42px;
             font-weight: 700;
-            color: #fff;
+            color: #2d3748;
         }
 
-        /* ── Buttons ── */
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 24px;
-        }
-
-        .action-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 10px 24px;
+        /* ── Pause Button ── */
+        .pause-btn {
+            background: rgba(90, 103, 216, 0.15);
+            border: 1px solid rgba(90, 103, 216, 0.3);
+            color: #5a67d8;
+            padding: 10px 28px;
             border-radius: 50px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 100px;
+            margin-top: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .action-btn:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.18);
+        .pause-btn:hover {
+            background: rgba(90, 103, 216, 0.25);
+            color: #434190;
+        }
+
+        .pause-btn.pause-active {
+            background: #5a67d8;
             color: #fff;
-        }
-
-        .action-btn:disabled {
-            opacity: 0.5;
-            cursor: default;
-        }
-
-        .action-btn.pause-active {
-            background: rgba(124, 131, 255, 0.25);
-            border-color: rgba(124, 131, 255, 0.5);
-            color: #fff;
+            border-color: #5a67d8;
         }
 
         /* ── Link Bar ── */
@@ -169,14 +166,14 @@
         .link-bar a {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.07);
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.7);
             border-radius: 14px;
-            padding: 12px 20px;
-            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 22px;
+            color: #2d3748;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
@@ -184,39 +181,37 @@
         }
 
         .link-bar a:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.85);
+            color: #5a67d8;
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 20px rgba(31, 38, 135, 0.15);
         }
 
-        .link-bar a .link-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 6px;
-            background: rgba(124, 131, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            color: #7c83ff;
+        .link-bar a i {
+            font-size: 18px;
+            color: #5a67d8;
         }
+
+        /* Brand icon colors */
+        .link-bar a .fa-instagram { color: #E1306C; }
+        .link-bar a .fa-facebook  { color: #1877F2; }
+        .link-bar a .fa-tiktok    { color: #000000; }
+        .link-bar a .fa-globe     { color: #5a67d8; }
 
         /* ── Footer ── */
         .footer {
             margin-top: 48px;
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(45, 55, 72, 0.6);
         }
 
         .footer a {
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(45, 55, 72, 0.7);
             text-decoration: none;
         }
 
         .footer a:hover {
-            color: #fff;
+            color: #2d3748;
         }
 
         /* ── Responsive ── */
@@ -228,7 +223,7 @@
                 font-size: 18px;
             }
             .link-bar a {
-                padding: 10px 16px;
+                padding: 10px 18px;
                 font-size: 13px;
             }
         }
@@ -244,7 +239,7 @@
         <!-- <img src="your-logo.png" alt="Logo"> -->
 
         <!-- OPTION B: Placeholder (remove when you add a logo) -->
-        <div class="logo-placeholder">itesteye</div>
+        <div class="logo-placeholder">Your Logo</div>
     </div>
 
     <!-- ══════════════════════════════════════
@@ -267,11 +262,11 @@
             <div class="countdown-number" id="countNum">5</div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="btn-group">
-            <button class="action-btn" id="pauseBtn">Pause</button>
-            <button class="action-btn" id="cancelBtn">Cancel</button>
-        </div>
+        <!-- Pause / Resume Button -->
+        <button class="pause-btn" id="pauseBtn">
+            <i class="fa-solid fa-pause" id="pauseIcon"></i>
+            <span id="pauseLabel">Pause</span>
+        </button>
     </div>
 
     <!-- ══════════════════════════════════════
@@ -279,20 +274,20 @@
          ══════════════════════════════════════ -->
     <div class="link-bar">
         <a href="https://instagram.com/itesteye" target="_blank">
-            <span class="link-icon">I</span> Instagram
+            <i class="fa-brands fa-instagram"></i> Instagram
         </a>
         <a href="https://facebook.com/itesteye" target="_blank">
-            <span class="link-icon">F</span> Facebook
+            <i class="fa-brands fa-facebook"></i> Facebook
         </a>
         <a href="https://tiktok.com/@itesteye" target="_blank">
-            <span class="link-icon">T</span> TikTok
+            <i class="fa-brands fa-tiktok"></i> TikTok
         </a>
         <a href="https://akhtar.co.za" target="_blank">
-            <span class="link-icon">W</span> Website
+            <i class="fa-solid fa-globe"></i> Website
         </a>
         <!-- ✏️ Add more links here:
         <a href="YOUR_URL" target="_blank">
-            <span class="link-icon">6</span> Label
+            <i class="fa-brands fa-YOUR_ICON"></i> Label
         </a>
         -->
     </div>
@@ -314,7 +309,8 @@
         const countNum    = document.getElementById("countNum");
         const progress    = document.getElementById("progress");
         const pauseBtn    = document.getElementById("pauseBtn");
-        const cancelBtn   = document.getElementById("cancelBtn");
+        const pauseIcon   = document.getElementById("pauseIcon");
+        const pauseLabel  = document.getElementById("pauseLabel");
         const circumference = 2 * Math.PI * 52; // r=52
 
         let remaining = COUNTDOWN;
@@ -347,31 +343,17 @@
             if (isPaused) {
                 // Resume
                 startTimer();
-                pauseBtn.textContent = "Pause";
+                pauseLabel.textContent = "Pause";
+                pauseIcon.className = "fa-solid fa-pause";
                 pauseBtn.classList.remove("pause-active");
             } else {
                 // Pause
                 clearInterval(timer);
-                pauseBtn.textContent = "Resume";
+                pauseLabel.textContent = "Resume";
+                pauseIcon.className = "fa-solid fa-play";
                 pauseBtn.classList.add("pause-active");
             }
             isPaused = !isPaused;
-        });
-
-        // Cancel Logic
-        cancelBtn.addEventListener("click", () => {
-            clearInterval(timer);
-            isPaused = true; // Lock state
-            
-            countNum.textContent = "—";
-            
-            // Reset ring smoothly
-            progress.style.transition = "none"; 
-            progress.style.strokeDashoffset = circumference;
-            
-            // Disable buttons
-            pauseBtn.disabled = true;
-            cancelBtn.disabled = true;
         });
     </script>
 
