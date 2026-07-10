@@ -27,19 +27,20 @@
 
         /* ── Logo ── */
         .logo-area {
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .logo-area img {
-            max-width: 160px;
+            max-width: var(--logo-size, 160px);
             height: auto;
             border-radius: 16px;
         }
 
         .logo-placeholder {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
+            width: var(--logo-size, 160px);
+            height: var(--logo-size, 160px);
+            border-radius: 16px;
             border: 2px dashed rgba(45, 55, 72, 0.3);
             display: flex;
             align-items: center;
@@ -48,6 +49,69 @@
             color: rgba(45, 55, 72, 0.5);
             text-align: center;
             padding: 10px;
+            margin: 0 auto;
+        }
+
+        /* ── Logo Controls ── */
+        .logo-controls {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 12px 20px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .logo-controls label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #4a5568;
+            white-space: nowrap;
+        }
+
+        .logo-controls input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(90, 103, 216, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .logo-controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #5a67d8;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(90, 103, 216, 0.3);
+        }
+
+        .logo-controls input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #5a67d8;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(90, 103, 216, 0.3);
+        }
+
+        .logo-controls .size-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #5a67d8;
+            min-width: 40px;
+            text-align: right;
         }
 
         /* ── Countdown Card ── */
@@ -226,6 +290,9 @@
                 padding: 10px 18px;
                 font-size: 13px;
             }
+            .logo-controls {
+                padding: 10px 16px;
+            }
         }
     </style>
 </head>
@@ -236,7 +303,16 @@
          ══════════════════════════════════════ -->
     <div class="logo-area">
         <!-- OPTION A: Use an image -->
-      <img src="itesteye.png" alt="itesteye.com">
+   <img src="itesteye.png" alt="itesteye" id="logoImage">
+
+       
+
+        <!-- Logo Size Controls -->
+        <div class="logo-controls">
+            <label for="logoSize">Logo Size:</label>
+            <input type="range" id="logoSize" min="80" max="240" value="160" step="10">
+            <span class="size-value" id="sizeValue">160px</span>
+        </div>
     </div>
 
     <!-- ══════════════════════════════════════
@@ -259,10 +335,10 @@
             <div class="countdown-number" id="countNum">5</div>
         </div>
 
-        <!-- Pause / Resume Button -->
+        <!-- Go / Pause Button -->
         <button class="pause-btn" id="pauseBtn">
-            <i class="fa-solid fa-pause" id="pauseIcon"></i>
-            <span id="pauseLabel">Pause</span>
+            <i class="fa-solid fa-play" id="pauseIcon"></i>
+            <span id="pauseLabel">Go</span>
         </button>
     </div>
 
@@ -310,9 +386,15 @@
         const pauseLabel  = document.getElementById("pauseLabel");
         const circumference = 2 * Math.PI * 52; // r=52
 
+        // Logo controls
+        const logoSizeInput = document.getElementById("logoSize");
+        const sizeValueDisplay = document.getElementById("sizeValue");
+        const logoPlaceholder = document.getElementById("logoPlaceholder");
+        const logoImage = document.getElementById("logoImage");
+
         let remaining = COUNTDOWN;
         let timer = null;
-        let isPaused = false;
+        let isPaused = true; // Start paused
 
         function tick() {
             remaining--;
@@ -332,26 +414,36 @@
             timer = setInterval(tick, 1000);
         }
 
-        // Start initial countdown
-        startTimer();
-
-        // Pause / Resume Logic
+        // Go / Pause / Resume Logic
         pauseBtn.addEventListener("click", () => {
             if (isPaused) {
-                // Resume
+                // Start or Resume
                 startTimer();
                 pauseLabel.textContent = "Pause";
                 pauseIcon.className = "fa-solid fa-pause";
-                pauseBtn.classList.remove("pause-active");
+                pauseBtn.classList.add("pause-active");
             } else {
                 // Pause
                 clearInterval(timer);
                 pauseLabel.textContent = "Resume";
                 pauseIcon.className = "fa-solid fa-play";
-                pauseBtn.classList.add("pause-active");
+                pauseBtn.classList.remove("pause-active");
             }
             isPaused = !isPaused;
         });
+
+        // Logo Size Control
+        function updateLogoSize(size) {
+            document.documentElement.style.setProperty('--logo-size', size + 'px');
+            sizeValueDisplay.textContent = size + 'px';
+        }
+
+        logoSizeInput.addEventListener("input", (e) => {
+            updateLogoSize(e.target.value);
+        });
+
+        // Initialize logo size
+        updateLogoSize(logoSizeInput.value);
     </script>
 
 </body>
