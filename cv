@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        // Replace with your target URL
+        window.location.replace("https://akhtar.co.za/cv");
+    </script>
+</head>
+<body>
+    <!-- Fallback for users with JavaScript disabled -->
+    <p>If you are not redirected automatically, <a href="https://akhtar.co.za/cv">click here</a>.</p>
+</body>
+</html>
