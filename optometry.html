@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optometry Tools & Resources</title>
+      <link rel="icon" type="image/x-icon" href="favicons/favicon.ico">
+   <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+<link rel="manifest" href="favicons/site.webmanifest">
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="contact lens script converter, spectacle to contact lens conversion, vertex distance calculator, cylinder conversion for contact lenses, online contact lens formula tool, offline contact lens converter, toric lens prescription tool, eyecare professional tool, optometry calculator, glasses to contacts conversion, contact lens vertex formula, contact lens sph cyl axis converter, south africa, driver, license, licence, screening, criteria">
+    <meta name="description" content="An offline contact lens prescription converter that calculates contact lens power from spectacle scripts using vertex distance, cylinder conversion, and axis rounding. Ideal for optometrists and eyecare professionals.">
+
+<link rel="stylesheet" href="index.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- Hamburger Menu -->
+<!-- Vertical Control Buttons - Outside Menu -->
+<div class="control-stack">
+    <button class="control-btn" onclick="toggleCompact()" title="Resize">
+  <i class="fas fa-arrows-left-right" aria-hidden="true"></i>
+</button>
+<button class="control-btn" onclick="changeTheme()" title="Change Theme">
+  <i class="fas fa-palette" aria-hidden="true"></i>
+</button>
+</div>
+
+<button class="hamburger-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Menu">☰</button>
+<div class="hamburger-menu" id="hamburgerMenu">
+    <div class="menu-links">
+	<button class="tab-button active" onclick="openTab('tab1', event)"><i class="fa fa-random" aria-hidden="true"></i> Converter</button>
+<button class="tab-button" onclick="openTab('tab2', event)"><i class="fas fa-id-card" aria-hidden="true"></i> Driver's</button>
+<button class="tab-button" onclick="openTab('tab3', event)"><i class="fas fa-eye" aria-hidden="true"></i> Vision Charts</button>
+<button class="tab-button" onclick="openTab('tab4', event)"><i class="fas fa-prescription" aria-hidden="true"></i> Rx Terms</button>
+<button class="tab-button" onclick="openTab('tab5', event)"><i class="fas fa-globe" aria-hidden="true"></i> WHO</button>
+		<!-- Add this line after the WHO button -->
+<button class="tab-button" onclick="openTab('tab6', event)"><i class="fas fa-scale-balanced" aria-hidden="true"></i> HPCSA Rules</button>
+			 <hr class="menu-divider">
+	<a href="/javeria" target="_blank" rel="noopener noreferrer" class="menu-item">
+  <i class="fas fa-house-chimney" aria-hidden="true"></i> Properties
+</a>
+<a class="menu-item" href="/poster" rel="noopener noreferrer" target="_blank">
+  <i class="fas fa-image" aria-hidden="true"></i> Poster Maker
+</a>
+<a class="menu-item" href="https://theattn.com/invoice" rel="noopener noreferrer" target="_blank">
+  <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Invoice Maker
+</a>
+<a class="menu-item" href="/sicknote" rel="noopener noreferrer" target="_blank" title="A valid sick note must be issued and signed by a medical practitioner registered with the Health Professions Council of South Africa (HPCSA)">
+  <i class="fas fa-file-pen" aria-hidden="true"></i> Sick Note
+</a>
+<a href="/search" target="_blank" rel="noopener noreferrer" class="menu-item"><i class="fas fa-magnifying-glass" aria-hidden="true"></i> Advanced Search</a>
+		<a href="https://gbps.me" target="_blank" rel="noopener noreferrer" class="menu-item"><i class="fas fa-gauge-high" aria-hidden="true"></i> Speed Test</a>
+<a href="https://instagram.com/itesteye" target="_blank" rel="noopener noreferrer" class="menu-item">
+  <i class="fas fa-user" aria-hidden="true"></i> Follow Akhtar
+</a>
+		
+   
+    <hr class="menu-divider">
+<center>
+	<span class=disclaimer2><a href="index.html">©2026 Akhtar.co.za</a></span></center>
+</div> </div>
+
+</div>
+
+   <script>
+  document.getElementById('page-refresh').addEventListener('click', () => location.reload());
+</script>
+
+    <!-- Dynamic Gradient Script -->
+    <script>
+        // Generate random liquid glass gradient on page load
+        (function generateDynamicGradient() {
+            const gradients = [
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+                'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+                'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+                'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
+                'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
+                'linear-gradient(135deg, #cd9cf2 0%, #f6f3ff 100%)',
+                'linear-gradient(135deg, #fbc7d4 0%, #9796f0 100%)',
+                'linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)'
+            ];
+            
+            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+            document.documentElement.style.setProperty('--dynamic-gradient', randomGradient);
+        })();
+
+// Auto-detect if gradient is light/dark and adjust text color
+(function autoAdjustTextColor() {
+    const gradient = getComputedStyle(document.documentElement)
+        .getPropertyValue('--dynamic-gradient');
+    
+    // Simple heuristic: check if gradient contains light colors
+    const lightGradients = [
+        '#a8edea', '#fed6e3', '#ffecd2', '#fcb69f', 
+        '#a1c4fd', '#c2e9fb', '#fddb92', '#d1fdff'
+    ];
+    
+    const isLight = lightGradients.some(color => gradient.includes(color));
+    
+    if (isLight) {
+        document.documentElement.style.setProperty('--text-primary', 'rgba(25, 25, 35, 0.95)');
+        document.documentElement.style.setProperty('--text-secondary', 'rgba(60, 60, 80, 0.85)');
+        document.documentElement.style.setProperty('--accent-glow', 'rgba(40, 100, 180, 0.5)');
+    }
+})();
+
+    </script>
+
+    
+
+    <!-- Tabs -->
+   
+
+        
+            <!-- Tab 1: Calculator -->
+            <div id="tab1" class="tab-pane active">
+                <h2><i class="fa fa-random" aria-hidden="true"></i> Spectacles To Contact Lens Converter</h2>
+               
+                <div class="main">
+                    <div class="input-section glass">
+    <!-- Vertex Distance -->
+	
+    <div class="radio-group">
+        
+        <div class="radio-options"><span class="radio-title">BVD:</span>
+            <label><input type="radio" name="vertexDistance" value="10" onchange="convertPrescription()"> 10mm</label>
+            <label><input type="radio" name="vertexDistance" value="12" checked onchange="convertPrescription()"> 12mm</label>
+            <label><input type="radio" name="vertexDistance" value="14" onchange="convertPrescription()"> 14mm</label>
+        </div>
+    </div>
+    
+
+    <!-- Right Eye (OD) -->
+	<div class="result-section glass">
+    <h3 style="font-size: 1.3rem;">🇷 Right Eye (OD)</h3>
+    
+    <div class="input-group">
+        <label for="sphOD">Sphere:</label>
+        <div class="stepper">
+            <button class="stepper-btn" type="button" onclick="adjustValue('sphOD', -0.25)">−</button>
+            <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="sphOD" placeholder="0.00" oninput="convertPrescription()">
+            <button class="stepper-btn" type="button" onclick="adjustValue('sphOD', 0.25)">+</button>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label for="cylOD">Cylinder:</label>
+        <div class="stepper">
+            <button class="stepper-btn" type="button" onclick="adjustValue('cylOD', -0.25)">−</button>
+            <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="cylOD" placeholder="0.00" oninput="convertPrescription()">
+            <button class="stepper-btn" type="button" onclick="adjustValue('cylOD', 0.25)">+</button>
+        </div>
+    </div>
+    <div class="input-group">
+        <label for="axisOD">Axis:</label>
+        <div class="stepper">
+            <button class="stepper-btn" type="button" onclick="adjustValue('axisOD', -5)">−</button>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOD" placeholder="180" oninput="convertPrescription()">
+            <button class="stepper-btn" type="button" onclick="adjustValue('axisOD', 5)">+</button>
+        </div>
+    </div>
+</div>
+    <br>
+
+    <!-- Left Eye (OS) -->
+	<div class="result-section glass">
+    <h3 style="font-size: 1.3rem;">🇱 Left Eye (OS)</h3>
+    
+    <div class="input-group">
+        <label for="sphOS">Sphere:</label>
+        <div class="stepper">
+            <button class="stepper-btn" type="button" onclick="adjustValue('sphOS', -0.25)">−</button>
+            <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="sphOS" placeholder="0.00" oninput="convertPrescription()">
+            <button class="stepper-btn" type="button" onclick="adjustValue('sphOS', 0.25)">+</button>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label for="cylOS">Cylinder:</label>
+        <div class="stepper">
+            <button class="stepper-btn" type="button" onclick="adjustValue('cylOS', -0.25)">−</button>
+            <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="cylOS" placeholder="0.00" oninput="convertPrescription()">
+            <button class="stepper-btn" type="button" onclick="adjustValue('cylOS', 0.25)">+</button>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label for="axisOS">Axis:</label>
+        <div class="stepper">
+            <button class="stepper-btn" type="button" onclick="adjustValue('axisOS', -5)">−</button>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOS" placeholder="180" oninput="convertPrescription()">
+            <button class="stepper-btn" type="button" onclick="adjustValue('axisOS', 5)">+</button>
+        </div>
+    </div></div>
+
+  
+   
+    
+</div>
+
+                    <div class="result-section glass">
+                        <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Results</h3>
+                        <div id="liveResults"></div><span class="disclaimer">Results may vary for values &gt;10.75</span>
+	  
+    </div> 
+                    
+                </div>
+            </div>
+			<script>
+function adjustValue(id, delta) {
+    const input = document.getElementById(id);
+    let val = parseFloat(input.value) || 0;
+    
+    // Step by delta, then snap to nearest 0.25
+    val = Math.round((val + delta) * 4) / 4;
+    
+    input.value = val.toFixed(2);
+    convertPrescription(); // Auto-calculate after change
+}</script>
+            <!-- Tab 2: 's License -->
+            <div id="tab2" class="tab-pane">
+                <h2><i class="fas fa-id-card" aria-hidden="true"></i> Driving License Test Passing Criteria</h2>
+                <div class="glass" style="padding: 20px; display: inline-block; max-width: 100%;">
+                    <img src="https://akhtar.co.za/drivers.png" alt="Driver's License Criteria" style="max-width: 100%; border-radius: 16px;">
+                </div>
+<!-- Driver's Licence Info Section -->
+<div class="glass" style="margin-top: 24px; padding: 24px;">
+    
+    <h3 style="margin-bottom: 16px; font-size: 1.3rem; color: var(--text-primary);">📋 Temporary Driving Licence (South Africa)</h3>
+    
+    <p style="margin-bottom: 20px; color: var(--text-secondary);">
+        Issued immediately at a DLTC when renewing an expired licence or replacing a lost/stolen one. 
+        Valid for <strong>6 months</strong> while you wait for your new card.
+    </p>
+    
+    <div style="display: grid; gap: 16px; margin-bottom: 24px;">
+        <!-- Validity Card -->
+        <div style="background: rgba(255,255,255,0.08); padding: 14px 18px; border-radius: 12px; border-left: 3px solid var(--accent-glow);">
+            <strong style="display: block; margin-bottom: 6px;">⏱️ Validity</strong>
+            <span style="color: var(--text-secondary);">6 months from issue date OR until new card is produced (whichever comes first)</span>
+        </div>
+        
+        <!-- Cost Card -->
+        <div style="background: rgba(255,255,255,0.08); padding: 14px 18px; border-radius: 12px; border-left: 3px solid #22c55e;">
+            <strong style="display: block; margin-bottom: 6px;">💰 Cost</strong>
+            <span style="color: var(--text-secondary);">Approx. R45 (confirm with your DLTC)</span>
+        </div>
+    </div>
+    
+    <h4 style="margin: 24px 0 12px; font-size: 1.1rem;">📄 Required Documents (*: Important)</h4>
+    <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.8;">
+        <li>Certified copy of SA ID or temporary ID *</li>
+        <li>Proof of residential address (utility bill, bank statement – not older than 3 months) *</li>
+        <li>4 identical black-and-white ID photos (confirm quantity with your DLTC)</li>
+        <li>Applicable fee (cash/card – confirm payment methods)</li>
+        <li><strong>If replacing lost/stolen licence:</strong> Police affidavit</li>
+    </ul>
+    
+    <h4 style="margin: 24px 0 12px; font-size: 1.1rem;">🔄 Application Process</h4>
+    <ol style="color: var(--text-secondary); padding-left: 20px; line-height: 1.8;">
+        <li>Visit any Driving Licence Testing Centre (DLTC)</li>
+        <li>Complete the <em>Application for a driving licence (DL1)</em> form</li>
+        <li>Submit documents + pay fee</li>
+        <li>Receive temporary licence <strong>same day</strong></li>
+        <li>Wait 4–6 weeks for permanent card (SMS notification when ready)</li>
+    </ol>
+    
+    <div style="background: rgba(59, 130, 246, 0.12); padding: 14px 18px; border-radius: 12px; margin: 24px 0; border-left: 3px solid #3b82f6;">
+        <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">💡 Pro Tip</strong>
+        <span style="color: var(--text-secondary);">
+            Gauteng residents can start the process online via the 
+            <a href="https://online.natis.gov.za" target="_blank" rel="noopener" style="color: var(--accent-glow); text-decoration: none;">NaTIS online system</a>.
+        </span>
+    </div>
+    
+    <hr style="margin: 28px 0; opacity: 0.3;">
+    
+    <!-- Foreign Licence Conversion Section -->
+    <h3 style="margin-bottom: 16px; font-size: 1.3rem; color: var(--text-primary);">🌍 Converting a Foreign Licence (After PR)</h3>
+    
+    <p style="margin-bottom: 20px; color: var(--text-secondary);">
+        If you've obtained <strong>Permanent Residency (PR)</strong> in South Africa, you must convert your foreign licence within <strong>5 years</strong>.
+    </p>
+    
+    <h4 style="margin: 20px 0 12px; font-size: 1.1rem;">✅ Eligibility</h4>
+    <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.8;">
+        <li>Hold a valid SA ID or Passport + PR certificate</li>
+        <li>Foreign licence must be valid, with photo/signature</li>
+        <li>Licence must be in English OR accompanied by a sworn translation</li>
+        <li>Conversion must be done within 5 years of PR approval</li>
+    </ul>
+    
+    <h4 style="margin: 20px 0 12px; font-size: 1.1rem;">📋 Documents Needed</h4>
+    <ul style="color: var(--text-secondary); padding-left: 20px; line-height: 1.8;">
+        <li>SA ID document + certified copy</li>
+        <li>Permanent Residence certificate/permit</li>
+        <li>Foreign driving licence (+ translation if not in English)</li>
+        <li>Proof of address (not older than 3 months)</li>
+        <li>4 black-and-white ID photos</li>
+        <li>Applicable fee (cash)</li>
+    </ul>
+    
+    <h4 style="margin: 20px 0 12px; font-size: 1.1rem;">🔄 Conversion Steps</h4>
+    <ol style="color: var(--text-secondary); padding-left: 20px; line-height: 1.8;">
+        <li>Visit a DLTC in the province where you received PR</li>
+        <li>Complete forms: <em>DL1 (Exchange)</em> + <em>NCP (Address Change)</em></li>
+        <li>Pass an eye test at the DLTC OR submit a report from a qualified optometrist</li>
+        <li>Provide fingerprints at the centre</li>
+        <li>Receive temporary licence immediately</li>
+        <li>Collect permanent card in 4–6 weeks (SMS alert)</li>
+    </ol>
+    
+    <div style="background: rgba(245, 158, 11, 0.12); padding: 14px 18px; border-radius: 12px; margin: 24px 0; border-left: 3px solid #f59e0b;">
+        <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">⚠️ Important: International Driving Permit (IDP)</strong>
+        <span style="color: var(--text-secondary);">
+            If driving on an IDP, it remains valid until the <strong>earlier</strong> of: 
+            its expiry date OR 1 year after becoming a permanent resident.
+        </span>
+    </div>
+    
+    <p style="margin-top: 24px; font-size: 0.9rem; color: var(--text-secondary); opacity: 0.85;">
+        <em>ℹ️ Information sourced from official South African transport guidelines. Requirements may vary slightly by province — confirm with your local DLTC before visiting.</em>
+    </p>
+    
+</div>
+				
+            </div>
+
+            <!-- Tab 3: Visual Acuity Reference -->
+            <div id="tab3" class="tab-pane">
+                <h2><i class="fas fa-eye" aria-hidden="true"></i> Visual Acuity Quick Reference Conversion</h2>
+                <table class="glass shadow">
+                    <thead>
+                        <tr>
+                            <th>Snellen (ft)</th>
+                            <th>Snellen (m)</th>
+                            <th>Decimal</th>
+                            <th>LogMAR</th>
+                            <th>Near Vision (approx.)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>20/10</td><td>6/3</td><td>2.0</td><td>-0.1</td><td>N4–N5 / J1</td></tr>
+                        <tr><td>20/15</td><td>6/4.5</td><td>1.33</td><td>-0.12</td><td>N5 / J1–J2</td></tr>
+                        <tr style="font-weight: 600;"><td>20/20</td><td>6/6</td><td>1.0</td><td>0.0</td><td>N6 / J2–J3</td></tr>
+                        <tr><td>20/25</td><td>6/7.5</td><td>0.8</td><td>0.1</td><td>N8 / J3–J4</td></tr>
+                        <tr><td>20/30</td><td>6/9</td><td>0.67</td><td>0.18</td><td>N10 / J5</td></tr>
+                        <tr><td>20/40</td><td>6/12</td><td>0.5</td><td>0.3</td><td>N12 / J6</td></tr>
+                        <tr><td>20/50</td><td>6/15</td><td>0.4</td><td>0.4</td><td>N14 / J7</td></tr>
+                        <tr><td>20/100</td><td>6/30</td><td>0.2</td><td>0.7</td><td>N24 / J10</td></tr>
+                        <tr><td>20/200</td><td>6/60</td><td>0.1</td><td>1.0</td><td>N36 / J12+</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- Visual Acuity Terminology Reference -->
+<div class="glass" style="margin-top: 28px; padding: 24px;">
+    
+    <h3 style="margin-bottom: 20px; font-size: 1.3rem; color: var(--text-primary);">📖 Understanding Visual Acuity Measurements</h3>
+    
+    <div style="display: grid; gap: 16px;">
+        
+        <!-- Snellen -->
+        <div style="background: rgba(255,255,255,0.08); padding: 16px 20px; border-radius: 12px; border-left: 3px solid #3b82f6;">
+            <strong style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-primary);">
+                <span style="font-size: 1.2rem;">📏</span> Snellen (ft/m)
+            </strong>
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+                The standard fraction where the <strong>numerator</strong> is the test distance (e.g., 20 ft or 6 m) and the <strong>denominator</strong> is the distance at which a "normal" eye could read that same line. 
+                <br><br>
+                <em>Example:</em> 20/40 means you see at 20 feet what a normal eye sees at 40 feet.
+            </p>
+        </div>
+        
+        <!-- Decimal -->
+        <div style="background: rgba(255,255,255,0.08); padding: 16px 20px; border-radius: 12px; border-left: 3px solid #22c55e;">
+            <strong style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-primary);">
+                <span style="font-size: 1.2rem;">🔢</span> Decimal
+            </strong>
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+                Calculated by dividing the Snellen fraction (e.g., 20/40 = 0.5). Commonly used in <strong>European clinical records</strong> and research.
+                <br><br>
+                <em>Quick reference:</em> 1.0 = 20/20 (normal), 0.5 = 20/40, 0.1 = 20/200.
+            </p>
+        </div>
+        
+        <!-- LogMAR -->
+        <div style="background: rgba(255,255,255,0.08); padding: 16px 20px; border-radius: 12px; border-left: 3px solid #8b5cf6;">
+            <strong style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-primary);">
+                <span style="font-size: 1.2rem;">📐</span> LogMAR
+            </strong>
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+                The <strong>logarithm of the Minimum Angle of Resolution</strong>. Lower values indicate better vision; <strong>0.0 = standard 20/20 vision</strong>.
+                <br><br>
+                <em>Why it matters:</em> Each 0.1 change = one line on the eye chart. Preferred for research and statistical analysis.
+            </p>
+        </div>
+        
+        <!-- Near Vision -->
+        <div style="background: rgba(255,255,255,0.08); padding: 16px 20px; border-radius: 12px; border-left: 3px solid #f59e0b;">
+            <strong style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-primary);">
+                <span style="font-size: 1.2rem;">📚</span> Near Vision (N-point / J-scale)
+            </strong>
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+                A measurement of <strong>print size</strong> used for reading tests, typically held at <strong>40 cm</strong>.
+                <br><br>
+                <em>N-scale:</em> N5 = small newsprint, N8 = standard book text, N12+ = large print.
+                <br>
+                <em>J-scale:</em> J1 ≈ N5, J3 ≈ N8, J10+ ≈ N24 (used in some regions).
+            </p>
+        </div>
+        
+    </div>
+    
+    <!-- Quick Conversion Reminder -->
+    <div style="background: rgba(59, 130, 246, 0.12); padding: 14px 18px; border-radius: 12px; margin-top: 24px; border-left: 3px solid #3b82f6;">
+        <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">💡 Quick Reference</strong>
+        <span style="color: var(--text-secondary);">
+            20/20 = 6/6 = 1.0 decimal = 0.0 LogMAR = N6/J2–J3 near vision
+        </span>
+    </div>
+    
+    <p style="margin-top: 20px; font-size: 0.85rem; color: var(--text-secondary); opacity: 0.85; text-align: center;">
+        <em>ℹ️ Values are approximate equivalents. Actual visual function depends on contrast, lighting, and individual factors.</em>
+    </p>
+    
+</div>
+              
+            </div>
+
+            <!-- Tab 4: Abbreviations -->
+            <div id="tab4" class="tab-pane">
+                <h2><i class="fas fa-prescription" aria-hidden="true"></i> Most Used Prescription Terms</h2>
+                <table class="glass shadow">
+                  <thead>
+                    <tr>
+                      <th>Abbreviation</th>
+                      <th>Latin Meaning</th>
+                      <th>English Meaning</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><b>p.o.</b></td><td><i>per os</i></td><td>by mouth, orally</td></tr>
+                    <tr><td><b>gtt(s)</b></td><td><i>gutta(e)</i></td><td>drop(s)</td></tr>
+                    <tr><td><b>b.i.d.</b></td><td><i>bis in die</i></td><td>twice daily</td></tr>
+                    <tr><td><b>t.i.d.</b></td><td><i>ter in die</i></td><td>three times a day</td></tr>
+                    <tr><td><b>q.i.d.</b></td><td><i>quater in die</i></td><td>four times a day</td></tr>
+                    <tr><td><b>prn</b></td><td><i>pro re nata</i></td><td>as needed</td></tr>
+                    <tr><td><b>h.s.</b></td><td><i>hora somni</i></td><td>at bedtime</td></tr>
+                    <tr><td><b>stat</b></td><td><i>statim</i></td><td>immediately</td></tr>
+                    <tr><td><b>o.d.</b></td><td><i>oculus dexter</i></td><td>right eye</td></tr>
+                    <tr><td><b>o.s.</b></td><td><i>oculus sinister</i></td><td>left eye</td></tr>
+                  </tbody>
+                </table>
+            </div>
+
+            <!-- Tab 5: WHO Classification -->
+            <div id="tab5" class="tab-pane">
+                <h2><i class="fas fa-globe" aria-hidden="true"></i> WHO Visual Impairment (VI) Classification</h2>
+               
+				
+				<!-- WHO VI Classification Reference Section -->
+<div class="glass" style="margin-top: 28px; padding: 24px;">
+    
+    <h3 style="margin-bottom: 20px; font-size: 1.3rem; color: var(--text-primary);">📚 About WHO Visual Impairment Classifications</h3>
+    
+    <!-- Intro Card -->
+    <div style="background: rgba(255,255,255,0.08); padding: 16px 20px; border-radius: 12px; margin-bottom: 24px; border-left: 3px solid #3b82f6;">
+        <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+            The <a href="https://www.who.int/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">World Health Organization (WHO)</a> classifies visual impairment based on <strong>visual acuity</strong> (clarity) and <strong>visual field</strong> (total area seen). 
+            <br><br>
+            These classifications, part of the <a href="https://www.who.int/standards/classifications/classification-of-diseases" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">International Classification of Diseases (ICD)</a>, measure vision in the <strong>better eye</strong> with best possible correction or "presenting vision" (vision as it currently is, such as with existing glasses).
+        </p>
+    </div>
+    
+    <!-- Distance Vision Table -->
+    <h4 style="margin: 24px 0 12px; font-size: 1.1rem; color: var(--text-primary);">📏 Distance Vision Classification (ICD-10)</h4>
+    
+    <div style="overflow-x: auto; margin-bottom: 24px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+            <thead>
+                <tr style="background: rgba(59, 130, 246, 0.2);">
+                    <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--glass-border); color: var(--text-primary);">Category</th>
+                    <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--glass-border); color: var(--text-primary);">Description</th>
+                    <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--glass-border); color: var(--text-primary);">Visual Acuity (Better Eye)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">0</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">Mild or no impairment</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">Better than 6/18 (20/70)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03);">
+                    <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">1</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">Moderate impairment</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">6/18 to 6/60 (20/70 to 20/200)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">2</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">Severe impairment</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">6/60 to 3/60 (20/200 to 20/400)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03);">
+                    <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">3</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">Blindness (Grade 3)</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">3/60 to 1/60 (20/400 to 20/1200)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">4</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">Blindness (Grade 4)</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">1/60 to Light Perception</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">5</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">Blindness (Grade 5)</td>
+                    <td style="padding: 12px 16px; color: var(--text-secondary);">No Light Perception (Total blindness)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Key Definitions Grid -->
+    <h4 style="margin: 24px 0 12px; font-size: 1.1rem; color: var(--text-primary);">🔑 Key Definitions</h4>
+    
+    <div style="display: grid; gap: 12px; margin-bottom: 24px;">
+        
+        <div style="background: rgba(34, 197, 94, 0.12); padding: 14px 18px; border-radius: 12px; border-left: 3px solid #22c55e;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">👁️ Low Vision</strong>
+            <span style="color: var(--text-secondary);">
+                Generally covers categories 1 and 2 (Moderate and Severe impairment). In some clinical contexts, also includes visual field restricted to ≤20°.
+            </span>
+        </div>
+        
+        <div style="background: rgba(239, 68, 68, 0.12); padding: 14px 18px; border-radius: 12px; border-left: 3px solid #ef4444;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">⚫ Blindness</strong>
+            <span style="color: var(--text-secondary);">
+                Formally begins at category 3 (vision worse than 3/60). Also applies if visual field is restricted to ≤10° around central fixation.
+            </span>
+        </div>
+        
+        <div style="background: rgba(245, 158, 11, 0.12); padding: 14px 18px; border-radius: 12px; border-left: 3px solid #f59e0b;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">📖 Near Vision Impairment</strong>
+            <span style="color: var(--text-secondary);">
+                WHO defines this as the inability to read N6 or M 0.8 type at a distance of 40 cm.
+            </span>
+        </div>
+        
+    </div>
+    
+    <!-- Why It Matters -->
+    <div style="background: rgba(59, 130, 246, 0.12); padding: 16px 20px; border-radius: 12px; margin-bottom: 24px; border-left: 3px solid #3b82f6;">
+        <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">💡 Why These Classifications Matter</strong>
+        <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+            Classifications help health systems <a href="https://www.who.int/news-room/fact-sheets/detail/blindness-and-visual-impairment" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">track the prevalence</a> of vision loss—estimated at over 2.2 billion people globally—and identify those needing <a href="https://www.who.int/docs/default-source/documents/publications/world-vision-report-accessible.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">rehabilitation or medical intervention</a>.
+            <br><br>
+            For athletes, similar but distinct <a href="https://visionsports.ie/knowledge-hub/eyesight-classifications/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">Paralympic classifications</a> (B1, B2, B3) are used to group competitors fairly.
+        </p>
+    </div>
+    
+    <!-- Collapsible References -->
+    <details style="background: rgba(255,255,255,0.05); padding: 16px 20px; border-radius: 12px; cursor: pointer;">
+        <summary style="font-weight: 600; color: var(--text-primary); margin-bottom: 12px; cursor: pointer;">📚 References & Sources <span style="color: var(--text-secondary); font-weight: 400; font-size: 0.9rem;">(click to expand)</span></summary>
+        
+        <ol style="color: var(--text-secondary); padding-left: 20px; line-height: 1.8; font-size: 0.9rem; margin-top: 8px;">
+            <li><a href="https://en.wikipedia.org/wiki/Visual_impairment" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">Wikipedia: Visual impairment</a></li>
+            <li><a href="https://study.com/academy/lesson/video/what-is-vision-impairment-definition-causes-symptoms.html" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">Study.com: Vision impairment overview</a></li>
+            <li><a href="https://www.ncbi.nlm.nih.gov/books/NBK448182/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">NCBI Bookshelf: Visual impairment criteria</a></li>
+            <li><a href="https://www.who.int/standards/classifications/classification-of-diseases" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">WHO: ICD classification standards</a></li>
+            <li><a href="https://icd.who.int/browse10/2019/en#/H54" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">ICD-10: H54 Visual impairment codes</a></li>
+            <li><a href="https://www.cedc.tools/WHOcategories.html" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">CEDC: WHO categories reference</a></li>
+            <li><a href="https://disabilityinfosa.org.za/sensory-impairments/types-of-sensory-impairments/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">Disability Info SA: Sensory impairments</a></li>
+            <li><a href="https://visionsports.ie/knowledge-hub/eyesight-classifications/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">Vision Sports Ireland: Paralympic classifications</a></li>
+        </ol>
+    </details>
+    
+    <p style="margin-top: 20px; font-size: 0.85rem; color: var(--text-secondary); opacity: 0.85; text-align: center; border-top: 1px dashed var(--glass-border); padding-top: 16px;">
+        <em>ℹ️ Information sourced from WHO, ICD-10, and peer-reviewed clinical guidelines. Always consult local health authorities for legal definitions and eligibility criteria in your region.</em>
+    </p>
+    
+</div>
+				
+            </div>
+
+	<!-- Tab 6: HPCSA Regulations -->
+<div id="tab6" class="tab-pane">
+    <h2><i class="fas fa-scale-balanced" aria-hidden="true"></i> HPCSA Contact Lens Regulations</h2>
+    
+    <!-- HPCSA Regulations Section -->
+    <div class="glass" style="margin-top: 28px; padding: 24px;">
+        
+        <h3 style="margin-bottom: 20px; font-size: 1.3rem; color: var(--text-primary);">⚖️ HPCSA Regulations: Contact Lens Prescription Validity</h3>
+        
+        <!-- Intro Card -->
+        <div style="background: rgba(255,255,255,0.08); padding: 16px 20px; border-radius: 12px; margin-bottom: 24px; border-left: 3px solid #3b82f6;">
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+                The 12-month prescription validity rule is legally binding for all contact lens retail in South Africa — online and in-store. 
+                Source: <strong>Health Professions Council of South Africa (HPCSA)</strong> & National Department of Health.
+            </p>
+        </div>
+        
+        <!-- Section 1: Ethical Rules -->
+        <h4 style="margin: 24px 0 12px; font-size: 1.1rem; color: var(--text-primary);">1️⃣ HPCSA Ethical Rules of Conduct</h4>
+        
+        <div style="background: rgba(59, 130, 246, 0.12); padding: 16px 20px; border-radius: 12px; margin-bottom: 16px; border-left: 3px solid #3b82f6;">
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.7;">
+                Published in the <strong>South African Government Gazette No. 43632</strong> under the Health Professions Act.
+            </p>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.08); padding: 16px 20px; border-radius: 12px; margin-bottom: 20px;">
+            <strong style="display: block; margin-bottom: 8px; color: var(--text-primary);">📜 Section 5(e) — Key Requirement</strong>
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.7; font-style: italic;">
+                "The sale of contact lenses (or spectacles) is strictly limited to a <strong>valid prescription that is less than a year from the date of eye examination</strong>."
+            </p>
+        </div>
+        
+        <p style="color: var(--text-secondary); margin: 0 0 24px; line-height: 1.7;">
+            ✅ Applies to: All optometrists, dispensing opticians, and retail outlets<br>
+            ✅ Enforced by: HPCSA Professional Conduct Committee<br>
+            ✅ Penalty for non-compliance: Disciplinary hearing, fines, or suspension
+        </p>
+        
+        <hr style="margin: 28px 0; opacity: 0.3;">
+        
+        <!-- Section 2: Clinical Guidelines -->
+        <h4 style="margin: 24px 0 12px; font-size: 1.1rem; color: var(--text-primary);">2️⃣ HPCSA Clinical Guidelines for Contact Lens Fitting</h4>
+        
+        <p style="color: var(--text-secondary); margin: 0 0 16px; line-height: 1.7;">
+            Professional standards outlined in the official <strong>HPCSA Board for Optometry and Dispensing Opticians Guidelines</strong>.
+        </p>
+        
+        <div style="display: grid; gap: 12px; margin-bottom: 24px;">
+            
+            <div style="background: rgba(34, 197, 94, 0.12); padding: 14px 18px; border-radius: 12px; border-left: 3px solid #22c55e;">
+                <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">👁️ Ocular Health Evaluation</strong>
+                <span style="color: var(--text-secondary);">
+                    Contact lenses must not be dispensed without a current ocular health evaluation if <strong>more than 12 months</strong> have passed since the last consultation.
+                </span>
+            </div>
+            
+            <div style="background: rgba(245, 158, 11, 0.12); padding: 14px 18px; border-radius: 12px; border-left: 3px solid #f59e0b;">
+                <strong style="color: var(--text-primary); display: block; margin-bottom: 4px;">🔄 Disposable Lens Patients</strong>
+                <span style="color: var(--text-secondary);">
+                    For monthly or two-weekly disposables: Patients must be <strong>formally advised</strong> to undergo an eye examination annually to monitor corneal health.
+                </span>
+            </div>
+            
+        </div>
+        
+        <!-- Quick Reference Box -->
+        <div style="background: rgba(139, 92, 246, 0.12); padding: 16px 20px; border-radius: 12px; margin: 24px 0; border-left: 3px solid #8b5cf6;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">📋 Quick Compliance Checklist</strong>
+            <ul style="color: var(--text-secondary); padding-left: 20px; margin: 0; line-height: 1.8;">
+                <li>Verify prescription date is within 12 months of sale</li>
+                <li>Document ocular health evaluation in patient records</li>
+                <li>Provide written advice for annual exams to disposable lens wearers</li>
+                <li>Retain prescription copies for minimum 5 years (HPCSA record-keeping rule)</li>
+            </ul>
+        </div>
+        
+        <!-- Official Sources -->
+        <details style="background: rgba(255,255,255,0.05); padding: 16px 20px; border-radius: 12px; cursor: pointer;">
+            <summary style="font-weight: 600; color: var(--text-primary); margin-bottom: 12px; cursor: pointer;">🔗 Official Sources & Documents <span style="color: var(--text-secondary); font-weight: 400; font-size: 0.9rem;">(click to expand)</span></summary>
+            
+            <ol style="color: var(--text-secondary); padding-left: 20px; line-height: 1.8; font-size: 0.9rem; margin-top: 8px;">
+                <li><a href="https://www.hpcsa.co.za/Uploads/editor/General/ethical_rules/General_ethical_rules_for_the_health_professions_2021.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">HPCSA Ethical Rules of Conduct (PDF)</a></li>
+                <li><a href="https://www.hpcsa.co.za/Uploads/editor/General/Boards/Optometry/Board_Notice_141_of_2021_-_Guidelines_for_the_fitting_of_contact_lenses.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">HPCSA Contact Lens Fitting Guidelines (PDF)</a></li>
+                <li><a href="https://www.gov.za/documents/health-professions-act-56-1974" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">Health Professions Act 56 of 1974 (Government Gazette)</a></li>
+                <li><a href="https://www.hpcsa.co.za" target="_blank" rel="noopener noreferrer" style="color: var(--accent-glow); text-decoration: none;">HPCSA Official Website</a></li>
+            </ol>
+        </details>
+        
+        <p style="margin-top: 24px; font-size: 0.85rem; color: var(--text-secondary); opacity: 0.85; text-align: center; border-top: 1px dashed var(--glass-border); padding-top: 16px;">
+            <em>ℹ️ This summary is for informational purposes. Always consult the latest HPCSA publications and legal counsel for compliance decisions.</em>
+        </p>
+        
+    </div>
+</div>
+        </div>
+    
+
+    
+<!-- Footer -->
+
+    <!-- Main Script -->
+    <script>
+        function openTab(tabId, event) {
+            const tabPanes = document.getElementsByClassName('tab-pane');
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabPanes.length; i++) tabPanes[i].classList.remove('active');
+            for (let i = 0; i < tabButtons.length; i++) tabButtons[i].classList.remove('active');
+            document.getElementById(tabId).classList.add('active');
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+        }
+
+        function mround(value, multiple) {
+            return Math.round(value / multiple) * multiple;
+        }
+
+        function convertPower(value, vertexDistance) {
+            return ((value * value) * vertexDistance / 1000) + value;
+        }
+
+        function roundAxis(axis) {
+            let rounded = mround(axis, 10);
+            return rounded === 0 ? 180 : rounded;
+        }
+
+        function convertPrescription() {
+            const vertexDistance = getVertexDistance();
+            const liveResults = document.getElementById("liveResults");
+            liveResults.innerHTML = "";
+
+            const resultsBox = document.createElement("div");
+            resultsBox.style.lineHeight = "1.6";
+            resultsBox.style.padding = "20px";
+            resultsBox.style.border = "1px solid var(--glass-border)";
+            resultsBox.style.borderRadius = "20px";
+            resultsBox.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+            resultsBox.style.backdropFilter = "blur(10px)";
+
+            // Right Eye (OD)
+            const sphOD = parseFloat(document.getElementById("sphOD").value) || 0;
+            const cylOD = parseFloat(document.getElementById("cylOD").value) || 0;
+            const axisOD = parseFloat(document.getElementById("axisOD").value) || 0;
+
+            const d4OD = sphOD + cylOD;
+            const d7OD = convertPower(sphOD, vertexDistance);
+            const d14OD = convertPower(d4OD, vertexDistance);
+            const d9OD = d14OD - d7OD;
+            const convertedCylOD = mround(d9OD, 0.25);
+            const convertedSphOD = mround(d7OD, 0.25);
+            const roundedAxisOD = roundAxis(axisOD);
+
+            const seODExact = convertedSphOD + (convertedCylOD / 2);
+            const seODRounded = mround(seODExact, 0.25);
+
+            // Left Eye (OS)
+            const sphOS = parseFloat(document.getElementById("sphOS").value) || 0;
+            const cylOS = parseFloat(document.getElementById("cylOS").value) || 0;
+            const axisOS = parseFloat(document.getElementById("axisOS").value) || 0;
+
+            const d4OS = sphOS + cylOS;
+            const d7OS = convertPower(sphOS, vertexDistance);
+            const d14OS = convertPower(d4OS, vertexDistance);
+            const d9OS = d14OS - d7OS;
+            const convertedCylOS = mround(d9OS, 0.25);
+            const convertedSphOS = mround(d7OS, 0.25);
+            const roundedAxisOS = roundAxis(axisOS);
+
+            const seOSExact = convertedSphOS + (convertedCylOS / 2);
+            const seOSRounded = mround(seOSExact, 0.25);
+
+            const output = `
+                <div id="resultsText">
+                    <div><strong>Right Eye (OD)</strong>
+                        <b>SPH:</b> ${convertedSphOD.toFixed(2)} D  
+                        <b>CYL:</b> ${convertedCylOD.toFixed(2)} D  
+                        <b>Axis:</b> ${roundedAxisOD}<br>
+                        <small style="color: var(--text-secondary);">
+                            Spherical Eq: ${seODExact.toFixed(2)} D (or ${seODRounded.toFixed(2)} D)
+                        </small>
+                    </div><br>
+                    <div><strong>Left Eye (OS)</strong>
+                        <b>SPH:</b> ${convertedSphOS.toFixed(2)} D  
+                        <b>CYL:</b> ${convertedCylOS.toFixed(2)} D  
+                        <b>Axis:</b> ${roundedAxisOS}<br>
+                        <small style="color: var(--text-secondary);">
+                            Spherical Eq: ${seOSExact.toFixed(2)} D (or ${seOSRounded.toFixed(2)} D)
+                        </small>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; text-align: left;">
+                    <button onclick="copyResults()" class="buttons" title="Copy results"><i class="fa fa-clipboard" aria-hidden="true"></i> Copy</button>&nbsp
+					<button onclick="resetForm()" class="buttons" title="Reset"><i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+                </div> 
+            `;
+            resultsBox.innerHTML = output;
+            liveResults.appendChild(resultsBox);
+        }
+
+      function copyResults() {
+    // Get current values directly from variables (more reliable than DOM parsing)
+    const sphOD = parseFloat(document.getElementById("sphOD").value) || 0;
+    const cylOD = parseFloat(document.getElementById("cylOD").value) || 0;
+    const axisOD = parseFloat(document.getElementById("axisOD").value) || 0;
+    const sphOS = parseFloat(document.getElementById("sphOS").value) || 0;
+    const cylOS = parseFloat(document.getElementById("cylOS").value) || 0;
+    const axisOS = parseFloat(document.getElementById("axisOS").value) || 0;
+    const vertexDistance = getVertexDistance();
+    
+    // Recalculate converted values (same logic as convertPrescription)
+    function convertPower(value, vd) { return ((value * value) * vd / 1000) + value; }
+    function mround(value, multiple) { return Math.round(value / multiple) * multiple; }
+    function roundAxis(axis) { let r = mround(axis, 10); return r === 0 ? 180 : r; }
+    
+    const d4OD = sphOD + cylOD;
+    const d7OD = convertPower(sphOD, vertexDistance);
+    const d14OD = convertPower(d4OD, vertexDistance);
+    const convertedCylOD = mround(d14OD - d7OD, 0.25);
+    const convertedSphOD = mround(d7OD, 0.25);
+    const roundedAxisOD = roundAxis(axisOD);
+    
+    const d4OS = sphOS + cylOS;
+    const d7OS = convertPower(sphOS, vertexDistance);
+    const d14OS = convertPower(d4OS, vertexDistance);
+    const convertedCylOS = mround(d14OS - d7OS, 0.25);
+    const convertedSphOS = mround(d7OS, 0.25);
+    const roundedAxisOS = roundAxis(axisOS);
+
+    // ✅ Plain text output - LEFT ALIGNED, NO formatting, NO spherical equivalent
+    const textToCopy = 
+`Right Eye (OD)
+SPH: ${convertedSphOD.toFixed(2)} D
+CYL: ${convertedCylOD.toFixed(2)} D
+Axis: ${roundedAxisOD}
+
+Left Eye (OS)
+SPH: ${convertedSphOS.toFixed(2)} D
+CYL: ${convertedCylOS.toFixed(2)} D
+Axis: ${roundedAxisOS}`;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Minimal toast - no emojis if you want pure text
+        showToast("Copied");
+    }).catch(err => {
+        console.error("Copy failed:", err);
+        alert("Failed to copy");
+    });
+}
+
+// Minimal toast helper (optional - remove if you prefer alert)
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = `position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;z-index:9999;animation:slideIn 0.2s ease,fadeOut 0.2s ease 1.5s forwards`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1800);
+}
+
+        function resetForm() {
+            document.querySelector('input[name="vertexDistance"][value="12"]').checked = true;
+            document.getElementById("sphOD").value = "";
+            document.getElementById("cylOD").value = "";
+            document.getElementById("axisOD").value = "";
+            document.getElementById("sphOS").value = "";
+            document.getElementById("cylOS").value = "";
+            document.getElementById("axisOS").value = "";
+            document.getElementById("liveResults").innerHTML = "";
+        }
+
+        function getVertexDistance() {
+            return parseFloat(document.querySelector('input[name="vertexDistance"]:checked').value);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputs = document.querySelectorAll("input[type='number'], input[type='text']");
+            inputs.forEach(input => input.addEventListener("input", convertPrescription));
+            inputs.forEach((input, index) => {
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        const nextIndex = (index + 1) % inputs.length;
+                        inputs[nextIndex].focus();
+                    }
+                });
+            });
+            convertPrescription();
+        });
+    </script>
+
+   <script>
+  // ===== HAMBURGER MENU & CONTROLS =====
+function toggleMenu() {
+    const btn = document.getElementById('menuBtn');
+    const menu = document.getElementById('hamburgerMenu');
+    menu.classList.toggle('active');
+    btn.classList.toggle('active');
+    btn.textContent = menu.classList.contains('active') ? '✕' : '☰';
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('hamburgerMenu');
+    const btn = document.getElementById('menuBtn');
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('active');
+        btn.classList.remove('active');
+        btn.textContent = '☰';
+    }
+});
+
+// Compact Mode Toggle
+function toggleCompact() {
+    document.body.classList.toggle('compact');
+    const isCompact = document.body.classList.contains('compact');
+    localStorage.setItem('compactMode', isCompact);
+}
+
+// Theme Changer
+const gradients = [
+    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+    'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+    'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+    'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+    'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
+    'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
+    'linear-gradient(135deg, #cd9cf2 0%, #f6f3ff 100%)',
+    'linear-gradient(135deg, #fbc7d4 0%, #9796f0 100%)',
+    'linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)'
+];
+
+function changeTheme() {
+    let idx = parseInt(localStorage.getItem('themeIndex') || '0');
+    idx = (idx + 1) % gradients.length;
+    localStorage.setItem('themeIndex', idx);
+    document.documentElement.style.setProperty('--dynamic-gradient', gradients[idx]);
+}
+
+// Load saved preferences on page load
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('compactMode') === 'true') {
+        document.body.classList.add('compact');
+    }
+    const savedTheme = localStorage.getItem('themeIndex');
+    const themeIdx = savedTheme !== null ? parseInt(savedTheme) : Math.floor(Math.random() * gradients.length);
+    document.documentElement.style.setProperty('--dynamic-gradient', gradients[themeIdx]);
+    localStorage.setItem('themeIndex', themeIdx);
+});
+</script>
+<script src="https://theattn.com/load.js"></script>
+</body>
+</html>
