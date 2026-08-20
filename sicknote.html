@@ -23,7 +23,6 @@
       display: grid; grid-template-columns: 320px 1fr; gap: 20px;
     }
 
-    /* Controls Panel */
     .controls {
       background: #f0f2f5;
       padding: 20px;
@@ -40,7 +39,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* Section Cards */
     .control-section {
       background: #fff;
       border: 1px solid #e0e0e0;
@@ -90,10 +88,8 @@
     .btn-reset { background: #6c757d; margin-top: 8px; }
     .btn-reset:hover { background: #5a6268; }
 
-    /* Toggle for Custom Upload */
     .hidden { display: none; }
 
-    /* Letter Preview */
     #letter-preview {
       background: var(--letter-bg); width: 210mm; min-height: 297mm;
       padding: 20mm; margin: 0 auto;
@@ -137,7 +133,6 @@
     }
     .practice-info strong { color: var(--text-color); }
     
-    /* Color Strip */
     .color-strip {
       width: 100%;
       height: 5px;
@@ -160,17 +155,16 @@
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
-    /* Footer Styles */
-  .letter-footer {
-  margin-top: 50px;
-  padding: 15px 20px;
-  background: #fff9e6;
-  border: 1px solid #f0e6b8;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 0.8rem;
-  color: #666;
-}
+    .letter-footer {
+      margin-top: 50px;
+      padding: 15px 20px;
+      background: #fff9e6;
+      border: 1px solid #f0e6b8;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #666;
+    }
     .letter-footer a {
       color: var(--primary-color);
       text-decoration: none;
@@ -179,7 +173,6 @@
       text-decoration: underline;
     }
 
-    /* Print / PDF Export */
     @media print {
       body { 
         background: white; 
@@ -253,11 +246,9 @@
 <body>
 
   <div class="app-container">
-    <!-- CONTROL PANEL -->
     <div class="controls">
       <h2>Configuration</h2>
 
-      <!-- LOGO & APPEARANCE -->
       <div class="control-section">
         <h3>Logo & Appearance</h3>
         <div class="field">
@@ -285,7 +276,6 @@
         </div>
       </div>
 
-      <!-- PRACTICE DETAILS -->
       <div class="control-section">
         <h3>Practice Details</h3>
         <div class="row">
@@ -300,7 +290,6 @@
         </div>
       </div>
 
-      <!-- PATIENT DETAILS -->
       <div class="control-section">
         <h3>Patient Details</h3>
         <div class="row">
@@ -319,7 +308,6 @@
         </div>
       </div>
 
-      <!-- CLINICAL & ADMIN -->
       <div class="control-section">
         <h3>Clinical & Admin</h3>
         <div class="row">
@@ -328,7 +316,6 @@
         </div>
         <div class="field"><label>Reason / Prescription</label><textarea id="reason" rows="2">was present at our clinic for a full eye test and was prescribed new spectacles for regular use.</textarea></div>
         
-        <!-- Excuse Toggle -->
         <div class="field">
           <label class="checkbox-label">
             <input type="checkbox" id="showExcuse" checked>
@@ -354,15 +341,12 @@
         <div class="field"><label>Additional Notes</label><textarea id="additionalNotes" rows="3" placeholder="Leave blank to hide..."></textarea></div>
       </div>
 
-      <!-- EXPORT -->
       <div class="control-section">
-       
         <button class="btn-export" onclick="window.print()"><i class="fa fa-print" aria-hidden="true"></i> Export / Print</button>
-        <button class="btn-export btn-reset" onclick="location.reload()"><i class="fa fa-refresh" aria-hidden="true"></i> Reset Defaults</button>
+        <button class="btn-export btn-reset" onclick="resetDefaults()"><i class="fa fa-refresh" aria-hidden="true"></i> Reset Defaults</button>
       </div>
     </div>
 
-    <!-- LETTER PREVIEW -->
     <div id="letter-preview">
       <h1 class="letter-headline" id="p_headline"></h1>
       
@@ -378,7 +362,6 @@
         </div>
       </div>
       
-      <!-- Color Strip -->
       <div class="color-strip"></div>
 
       <div class="letter-body">
@@ -389,7 +372,6 @@
         <b>Escorted by:</b> <span id="p_escort">Self</span><br>
         <b>Tested by:</b> <span id="p_doctor">Optom. XYZ</span></p>
         
-        <!-- Excuse sentence - toggleable -->
         <p id="p_excuseParagraph">Kindly excuse <span id="p_pronounObj"></span> from <span id="p_excuseType"></span> for <span id="p_duration"></span> spent at our clinic.</p>
         <b>Comments:</b>
         <div id="p_notes" class="notes-box" style="display:none;"></div>
@@ -404,7 +386,6 @@
         <div class="color-strip"></div>
       </div>
       
-      <!-- Footer -->
       <div class="letter-footer">
         <p>A valid sick note must be issued and signed by a medical practitioner registered with the Health Professions Council of South Africa (HPCSA).</p>
       </div>
@@ -412,38 +393,27 @@
   </div>
 
   <script>
-    // ==========================================================
-    // CONFIGURATION: Replace these strings with your actual image URLs or Base64 Data
-    // ==========================================================
     const LOGOS = {
       execuspecs: "/img/execuspecs.png",
       specsavers: "/img/specsavers.png",
       company: "/img/company.png"
     };
-    // ==========================================================
+    const STORAGE_KEY = 'sickNoteData';
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Set default dates to today
-      const today = new Date();
-      const isoDate = today.toISOString().split('T')[0];
-      document.getElementById('letterDate').value = isoDate;
-      document.getElementById('attendanceDate').value = isoDate;
-      
-      // Initial Logo Load
-      updateLogo();
+      loadState();
       updateAll();
 
-      // Bind all inputs to live update
       const inputs = document.querySelectorAll('input, select, textarea');
-      inputs.forEach(el => el.addEventListener('input', updateAll));
-      inputs.forEach(el => el.addEventListener('change', updateAll));
+      inputs.forEach(el => {
+        el.addEventListener('input', updateAll);
+        el.addEventListener('change', updateAll);
+      });
 
-      // Theme color — ONLY updates the CSS variable used by the letter preview
       document.getElementById('themeColor').addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--primary-color', e.target.value);
       });
 
-      // Logo Selector Change
       document.getElementById('logoSelector').addEventListener('change', (e) => {
         const customField = document.getElementById('customLogoField');
         if (e.target.value === 'custom') {
@@ -454,20 +424,96 @@
         }
       });
 
-      // Custom Logo Upload
       document.getElementById('logoUpload').addEventListener('change', (e) => {
         if (e.target.files[0]) {
           const reader = new FileReader();
           reader.onload = (evt) => {
             document.getElementById('logoImg').src = evt.target.result;
+            updateAll(); 
           };
           reader.readAsDataURL(e.target.files[0]);
         }
       });
       
-      // Excuse sentence toggle
       document.getElementById('showExcuse').addEventListener('change', updateExcuseVisibility);
     });
+
+    function saveState() {
+      const data = {
+        logoSelector: document.getElementById('logoSelector').value,
+        customLogoData: document.getElementById('logoSelector').value === 'custom' ? document.getElementById('logoImg').src : '',
+        themeColor: document.getElementById('themeColor').value,
+        headlineInput: document.getElementById('headlineInput').value,
+        practiceNo: document.getElementById('practiceNo').value,
+        letterDate: document.getElementById('letterDate').value,
+        practiceName: document.getElementById('practiceName').value,
+        practiceAddress: document.getElementById('practiceAddress').value,
+        practiceEmail: document.getElementById('practiceEmail').value,
+        practicePhone: document.getElementById('practicePhone').value,
+        patientName: document.getElementById('patientName').value,
+        patientGender: document.getElementById('patientGender').value,
+        attendanceDate: document.getElementById('attendanceDate').value,
+        escort: document.getElementById('escort').value,
+        doctorName: document.getElementById('doctorName').value,
+        doctorQual: document.getElementById('doctorQual').value,
+        reason: document.getElementById('reason').value,
+        showExcuse: document.getElementById('showExcuse').checked,
+        excuseType: document.getElementById('excuseType').value,
+        durationType: document.getElementById('durationType').value,
+        additionalNotes: document.getElementById('additionalNotes').value
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.warn('localStorage quota exceeded. Custom logo may be too large.');
+      }
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const today = new Date().toISOString().split('T')[0];
+
+      if (saved) {
+        const data = JSON.parse(saved);
+        document.getElementById('logoSelector').value = data.logoSelector || 'company';
+        
+        if (data.logoSelector === 'custom' && data.customLogoData) {
+          document.getElementById('logoImg').src = data.customLogoData;
+          document.getElementById('customLogoField').classList.remove('hidden');
+        } else {
+          updateLogo();
+        }
+        
+        document.getElementById('themeColor').value = data.themeColor || '#d9534f';
+        document.documentElement.style.setProperty('--primary-color', document.getElementById('themeColor').value);
+        document.getElementById('headlineInput').value = data.headlineInput || '';
+        document.getElementById('practiceNo').value = data.practiceNo || '0XXXXXX';
+        document.getElementById('letterDate').value = data.letterDate || today;
+        document.getElementById('practiceName').value = data.practiceName || '123 Clinic';
+        document.getElementById('practiceAddress').value = data.practiceAddress || 'XYZ Centre, ABC Drive, PQR City';
+        document.getElementById('practiceEmail').value = data.practiceEmail || 'clinic@example.co.za';
+        document.getElementById('practicePhone').value = data.practicePhone || '011 XXX XXXX';
+        document.getElementById('patientName').value = data.patientName || 'Patient Name';
+        document.getElementById('patientGender').value = data.patientGender || 'male';
+        document.getElementById('attendanceDate').value = data.attendanceDate || today;
+        document.getElementById('escort').value = data.escort || 'Self';
+        document.getElementById('doctorName').value = data.doctorName || 'Mr XYZ';
+        document.getElementById('doctorQual').value = data.doctorQual || 'Qualification (UJ)';
+        document.getElementById('reason').value = data.reason || 'was present at our clinic for a full eye test and was prescribed new spectacles for regular use.';
+        document.getElementById('showExcuse').checked = data.showExcuse !== undefined ? data.showExcuse : true;
+        document.getElementById('excuseType').value = data.excuseType || 'work';
+        document.getElementById('durationType').value = data.durationType || 'the day';
+        document.getElementById('additionalNotes').value = data.additionalNotes || '';
+      } else {
+        document.getElementById('letterDate').value = today;
+        document.getElementById('attendanceDate').value = today;
+      }
+    }
+
+    function resetDefaults() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
 
     function updateLogo() {
       const selector = document.getElementById('logoSelector').value;
@@ -483,24 +529,20 @@
     }
 
     function updateAll() {
-      // Headline Logic
       const headlineVal = document.getElementById('headlineInput').value.trim();
       const headlineEl = document.getElementById('p_headline');
       headlineEl.textContent = headlineVal;
       headlineEl.style.display = headlineVal ? 'block' : 'none';
 
-      // Dates
       document.getElementById('p_date').textContent = formatDate(document.getElementById('letterDate').value);
       document.getElementById('p_attendanceDate').textContent = formatDate(document.getElementById('attendanceDate').value);
 
-      // Practice Info
       document.getElementById('p_practiceNo').textContent = document.getElementById('practiceNo').value || '[Practice No.]';
       document.getElementById('p_practiceName').textContent = document.getElementById('practiceName').value || '[Practice Name]';
       document.getElementById('p_address').innerHTML = document.getElementById('practiceAddress').value.replace(/\n/g, '<br>') || '[Address]';
       document.getElementById('p_email').textContent = document.getElementById('practiceEmail').value;
       document.getElementById('p_phone').textContent = document.getElementById('practicePhone').value;
 
-      // Gender & Pronoun Logic
       const name = document.getElementById('patientName').value.trim() || '[Patient Name]';
       const gender = document.getElementById('patientGender').value;
       let title = 'Mr', pronounSubj = 'He', pronounObj = 'him';
@@ -515,7 +557,6 @@
       document.getElementById('p_pronounCap').textContent = pronounSubj;
       document.getElementById('p_pronounObj').textContent = pronounObj;
 
-      // Clinical & Reason
       document.getElementById('p_reason').textContent = document.getElementById('reason').value || '[reason/prescription text]';
       document.getElementById('p_escort').textContent = document.getElementById('escort').value || 'Self';
       
@@ -524,11 +565,9 @@
       document.getElementById('p_doctorSign').textContent = docName ? `${docName} Optometrist` : '[Name] Optometrist';
       document.getElementById('p_qual').textContent = document.getElementById('doctorQual').value;
 
-      // Work/School & Duration
       document.getElementById('p_excuseType').textContent = document.getElementById('excuseType').value;
       document.getElementById('p_duration').textContent = document.getElementById('durationType').value;
 
-      // Additional Notes
       const notes = document.getElementById('additionalNotes').value.trim();
       const notesEl = document.getElementById('p_notes');
       if (notes) {
@@ -538,8 +577,8 @@
         notesEl.style.display = 'none';
       }
       
-      // Excuse visibility
       updateExcuseVisibility();
+      saveState();
     }
 
     function formatDate(dateStr) {
@@ -548,6 +587,5 @@
       return `${d}/${m}/${y}`;
     }
   </script>
-<script src="https://theattn.com/load.js"></script>
 </body>
 </html>
