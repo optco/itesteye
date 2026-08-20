@@ -242,6 +242,7 @@
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/4.2.2/html2pdf.min.js"></script>
 </head>
 <body>
 
@@ -346,7 +347,7 @@
       </div>
 
       <div class="control-section">
-        <button class="btn-export" onclick="window.print()"><i class="fa fa-print" aria-hidden="true"></i> Export / Print</button>
+        <button class="btn-export" onclick="saveAsPDF()"><i class="fa fa-file-pdf" aria-hidden="true"></i> Save as PDF</button>
         <button class="btn-export btn-reset" onclick="resetDefaults()"><i class="fa fa-refresh" aria-hidden="true"></i> Reset Defaults</button>
       </div>
     </div>
@@ -366,10 +367,8 @@
         </div>
       </div>
       
-      <!-- Subject Line positioned above the color strip -->
       <p id="p_letterSubject" style="font-weight: bold; text-align: center; margin: 15px 0 10px 0; font-size: 12pt; text-transform: uppercase; display: none;"></p>
 
-      <!-- Top Color Strip -->
       <div class="color-strip"></div>
 
       <div class="letter-body">
@@ -392,7 +391,6 @@
           <span id="p_qual">Qualifaction (UJ)</span></p>
         </div>
         
-        <!-- Bottom Color Strip -->
         <div class="color-strip"></div>
       </div>
       
@@ -525,6 +523,25 @@
     function resetDefaults() {
       localStorage.removeItem(STORAGE_KEY);
       location.reload();
+    }
+
+    function saveAsPDF() {
+      const element = document.getElementById('letter-preview');
+      const patientName = document.getElementById('patientName').value.trim() || 'Patient';
+      const letterDate = document.getElementById('letterDate').value;
+      const dateFormatted = letterDate ? letterDate.replace(/-/g, '') : 'NoDate';
+      
+      const filename = `Sick_Note_${patientName.replace(/\s+/g, '_')}_${dateFormatted}.pdf`;
+      
+      const opt = {
+        margin: 0,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).save();
     }
 
     function updateLogo() {
