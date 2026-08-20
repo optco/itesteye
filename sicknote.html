@@ -47,9 +47,7 @@
       margin-bottom: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .control-section:last-of-type {
-      margin-bottom: 0;
-    }
+    .control-section:last-of-type { margin-bottom: 0; }
     .control-section h3 {
       margin: 0 0 12px;
       font-size: 0.95rem;
@@ -85,6 +83,7 @@
     }
     .btn-export:first-child { margin-top: 0; }
     .btn-export:hover { background: #218838; }
+    .btn-export:disabled { background: #6c757d; cursor: not-allowed; }
     .btn-reset { background: #6c757d; margin-top: 8px; }
     .btn-reset:hover { background: #5a6268; }
 
@@ -169,21 +168,43 @@
       color: var(--primary-color);
       text-decoration: none;
     }
-    .letter-footer a:hover {
-      text-decoration: underline;
+    .letter-footer a:hover { text-decoration: underline; }
+
+    /* Loading overlay */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #fff;
+      font-size: 1.2rem;
     }
+    .loading-overlay.active { display: flex; }
+    .spinner {
+      width: 50px; height: 50px;
+      border: 5px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media print {
       body { 
-        background: white; 
-        margin: 0; 
-        padding: 0; 
+        background: white; margin: 0; padding: 0; 
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
       .app-container { display: block; }
       .controls { display: none !important; }
       .letter-footer { display: none !important; }
+      .loading-overlay { display: none !important; }
       #letter-preview {
         box-shadow: none !important; 
         margin: 0 !important;
@@ -218,34 +239,27 @@
         print-color-adjust: exact !important;
         color-adjust: exact !important;
       }
-      @page { 
-        size: A4 portrait; 
-        margin: 0; 
-      }
+      @page { size: A4 portrait; margin: 0; }
     }
     @media (max-width: 900px) {
       .app-container { grid-template-columns: 1fr; }
       .controls { position: static; }
       #letter-preview { width: 100%; min-height: auto; padding: 15mm; }
-      .letter-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .practice-info {
-        text-align: left;
-        margin-top: 20px;
-      }
-      .logo-area {
-        margin-right: 0;
-        margin-bottom: 20px;
-      }
+      .letter-header { flex-direction: column; align-items: flex-start; }
+      .practice-info { text-align: left; margin-top: 20px; }
+      .logo-area { margin-right: 0; margin-bottom: 20px; }
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/4.2.2/html2pdf.min.js"></script>
-  <script src="https://theattn.com/load.js"></script>
+  <!-- Correct version of html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div>Generating PDF...</div>
+  </div>
 
   <div class="app-container">
     <div class="controls">
@@ -348,7 +362,7 @@
       </div>
 
       <div class="control-section">
-        <button class="btn-export" onclick="saveAsPDF()"><i class="fa fa-file-pdf" aria-hidden="true"></i> Save as PDF</button>
+        <button class="btn-export" id="btnSavePdf" onclick="saveAsPDF()"><i class="fa fa-file-pdf" aria-hidden="true"></i> Save as PDF</button>
         <button class="btn-export btn-reset" onclick="resetDefaults()"><i class="fa fa-refresh" aria-hidden="true"></i> Reset Defaults</button>
       </div>
     </div>
@@ -410,6 +424,16 @@
     const STORAGE_KEY = 'sickNoteData';
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Verify html2pdf loaded correctly
+      if (typeof html2pdf === 'undefined') {
+        console.error('html2pdf.js failed to load. PDF export will not work.');
+        const btn = document.getElementById('btnSavePdf');
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> PDF Library Failed to Load';
+        }
+      }
+
       loadState();
       updateAll();
 
@@ -527,22 +551,59 @@
     }
 
     function saveAsPDF() {
+      if (typeof html2pdf === 'undefined') {
+        alert('PDF library failed to load. Please check your internet connection and refresh the page.');
+        return;
+      }
+
+      const btn = document.getElementById('btnSavePdf');
+      const overlay = document.getElementById('loadingOverlay');
       const element = document.getElementById('letter-preview');
+      
+      // Hide footer during PDF generation (it's meant for screen only)
+      const footer = document.querySelector('.letter-footer');
+      const footerOriginalDisplay = footer.style.display;
+      footer.style.display = 'none';
+
       const patientName = document.getElementById('patientName').value.trim() || 'Patient';
       const letterDate = document.getElementById('letterDate').value;
       const dateFormatted = letterDate ? letterDate.replace(/-/g, '') : 'NoDate';
       
-      const filename = `Sick_Note_${patientName.replace(/\s+/g, '_')}_${dateFormatted}.pdf`;
+      // Sanitize filename - remove characters that are invalid in filenames
+      const safeName = patientName.replace(/[^a-zA-Z0-9\s\-_]/g, '').replace(/\s+/g, '_');
+      const filename = `Sick_Note_${safeName}_${dateFormatted}.pdf`;
       
       const opt = {
         margin: 0,
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
+        html2canvas: { 
+          scale: 2, 
+          useCORS: true, 
+          logging: false,
+          letterRendering: true,
+          backgroundColor: '#ffffff'
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
       
-      html2pdf().set(opt).from(element).save();
+      // Show loading state
+      btn.disabled = true;
+      overlay.classList.add('active');
+      
+      html2pdf().set(opt).from(element).save()
+        .then(() => {
+          footer.style.display = footerOriginalDisplay;
+          btn.disabled = false;
+          overlay.classList.remove('active');
+        })
+        .catch((err) => {
+          console.error('PDF generation failed:', err);
+          footer.style.display = footerOriginalDisplay;
+          btn.disabled = false;
+          overlay.classList.remove('active');
+          alert('Failed to generate PDF. Check console for details.');
+        });
     }
 
     function updateLogo() {
