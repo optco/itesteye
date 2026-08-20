@@ -270,7 +270,7 @@
             <input type="color" id="themeColor" value="#d9534f">
           </div>
           <div class="field">
-            <label>Title</label>
+            <label>Page Headline</label>
             <input type="text" id="headlineInput" placeholder="e.g. SICK NOTE">
           </div>
         </div>
@@ -310,6 +310,10 @@
 
       <div class="control-section">
         <h3>Clinical & Admin</h3>
+        <div class="field">
+          <label>Letter Subject / Title (Optional)</label>
+          <input type="text" id="letterSubject" placeholder="e.g., SUBJECT: MEDICAL CERTIFICATE">
+        </div>
         <div class="row">
           <div class="field"><label>Optometrist Name</label><input type="text" id="doctorName" value="Mr XYZ"></div>
           <div class="field"><label>Qualifications</label><input type="text" id="doctorQual" value="Qualification (UJ)"></div>
@@ -365,6 +369,7 @@
       <div class="color-strip"></div>
 
       <div class="letter-body">
+        <p id="p_letterSubject" style="font-weight: bold; text-align: center; margin-bottom: 15px; display: none;"></p>
         <p>To whom it may concern,</p>
         <p>This is to certify that <span id="p_titleName"></span> <span id="p_patientName"></span> <span id="p_reason"></span></p>
         
@@ -454,6 +459,7 @@
         patientGender: document.getElementById('patientGender').value,
         attendanceDate: document.getElementById('attendanceDate').value,
         escort: document.getElementById('escort').value,
+        letterSubject: document.getElementById('letterSubject').value,
         doctorName: document.getElementById('doctorName').value,
         doctorQual: document.getElementById('doctorQual').value,
         reason: document.getElementById('reason').value,
@@ -497,6 +503,7 @@
         document.getElementById('patientGender').value = data.patientGender || 'male';
         document.getElementById('attendanceDate').value = data.attendanceDate || today;
         document.getElementById('escort').value = data.escort || 'Self';
+        document.getElementById('letterSubject').value = data.letterSubject || '';
         document.getElementById('doctorName').value = data.doctorName || 'Mr XYZ';
         document.getElementById('doctorQual').value = data.doctorQual || 'Qualification (UJ)';
         document.getElementById('reason').value = data.reason || 'was present at our clinic for a full eye test and was prescribed new spectacles for regular use.';
@@ -556,6 +563,15 @@
       document.getElementById('p_patientName').textContent = name;
       document.getElementById('p_pronounCap').textContent = pronounSubj;
       document.getElementById('p_pronounObj').textContent = pronounObj;
+
+      const subjectVal = document.getElementById('letterSubject').value.trim();
+      const subjectEl = document.getElementById('p_letterSubject');
+      if (subjectVal) {
+        subjectEl.textContent = subjectVal;
+        subjectEl.style.display = 'block';
+      } else {
+        subjectEl.style.display = 'none';
+      }
 
       document.getElementById('p_reason').textContent = document.getElementById('reason').value || '[reason/prescription text]';
       document.getElementById('p_escort').textContent = document.getElementById('escort').value || 'Self';
