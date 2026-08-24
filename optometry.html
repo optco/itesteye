@@ -439,7 +439,35 @@ function adjustValue(id, delta) {
               
             </div>
 
-     <!-- Tab 4: Abbreviations -->
+    <!-- Tab 4: Abbreviations -->
+	<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.copy-symbol').forEach(cell => {
+        cell.addEventListener('click', async function() {
+            const symbol = this.dataset.symbol;
+            try {
+                await navigator.clipboard.writeText(symbol);
+                
+                // Visual feedback
+                const originalText = this.textContent;
+                this.textContent = 'Copied';
+                this.style.color = '#4CAF50';
+                this.style.fontSize = '0.9em';
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.color = '';
+                    this.style.fontSize = '1.5em';
+                }, 1000);
+            } catch (err) {
+                console.error('Clipboard write failed:', err);
+                alert('Copy failed. Ensure you are on a secure HTTPS connection and clicked the symbol directly.');
+            }
+        });
+    });
+});
+		
+	</script>
 <div id="tab4" class="tab-pane">
     <h2><i class="fas fa-prescription" aria-hidden="true"></i> Most Used Prescription Terms</h2>
     <table class="glass shadow">
@@ -464,17 +492,82 @@ function adjustValue(id, delta) {
         </tbody>
     </table>
 
-    <h3 style="margin-top: 20px;">Useful Symbols</h3>
-    <p style="font-size: 0.9em; margin-bottom: 10px;"><i>Note for Mac users: Enable "Unicode Hex Input" in System Settings under Keyboard > Input Sources to use the Option + Hex codes, or use the Character Viewer (Control + Command + Space).</i></p>
-    <ul class="glass shadow" style="padding: 15px 30px; list-style-type: none;">
-        <li><b>Up Arrow (↑):</b> Windows: Alt + 24 | Mac: Option + 2191</li>
-        <li><b>Down Arrow (↓):</b> Windows: Alt + 25 | Mac: Option + 2193</li>
-        <li><b>Right Arrow (→):</b> Windows: Alt + 26 | Mac: Option + 2192</li>
-        <li><b>Left Arrow (←):</b> Windows: Alt + 27 | Mac: Option + 2190</li>
-        <li><b>Up/Down Arrow (↕):</b> Windows: Alt + 18 | Mac: Option + 2195</li>
-        <li><b>Left/Right Arrow (↔):</b> Windows: Alt + 29 | Mac: Option + 2194</li>
-        <li><b>Plus/Minus (±):</b> Windows: Alt + 241 | Mac: Option + Shift + = (or Option + 00B1)</li>
-    </ul>
+    <h3 style="margin-top: 30px;">Useful Symbols</h3>
+    <table class="glass shadow" id="symbolsTable" style="text-align: center;">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Description</th>
+                <th>Windows</th>
+                <th>Mac</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="copy-symbol" data-symbol="↑" style="font-size: 1.5em; cursor: pointer;">↑</td>
+                <td>Up Arrow</td>
+                <td>Alt + 24</td>
+                <td>Option + 2191</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="↓" style="font-size: 1.5em; cursor: pointer;">↓</td>
+                <td>Down Arrow</td>
+                <td>Alt + 25</td>
+                <td>Option + 2193</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="→" style="font-size: 1.5em; cursor: pointer;">→</td>
+                <td>Right Arrow</td>
+                <td>Alt + 26</td>
+                <td>Option + 2192</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="←" style="font-size: 1.5em; cursor: pointer;">←</td>
+                <td>Left Arrow</td>
+                <td>Alt + 27</td>
+                <td>Option + 2190</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="↕" style="font-size: 1.5em; cursor: pointer;">↕</td>
+                <td>Up/Down Arrow</td>
+                <td>Alt + 18</td>
+                <td>Option + 2195</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="↔" style="font-size: 1.5em; cursor: pointer;">↔</td>
+                <td>Left/Right Arrow</td>
+                <td>Alt + 29</td>
+                <td>Option + 2194</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="►" style="font-size: 1.5em; cursor: pointer;">►</td>
+                <td>Solid Right Arrow</td>
+                <td>Alt + 16</td>
+                <td>Option + 25BA</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="◄" style="font-size: 1.5em; cursor: pointer;">◄</td>
+                <td>Solid Left Arrow</td>
+                <td>Alt + 17</td>
+                <td>Option + 25C4</td>
+            </tr>
+            <tr>
+                <td class="copy-symbol" data-symbol="±" style="font-size: 1.5em; cursor: pointer;">±</td>
+                <td>Plus/Minus</td>
+                <td>Alt + 241</td>
+                <td>Option + Shift + =</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 15px; font-size: 0.85em; opacity: 0.8;">
+        <p><b>Instructions:</b></p>
+        <ul style="padding-left: 20px; margin: 5px 0;">
+            <li><b>Click the symbol</b> in the first column to copy it directly to your clipboard.</li>
+            <li><b>Windows:</b> Hold the Alt key and type the numbers on your numeric keypad.</li>
+            <li><b>Mac:</b> Enable "Unicode Hex Input" in System Settings under Keyboard > Input Sources. Hold the Option key and type the four digit code.</li>
+        </ul>
+    </div>
 </div>
 
             <!-- Tab 5: WHO Classification -->
