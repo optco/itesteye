@@ -67,6 +67,7 @@
         .badge-d { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
         .badge-t { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
         .badge-idt { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .badge-dt { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
         
         .med-table {
             width: 100%;
@@ -102,16 +103,6 @@
 </head>
 <body>
 
-<!-- Hamburger Menu -->
-<div class="control-stack">
-    <button class="control-btn" onclick="toggleCompact()" title="Resize">
-        <i class="fas fa-arrows-left-right" aria-hidden="true"></i>
-    </button>
-    <button class="control-btn" onclick="changeTheme()" title="Change Theme">
-        <i class="fas fa-palette" aria-hidden="true"></i>
-    </button>
-</div>
-
 <button class="hamburger-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Menu">☰</button>
 <div class="hamburger-menu" id="hamburgerMenu">
     <div class="menu-links">
@@ -136,7 +127,7 @@
 </div>
 
 <div class="hpcsa-header glass">
-    <img src="https://www.hpcsa.co.za/Uploads/logo.png" alt="HPCSA Logo" class="hpcsa-logo">
+    <img src="https://practitionerssso.hpcsa.co.za/Content/images/HPCSA_Logo_big.png" alt="HPCSA Logo" class="hpcsa-logo">
     <h1 class="hpcsa-title">APPROVED LIST OF MEDICINES FOR USE BY OPTOMETRISTS</h1>
     <p class="hpcsa-subtitle">
         The below table consists of a list of medicines for use by optometrists registered in the categories of 
@@ -496,13 +487,12 @@
 </div>
 
 <script>
-// Hamburger Menu & Controls
 function toggleMenu() {
     const btn = document.getElementById('menuBtn');
     const menu = document.getElementById('hamburgerMenu');
     menu.classList.toggle('active');
     btn.classList.toggle('active');
-    btn.textContent = menu.classList.contains('active') ? '✕' : '☰';
+    btn.textContent = menu.classList.contains('active') ? '✕' : '';
 }
 
 document.addEventListener('click', (e) => {
@@ -513,37 +503,6 @@ document.addEventListener('click', (e) => {
         btn.classList.remove('active');
         btn.textContent = '☰';
     }
-});
-
-function toggleCompact() {
-    document.body.classList.toggle('compact');
-    const isCompact = document.body.classList.contains('compact');
-    localStorage.setItem('compactMode', isCompact);
-}
-
-const gradients = [
-    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-];
-
-function changeTheme() {
-    let idx = parseInt(localStorage.getItem('themeIndex') || '0');
-    idx = (idx + 1) % gradients.length;
-    localStorage.setItem('themeIndex', idx);
-    document.documentElement.style.setProperty('--dynamic-gradient', gradients[idx]);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('compactMode') === 'true') {
-        document.body.classList.add('compact');
-    }
-    const savedTheme = localStorage.getItem('themeIndex');
-    const themeIdx = savedTheme !== null ? parseInt(savedTheme) : 0;
-    document.documentElement.style.setProperty('--dynamic-gradient', gradients[themeIdx]);
-    localStorage.setItem('themeIndex', themeIdx);
 });
 </script>
 
