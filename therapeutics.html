@@ -18,6 +18,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
+        /* Override CSS variables for a light/white theme */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.5);
+            --text-primary: rgba(30, 30, 40, 0.95);
+            --text-secondary: rgba(60, 60, 80, 0.85);
+            --accent-glow: rgba(50, 120, 200, 0.5);
+        }
+
+        /* Force white/light background, overriding the purple fallback in optometry.css */
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+        }
+
         .hpcsa-header {
             text-align: center;
             margin-bottom: 32px;
@@ -41,7 +57,7 @@
             margin: 0 auto 24px;
         }
         .category-legend {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.5);
             padding: 16px 24px;
             border-radius: 12px;
             margin-bottom: 24px;
@@ -49,6 +65,7 @@
             flex-wrap: wrap;
             gap: 24px;
             justify-content: center;
+            border: 1px solid var(--glass-border);
         }
         .legend-item {
             display: flex;
@@ -63,11 +80,11 @@
             font-weight: 600;
             font-size: 0.85rem;
         }
-        .badge-i { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-        .badge-d { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .badge-t { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .badge-idt { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
-        .badge-dt { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .badge-i { background: rgba(34, 197, 94, 0.15); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-d { background: rgba(59, 130, 246, 0.15); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .badge-t { background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-idt { background: rgba(139, 92, 246, 0.15); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .badge-dt { background: rgba(139, 92, 246, 0.15); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.3); }
         
         .med-table {
             width: 100%;
@@ -76,23 +93,30 @@
         .med-table th {
             font-size: 0.85rem;
             padding: 14px 12px;
+            background: rgba(59, 130, 246, 0.1) !important;
+            color: var(--text-primary);
         }
         .med-table td {
             padding: 12px;
             vertical-align: top;
+            color: var(--text-secondary);
         }
         .category-header {
-            background: rgba(59, 130, 246, 0.15) !important;
+            background: rgba(59, 130, 246, 0.08) !important;
             font-weight: 700;
+            color: var(--text-primary);
+        }
+        .category-header td {
             color: var(--text-primary);
         }
         .schedule-badge {
             display: inline-block;
             padding: 2px 8px;
             border-radius: 4px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(0, 0, 0, 0.05);
             font-weight: 600;
             font-size: 0.85rem;
+            color: var(--text-primary);
         }
         @media (max-width: 768px) {
             .med-table { font-size: 0.8rem; }
@@ -492,7 +516,7 @@ function toggleMenu() {
     const menu = document.getElementById('hamburgerMenu');
     menu.classList.toggle('active');
     btn.classList.toggle('active');
-    btn.textContent = menu.classList.contains('active') ? '✕' : '';
+    btn.textContent = menu.classList.contains('active') ? '' : '☰';
 }
 
 document.addEventListener('click', (e) => {
