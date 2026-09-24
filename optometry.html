@@ -16,6 +16,21 @@
     <meta name="description" content="An offline contact lens prescription converter that calculates contact lens power from spectacle scripts using vertex distance, cylinder conversion, and axis rounding. Ideal for optometrists and eyecare professionals.">
 
     <link rel="stylesheet" href="/css/optometry.css">
+      <style>
+    .dlvs-wrap { font-family: Arial, Helvetica, sans-serif; max-width: 960px; margin: 0 auto; color: #000; }
+    .dlvs-wrap h2 { text-align: center; font-size: 16px; letter-spacing: .5px; margin: 0 0 18px; font-weight: bold; }
+    .dlvs-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .dlvs-table th, .dlvs-table td { border: 1px solid #000; padding: 8px 10px; vertical-align: middle; }
+    .dlvs-table thead th { background: #d9d9d9; text-align: center; font-size: 14px; }
+    .dlvs-table .group { background: #d9d9d9; font-weight: bold; text-align: center; width: 80px; }
+    .dlvs-table .code { font-weight: bold; text-align: center; width: 42px; }
+    .dlvs-table .eg-text { width: 18%; }
+    .dlvs-table .eg-icon { width: 13%; font-size: 22px; }
+    .dlvs-table .acuity { width: 26%; }
+    .dlvs-table .field { width: 28%; }
+    .dlvs-table tr.section-top td { border-top: 6px solid #000; }
+    .dlvs-table .plus { font-size: 18px; font-weight: bold; padding: 0 4px; }
+  </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -67,7 +82,7 @@
         <!-- Tab Navigation -->
         <div class="tab-buttons">
             <button class="tab-button active" onclick="openTab('tab1', event)"><i class="fa fa-random" aria-hidden="true"></i> Converter</button>
-            <button class="tab-button" onclick="openTab('tab2', event)"><i class="fas fa-id-card" aria-hidden="true"></i> Driver's</button>
+            <button class="tab-button" onclick="openTab('tab2', event)"><i class="fas fa-id-card" aria-hidden="true"></i> er's</button>
             <button class="tab-button" onclick="openTab('tab3', event)"><i class="fas fa-eye" aria-hidden="true"></i> Vision Charts</button>
             <button class="tab-button" onclick="openTab('tab4', event)"><i class="fas fa-prescription" aria-hidden="true"></i> Rx Terms</button>
             <button class="tab-button" onclick="openTab('tab5', event)"><i class="fas fa-globe" aria-hidden="true"></i> WHO</button>
@@ -159,23 +174,9 @@
             <!-- Tab 2: Driver's License -->
             <div id="tab2" class="tab-pane">
                 <h2><i class="fas fa-id-card" aria-hidden="true"></i> Driving License Test Passing Criteria</h2>
-                <div class="glass" style="padding: 20px; display: inline-block; max-width: 100%;">
+               <!-- <div class="glass" style="padding: 20px; display: inline-block; max-width: 100%;"> -->
                    <div class="dlvs-wrap">
-  <style>
-    .dlvs-wrap { font-family: Arial, Helvetica, sans-serif; max-width: 960px; margin: 0 auto; color: #000; }
-    .dlvs-wrap h2 { text-align: center; font-size: 16px; letter-spacing: .5px; margin: 0 0 18px; font-weight: bold; }
-    .dlvs-table { width: 100%; border-collapse: collapse; font-size: 15px; }
-    .dlvs-table th, .dlvs-table td { border: 1px solid #000; padding: 8px 10px; vertical-align: middle; }
-    .dlvs-table thead th { background: #d9d9d9; text-align: center; font-size: 14px; }
-    .dlvs-table .group { background: #d9d9d9; font-weight: bold; text-align: center; width: 80px; }
-    .dlvs-table .code { font-weight: bold; text-align: center; width: 42px; }
-    .dlvs-table .eg-text { width: 18%; }
-    .dlvs-table .eg-icon { width: 13%; font-size: 22px; }
-    .dlvs-table .acuity { width: 26%; }
-    .dlvs-table .field { width: 28%; }
-    .dlvs-table tr.section-top td { border-top: 6px solid #000; }
-    .dlvs-table .plus { font-size: 18px; font-weight: bold; padding: 0 4px; }
-  </style>
+
 
   <h2>DRIVING LICENSE VISION SCREENING REQUIREMENTS</h2>
 
@@ -238,7 +239,7 @@
     </tbody>
   </table>
 </div>
-                </div>
+             <!--   </div> -->
                 <div class="glass" style="margin-top: 24px; padding: 24px;">
                     <h3 style="margin-bottom: 16px; font-size: 1.3rem; color: var(--text-primary);">📋 Temporary Driving Licence (South Africa)</h3>
                     <p style="margin-bottom: 20px; color: var(--text-secondary);">
