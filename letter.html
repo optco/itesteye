@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <title>Medical Letter Generator</title>
   <style>
     :root {
       --primary-color: #d9534f;
@@ -20,7 +20,7 @@
     }
     .app-container {
       max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: 320px 1fr; gap: 20px;
+      display: grid; grid-template-columns: 340px 1fr; gap: 20px;
     }
 
     .controls {
@@ -74,6 +74,7 @@
     }
     .row { display: flex; gap: 10px; }
     .row > .field { flex: 1; }
+    .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
     .btn-export {
       width: 100%; padding: 12px; margin-top: 10px;
@@ -83,7 +84,6 @@
     }
     .btn-export:first-child { margin-top: 0; }
     .btn-export:hover { background: #218838; }
-    .btn-export:disabled { background: #6c757d; cursor: not-allowed; }
     .btn-reset { background: #6c757d; margin-top: 8px; }
     .btn-reset:hover { background: #5a6268; }
 
@@ -148,12 +148,41 @@
     
     .signature { margin-top: 40px; }
     .signature p { margin: 4px 0; }
+    
     .notes-box {
       margin-top: 15px; padding: 10px; border-left: 3px solid var(--primary-color);
       background: #f8f9fa; font-size: 0.95em; white-space: pre-wrap;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
+    .terms-box {
+      margin-top: 20px; padding: 10px; border-left: 3px solid #6c757d;
+      background: #f8f9fa; font-size: 0.9em; white-space: pre-wrap;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .rx-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      margin: 15px 0;
+    }
+    .rx-table th, .rx-table td {
+      border: 1px solid #ced4da;
+      padding: 8px;
+      text-align: center;
+    }
+    .rx-table th {
+      background: #f8f9fa;
+      font-weight: 600;
+      border-bottom: 2px solid var(--primary-color);
+    }
+    .rx-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+    }
+
     .letter-footer {
       margin-top: 50px;
       padding: 15px 20px;
@@ -170,31 +199,6 @@
     }
     .letter-footer a:hover { text-decoration: underline; }
 
-    /* Loading overlay */
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      color: #fff;
-      font-size: 1.2rem;
-    }
-    .loading-overlay.active { display: flex; }
-    .spinner {
-      width: 50px; height: 50px;
-      border: 5px solid #fff;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
     @media print {
       body { 
         background: white; margin: 0; padding: 0; 
@@ -204,7 +208,7 @@
       .app-container { display: block; }
       .controls { display: none !important; }
       .letter-footer { display: none !important; }
-      .loading-overlay { display: none !important; }
+      
       #letter-preview {
         box-shadow: none !important; 
         margin: 0 !important;
@@ -239,8 +243,12 @@
         print-color-adjust: exact !important;
         color-adjust: exact !important;
       }
+      .rx-table th, .rx-table td {
+        border: 1px solid #999 !important;
+      }
       @page { size: A4 portrait; margin: 0; }
     }
+
     @media (max-width: 900px) {
       .app-container { grid-template-columns: 1fr; }
       .controls { position: static; }
@@ -248,18 +256,12 @@
       .letter-header { flex-direction: column; align-items: flex-start; }
       .practice-info { text-align: left; margin-top: 20px; }
       .logo-area { margin-right: 0; margin-bottom: 20px; }
+      .row-4 { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- Correct version of html2pdf.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="spinner"></div>
-    <div>Generating PDF...</div>
-  </div>
 
   <div class="app-container">
     <div class="controls">
@@ -287,13 +289,13 @@
           </div>
           <div class="field">
             <label>Page Headline</label>
-            <input type="text" id="headlineInput" placeholder="e.g. SICK NOTE">
+            <input type="text" id="headlineInput" placeholder="e.g. MEDICAL CERTIFICATE">
           </div>
         </div>
       </div>
 
       <div class="control-section">
-        <h3>Practice Details</h3>
+        <h3>Practice Details (Persistent)</h3>
         <div class="row">
           <div class="field"><label>Practice No.</label><input type="text" id="practiceNo" value="0XXXXXX"></div>
           <div class="field"><label>Letter Date</label><input type="date" id="letterDate"></div>
@@ -327,14 +329,18 @@
       <div class="control-section">
         <h3>Clinical & Admin</h3>
         <div class="field">
+          <label>Salutation</label>
+          <input type="text" id="salutation" value="To whom it may concern,">
+        </div>
+        <div class="field">
           <label>Letter Subject / Title (Optional)</label>
           <input type="text" id="letterSubject" placeholder="e.g., SUBJECT: MEDICAL CERTIFICATE">
         </div>
         <div class="row">
-          <div class="field"><label>Optometrist Name</label><input type="text" id="doctorName" value="Mr XYZ"></div>
+          <div class="field"><label>Optometrist Name</label><input type="text" id="doctorName" value="XYZ"></div>
           <div class="field"><label>Qualifications</label><input type="text" id="doctorQual" value="Qualification (UJ)"></div>
         </div>
-        <div class="field"><label>Reason / Prescription</label><textarea id="reason" rows="2">was present at our clinic for a full eye test and was prescribed new spectacles for regular use.</textarea></div>
+        <div class="field"><label>Reason / Prescription Text</label><textarea id="reason" rows="2">was present at our clinic for a full eye test and was prescribed new spectacles for regular use.</textarea></div>
         
         <div class="field">
           <label class="checkbox-label">
@@ -362,8 +368,38 @@
       </div>
 
       <div class="control-section">
-        <button class="btn-export" id="btnSavePdf" onclick="saveAsPDF()"><i class="fa fa-file-pdf" aria-hidden="true"></i> Save as PDF</button>
-        <button class="btn-export btn-reset" onclick="resetDefaults()"><i class="fa fa-refresh" aria-hidden="true"></i> Reset Defaults</button>
+        <h3>Patient Prescription (Optional)</h3>
+        <div class="field">
+          <label>Right Eye (OD)</label>
+          <div class="row-4">
+            <div class="field"><label>Sph</label><input type="text" id="odSph" placeholder="-"></div>
+            <div class="field"><label>Cyl</label><input type="text" id="odCyl" placeholder="-"></div>
+            <div class="field"><label>Axis</label><input type="text" id="odAxis" placeholder="-"></div>
+            <div class="field"><label>Add</label><input type="text" id="odAdd" placeholder="-"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Left Eye (OS)</label>
+          <div class="row-4">
+            <div class="field"><label>Sph</label><input type="text" id="osSph" placeholder="-"></div>
+            <div class="field"><label>Cyl</label><input type="text" id="osCyl" placeholder="-"></div>
+            <div class="field"><label>Axis</label><input type="text" id="osAxis" placeholder="-"></div>
+            <div class="field"><label>Add</label><input type="text" id="osAdd" placeholder="-"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-section">
+        <h3>Terms & Definitions</h3>
+        <div class="field">
+          <label>Explain terms for patient understanding</label>
+          <textarea id="termsDefinitions" rows="4" placeholder="e.g., OD = Right Eye, OS = Left Eye, Sph = Sphere..."></textarea>
+        </div>
+      </div>
+
+      <div class="control-section">
+        <button class="btn-export" id="btnPrint" onclick="printLetter()"><i class="fa fa-print" aria-hidden="true"></i> Print / Save as PDF</button>
+        <button class="btn-export btn-reset" onclick="resetLetterDefaults()"><i class="fa fa-refresh" aria-hidden="true"></i> Clear Patient Data</button>
       </div>
     </div>
 
@@ -387,30 +423,67 @@
       <div class="color-strip"></div>
 
       <div class="letter-body">
-        <p>To whom it may concern,</p>
+        <p id="p_salutation">To whom it may concern,</p>
         <p>This is to certify that <span id="p_titleName"></span> <span id="p_patientName"></span> <span id="p_reason"></span></p>
         
         <p><span id="p_pronounCap"></span> attended our clinic on: <span id="p_attendanceDate"></span><br>
         <b>Escorted by:</b> <span id="p_escort">Self</span><br>
-        <b>Tested by:</b> <span id="p_doctor">Optom. XYZ</span></p>
+        <b>Tested by:</b> <span id="p_doctor">Optometrist XYZ</span></p>
         
         <p id="p_excuseParagraph">Kindly excuse <span id="p_pronounObj"></span> from <span id="p_excuseType"></span> for <span id="p_duration"></span> spent at our clinic.</p>
+        
+        <div id="p_prescription" style="display:none;">
+          <b>Patient Prescription:</b>
+          <table class="rx-table">
+            <thead>
+              <tr>
+                <th>Eye</th>
+                <th>Sph</th>
+                <th>Cyl</th>
+                <th>Axis</th>
+                <th>Add</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>OD (Right)</td>
+                <td id="p_odSph">-</td>
+                <td id="p_odCyl">-</td>
+                <td id="p_odAxis">-</td>
+                <td id="p_odAdd">-</td>
+              </tr>
+              <tr>
+                <td>OS (Left)</td>
+                <td id="p_osSph">-</td>
+                <td id="p_osCyl">-</td>
+                <td id="p_osAxis">-</td>
+                <td id="p_osAdd">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <b>Comments:</b>
         <div id="p_notes" class="notes-box" style="display:none;"></div>
+        
+        <div id="p_terms" class="terms-box" style="display:none;">
+          <strong>Terms & Definitions:</strong><br>
+          <span id="p_termsText"></span>
+        </div>
         
         <p>Should there be any queries, please do not hesitate to contact us.</p>
         
         <div class="signature">
           <p>Kind regards,</p>
-          <p><strong id="p_doctorSign">Optom. XYZ</strong><br>
-          <span id="p_qual">Qualifaction (UJ)</span></p>
+          <p><strong id="p_doctorSign">Optometrist XYZ</strong><br>
+          <span id="p_qual">Qualification (UJ)</span></p>
         </div>
         
         <div class="color-strip"></div>
       </div>
       
       <div class="letter-footer">
-        <p>A valid sick note must be issued and signed by a medical practitioner registered with the Health Professions Council of South Africa (HPCSA).</p>
+        <p>© 2026 <a href="https://akhtar.co.za/" target="_blank">Akhtar.co.za</a></p>
       </div>
     </div>
   </div>
@@ -421,19 +494,10 @@
       specsavers: "/img/specsavers.png",
       company: "/img/company.png"
     };
-    const STORAGE_KEY = 'sickNoteData';
+    const PRACTICE_STORAGE_KEY = 'optom_practice_settings';
+    const LETTER_STORAGE_KEY = 'optom_letter_settings';
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Verify html2pdf loaded correctly
-      if (typeof html2pdf === 'undefined') {
-        console.error('html2pdf.js failed to load. PDF export will not work.');
-        const btn = document.getElementById('btnSavePdf');
-        if (btn) {
-          btn.disabled = true;
-          btn.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> PDF Library Failed to Load';
-        }
-      }
-
       loadState();
       updateAll();
 
@@ -472,138 +536,125 @@
     });
 
     function saveState() {
-      const data = {
+      const practiceData = {
         logoSelector: document.getElementById('logoSelector').value,
         customLogoData: document.getElementById('logoSelector').value === 'custom' ? document.getElementById('logoImg').src : '',
         themeColor: document.getElementById('themeColor').value,
-        headlineInput: document.getElementById('headlineInput').value,
         practiceNo: document.getElementById('practiceNo').value,
-        letterDate: document.getElementById('letterDate').value,
         practiceName: document.getElementById('practiceName').value,
         practiceAddress: document.getElementById('practiceAddress').value,
         practiceEmail: document.getElementById('practiceEmail').value,
         practicePhone: document.getElementById('practicePhone').value,
+        doctorName: document.getElementById('doctorName').value,
+        doctorQual: document.getElementById('doctorQual').value,
+      };
+      
+      const letterData = {
+        headlineInput: document.getElementById('headlineInput').value,
+        letterDate: document.getElementById('letterDate').value,
         patientName: document.getElementById('patientName').value,
         patientGender: document.getElementById('patientGender').value,
         attendanceDate: document.getElementById('attendanceDate').value,
         escort: document.getElementById('escort').value,
+        salutation: document.getElementById('salutation').value,
         letterSubject: document.getElementById('letterSubject').value,
-        doctorName: document.getElementById('doctorName').value,
-        doctorQual: document.getElementById('doctorQual').value,
         reason: document.getElementById('reason').value,
         showExcuse: document.getElementById('showExcuse').checked,
         excuseType: document.getElementById('excuseType').value,
         durationType: document.getElementById('durationType').value,
-        additionalNotes: document.getElementById('additionalNotes').value
+        additionalNotes: document.getElementById('additionalNotes').value,
+        odSph: document.getElementById('odSph').value,
+        odCyl: document.getElementById('odCyl').value,
+        odAxis: document.getElementById('odAxis').value,
+        odAdd: document.getElementById('odAdd').value,
+        osSph: document.getElementById('osSph').value,
+        osCyl: document.getElementById('osCyl').value,
+        osAxis: document.getElementById('osAxis').value,
+        osAdd: document.getElementById('osAdd').value,
+        termsDefinitions: document.getElementById('termsDefinitions').value
       };
+
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        localStorage.setItem(PRACTICE_STORAGE_KEY, JSON.stringify(practiceData));
+        localStorage.setItem(LETTER_STORAGE_KEY, JSON.stringify(letterData));
       } catch (e) {
         console.warn('localStorage quota exceeded. Custom logo may be too large.');
       }
     }
 
     function loadState() {
-      const saved = localStorage.getItem(STORAGE_KEY);
       const today = new Date().toISOString().split('T')[0];
-
-      if (saved) {
-        const data = JSON.parse(saved);
-        document.getElementById('logoSelector').value = data.logoSelector || 'company';
-        
-        if (data.logoSelector === 'custom' && data.customLogoData) {
-          document.getElementById('logoImg').src = data.customLogoData;
+      
+      const savedPractice = localStorage.getItem(PRACTICE_STORAGE_KEY);
+      if (savedPractice) {
+        const p = JSON.parse(savedPractice);
+        document.getElementById('logoSelector').value = p.logoSelector || 'company';
+        if (p.logoSelector === 'custom' && p.customLogoData) {
+          document.getElementById('logoImg').src = p.customLogoData;
           document.getElementById('customLogoField').classList.remove('hidden');
         } else {
           updateLogo();
         }
-        
-        document.getElementById('themeColor').value = data.themeColor || '#d9534f';
+        document.getElementById('themeColor').value = p.themeColor || '#d9534f';
         document.documentElement.style.setProperty('--primary-color', document.getElementById('themeColor').value);
-        document.getElementById('headlineInput').value = data.headlineInput || '';
-        document.getElementById('practiceNo').value = data.practiceNo || '0XXXXXX';
-        document.getElementById('letterDate').value = data.letterDate || today;
-        document.getElementById('practiceName').value = data.practiceName || '123 Clinic';
-        document.getElementById('practiceAddress').value = data.practiceAddress || 'XYZ Centre, ABC Drive, PQR City';
-        document.getElementById('practiceEmail').value = data.practiceEmail || 'clinic@example.co.za';
-        document.getElementById('practicePhone').value = data.practicePhone || '011 XXX XXXX';
-        document.getElementById('patientName').value = data.patientName || 'Patient Name';
-        document.getElementById('patientGender').value = data.patientGender || 'male';
-        document.getElementById('attendanceDate').value = data.attendanceDate || today;
-        document.getElementById('escort').value = data.escort || 'Self';
-        document.getElementById('letterSubject').value = data.letterSubject || '';
-        document.getElementById('doctorName').value = data.doctorName || 'Mr XYZ';
-        document.getElementById('doctorQual').value = data.doctorQual || 'Qualification (UJ)';
-        document.getElementById('reason').value = data.reason || 'was present at our clinic for a full eye test and was prescribed new spectacles for regular use.';
-        document.getElementById('showExcuse').checked = data.showExcuse !== undefined ? data.showExcuse : true;
-        document.getElementById('excuseType').value = data.excuseType || 'work';
-        document.getElementById('durationType').value = data.durationType || 'the day';
-        document.getElementById('additionalNotes').value = data.additionalNotes || '';
+        document.getElementById('practiceNo').value = p.practiceNo || '0XXXXXX';
+        document.getElementById('practiceName').value = p.practiceName || '123 Clinic';
+        document.getElementById('practiceAddress').value = p.practiceAddress || 'XYZ Centre, ABC Drive, PQR City';
+        document.getElementById('practiceEmail').value = p.practiceEmail || 'clinic@example.co.za';
+        document.getElementById('practicePhone').value = p.practicePhone || '011 XXX XXXX';
+        document.getElementById('doctorName').value = p.doctorName || 'XYZ';
+        document.getElementById('doctorQual').value = p.doctorQual || 'Qualification (UJ)';
+      }
+
+      const savedLetter = localStorage.getItem(LETTER_STORAGE_KEY);
+      if (savedLetter) {
+        const l = JSON.parse(savedLetter);
+        document.getElementById('headlineInput').value = l.headlineInput || '';
+        document.getElementById('letterDate').value = l.letterDate || today;
+        document.getElementById('patientName').value = l.patientName || 'Patient Name';
+        document.getElementById('patientGender').value = l.patientGender || 'male';
+        document.getElementById('attendanceDate').value = l.attendanceDate || today;
+        document.getElementById('escort').value = l.escort || 'Self';
+        document.getElementById('salutation').value = l.salutation || 'To whom it may concern,';
+        document.getElementById('letterSubject').value = l.letterSubject || '';
+        document.getElementById('reason').value = l.reason || 'was present at our clinic for a full eye test and was prescribed new spectacles for regular use.';
+        document.getElementById('showExcuse').checked = l.showExcuse !== undefined ? l.showExcuse : true;
+        document.getElementById('excuseType').value = l.excuseType || 'work';
+        document.getElementById('durationType').value = l.durationType || 'the day';
+        document.getElementById('additionalNotes').value = l.additionalNotes || '';
+        document.getElementById('odSph').value = l.odSph || '';
+        document.getElementById('odCyl').value = l.odCyl || '';
+        document.getElementById('odAxis').value = l.odAxis || '';
+        document.getElementById('odAdd').value = l.odAdd || '';
+        document.getElementById('osSph').value = l.osSph || '';
+        document.getElementById('osCyl').value = l.osCyl || '';
+        document.getElementById('osAxis').value = l.osAxis || '';
+        document.getElementById('osAdd').value = l.osAdd || '';
+        document.getElementById('termsDefinitions').value = l.termsDefinitions || '';
       } else {
         document.getElementById('letterDate').value = today;
         document.getElementById('attendanceDate').value = today;
       }
     }
 
-    function resetDefaults() {
-      localStorage.removeItem(STORAGE_KEY);
+    function resetLetterDefaults() {
+      localStorage.removeItem(LETTER_STORAGE_KEY);
       location.reload();
     }
 
-    function saveAsPDF() {
-      if (typeof html2pdf === 'undefined') {
-        alert('PDF library failed to load. Please check your internet connection and refresh the page.');
-        return;
-      }
-
-      const btn = document.getElementById('btnSavePdf');
-      const overlay = document.getElementById('loadingOverlay');
-      const element = document.getElementById('letter-preview');
-      
-      // Hide footer during PDF generation (it's meant for screen only)
-      const footer = document.querySelector('.letter-footer');
-      const footerOriginalDisplay = footer.style.display;
-      footer.style.display = 'none';
-
+    function printLetter() {
       const patientName = document.getElementById('patientName').value.trim() || 'Patient';
-      const letterDate = document.getElementById('letterDate').value;
-      const dateFormatted = letterDate ? letterDate.replace(/-/g, '') : 'NoDate';
-      
-      // Sanitize filename - remove characters that are invalid in filenames
       const safeName = patientName.replace(/[^a-zA-Z0-9\s\-_]/g, '').replace(/\s+/g, '_');
-      const filename = `Sick_Note_${safeName}_${dateFormatted}.pdf`;
+      const originalTitle = document.title;
       
-      const opt = {
-        margin: 0,
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2, 
-          useCORS: true, 
-          logging: false,
-          letterRendering: true,
-          backgroundColor: '#ffffff'
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
+      document.title = `Medical_Letter_${safeName}`;
       
-      // Show loading state
-      btn.disabled = true;
-      overlay.classList.add('active');
-      
-      html2pdf().set(opt).from(element).save()
-        .then(() => {
-          footer.style.display = footerOriginalDisplay;
-          btn.disabled = false;
-          overlay.classList.remove('active');
-        })
-        .catch((err) => {
-          console.error('PDF generation failed:', err);
-          footer.style.display = footerOriginalDisplay;
-          btn.disabled = false;
-          overlay.classList.remove('active');
-          alert('Failed to generate PDF. Check console for details.');
-        });
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => {
+          document.title = originalTitle;
+        }, 1000);
+      }, 100);
     }
 
     function updateLogo() {
@@ -630,7 +681,7 @@
 
       document.getElementById('p_practiceNo').textContent = document.getElementById('practiceNo').value || '[Practice No.]';
       document.getElementById('p_practiceName').textContent = document.getElementById('practiceName').value || '[Practice Name]';
-      document.getElementById('p_address').innerHTML = document.getElementById('practiceAddress').value.replace(/\n/g, '<br>') || '[Address]';
+      document.getElementById('p_address').innerHTML = (document.getElementById('practiceAddress').value || '[Address]').replace(/\n/g, '<br>');
       document.getElementById('p_email').textContent = document.getElementById('practiceEmail').value;
       document.getElementById('p_phone').textContent = document.getElementById('practicePhone').value;
 
@@ -648,6 +699,8 @@
       document.getElementById('p_pronounCap').textContent = pronounSubj;
       document.getElementById('p_pronounObj').textContent = pronounObj;
 
+      document.getElementById('p_salutation').textContent = document.getElementById('salutation').value || 'To whom it may concern,';
+
       const subjectVal = document.getElementById('letterSubject').value.trim();
       const subjectEl = document.getElementById('p_letterSubject');
       if (subjectVal) {
@@ -661,8 +714,9 @@
       document.getElementById('p_escort').textContent = document.getElementById('escort').value || 'Self';
       
       const docName = document.getElementById('doctorName').value.trim();
-      document.getElementById('p_doctor').textContent = docName ? `Optometrist ${docName}` : 'Optometrist [Name]';
-      document.getElementById('p_doctorSign').textContent = docName ? `${docName} Optometrist` : 'Optometrist [Name]';
+      const formattedDocName = docName ? `Optometrist ${docName}` : 'Optometrist [Name]';
+      document.getElementById('p_doctor').textContent = formattedDocName;
+      document.getElementById('p_doctorSign').textContent = formattedDocName;
       document.getElementById('p_qual').textContent = document.getElementById('doctorQual').value;
 
       document.getElementById('p_excuseType').textContent = document.getElementById('excuseType').value;
@@ -676,6 +730,33 @@
       } else {
         notesEl.style.display = 'none';
       }
+
+      const hasRx = 
+        document.getElementById('odSph').value || document.getElementById('odCyl').value ||
+        document.getElementById('osSph').value || document.getElementById('osCyl').value;
+      const rxDiv = document.getElementById('p_prescription');
+      if (hasRx) {
+        rxDiv.style.display = 'block';
+        document.getElementById('p_odSph').textContent = document.getElementById('odSph').value || '-';
+        document.getElementById('p_odCyl').textContent = document.getElementById('odCyl').value || '-';
+        document.getElementById('p_odAxis').textContent = document.getElementById('odAxis').value || '-';
+        document.getElementById('p_odAdd').textContent = document.getElementById('odAdd').value || '-';
+        document.getElementById('p_osSph').textContent = document.getElementById('osSph').value || '-';
+        document.getElementById('p_osCyl').textContent = document.getElementById('osCyl').value || '-';
+        document.getElementById('p_osAxis').textContent = document.getElementById('osAxis').value || '-';
+        document.getElementById('p_osAdd').textContent = document.getElementById('osAdd').value || '-';
+      } else {
+        rxDiv.style.display = 'none';
+      }
+
+      const terms = document.getElementById('termsDefinitions').value.trim();
+      const termsEl = document.getElementById('p_terms');
+      if (terms) {
+        termsEl.style.display = 'block';
+        document.getElementById('p_termsText').innerHTML = terms.replace(/\n/g, '<br>');
+      } else {
+        termsEl.style.display = 'none';
+      }
       
       updateExcuseVisibility();
       saveState();
@@ -688,6 +769,4 @@
     }
   </script>
 </body>
-  
-  <script src="https://theattn.com/load.js"></script>
 </html>
