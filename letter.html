@@ -638,7 +638,7 @@
       const safeName = patientName.replace(/[^a-zA-Z0-9\s\-_]/g, '').replace(/\s+/g, '_');
       const originalTitle = document.title;
       
-      document.title = `Medical_Letter_${safeName}`;
+      document.title = `Letter_${safeName}`;
       
       setTimeout(() => {
         window.print();
