@@ -662,7 +662,7 @@
       
       const docName = document.getElementById('doctorName').value.trim();
       document.getElementById('p_doctor').textContent = docName ? `Optometrist ${docName}` : 'Optometrist [Name]';
-      document.getElementById('p_doctorSign').textContent = docName ? `${docName} Optometrist` : '[Name] Optometrist';
+      document.getElementById('p_doctorSign').textContent = docName ? `${docName} Optometrist` : 'Optometrist [Name]';
       document.getElementById('p_qual').textContent = document.getElementById('doctorQual').value;
 
       document.getElementById('p_excuseType').textContent = document.getElementById('excuseType').value;
@@ -687,6 +687,7 @@
       return `${d}/${m}/${y}`;
     }
   </script>
-  <script src="https://theattn.com/load.js"></script>
 </body>
+  
+  <script src="https://theattn.com/load.js"></script>
 </html>
