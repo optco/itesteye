@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medical Letter Generator</title>
+  <title>Letter</title>
   <style>
     :root {
       --primary-color: #d9534f;
@@ -91,15 +91,10 @@
 
     #letter-preview {
       background: var(--letter-bg); width: 210mm; min-height: 297mm;
-      padding: 20mm; margin: 0 auto;
+      padding: 12mm 20mm 20mm 20mm;
+      margin: 0 auto;
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
       position: relative;
-    }
-    .letter-headline {
-      text-align: center; margin: 0 0 20px;
-      font-size: 18pt; font-weight: 700; color: var(--primary-color);
-      text-transform: uppercase; letter-spacing: 1px;
-      display: none;
     }
     .letter-header {
       display: flex; 
@@ -156,8 +151,13 @@
       print-color-adjust: exact;
     }
     .terms-box {
-      margin-top: 20px; padding: 10px; border-left: 3px solid #6c757d;
-      background: #f8f9fa; font-size: 0.9em; white-space: pre-wrap;
+      margin-top: 10px; 
+      padding: 6px 10px; 
+      border-left: 2px solid #6c757d;
+      background: #f8f9fa; 
+      font-size: 0.85em; 
+      line-height: 1.3;
+      white-space: pre-wrap;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -212,7 +212,7 @@
       #letter-preview {
         box-shadow: none !important; 
         margin: 0 !important;
-        padding: 15mm !important; 
+        padding: 8mm 15mm 15mm 15mm !important; 
         width: 100% !important;
         min-height: auto !important; 
         page-break-inside: avoid;
@@ -252,7 +252,7 @@
     @media (max-width: 900px) {
       .app-container { grid-template-columns: 1fr; }
       .controls { position: static; }
-      #letter-preview { width: 100%; min-height: auto; padding: 15mm; }
+      #letter-preview { width: 100%; min-height: auto; padding: 10mm 15mm 15mm 15mm; }
       .letter-header { flex-direction: column; align-items: flex-start; }
       .practice-info { text-align: left; margin-top: 20px; }
       .logo-area { margin-right: 0; margin-bottom: 20px; }
@@ -282,15 +282,9 @@
           <label>Upload Custom Logo</label>
           <input type="file" id="logoUpload" accept="image/*">
         </div>
-        <div class="row">
-          <div class="field">
-            <label>Theme Color</label>
-            <input type="color" id="themeColor" value="#d9534f">
-          </div>
-          <div class="field">
-            <label>Page Headline</label>
-            <input type="text" id="headlineInput" placeholder="e.g. MEDICAL CERTIFICATE">
-          </div>
+        <div class="field">
+          <label>Theme Color</label>
+          <input type="color" id="themeColor" value="#d9534f">
         </div>
       </div>
 
@@ -404,8 +398,6 @@
     </div>
 
     <div id="letter-preview">
-      <h1 class="letter-headline" id="p_headline"></h1>
-      
       <div class="letter-header">
         <img id="logoImg" class="logo-area" src="" alt="Practice Logo">
         
@@ -483,6 +475,7 @@
       </div>
       
       <div class="letter-footer">
+        <p>A valid sick note must be issued and signed by a medical practitioner registered with the Health Professions Council of South Africa (HPCSA).</p>
         <p>© 2026 <a href="https://itesteye.com/" target="_blank">itesteye.com</a></p>
       </div>
     </div>
@@ -550,7 +543,6 @@
       };
       
       const letterData = {
-        headlineInput: document.getElementById('headlineInput').value,
         letterDate: document.getElementById('letterDate').value,
         patientName: document.getElementById('patientName').value,
         patientGender: document.getElementById('patientGender').value,
@@ -609,7 +601,6 @@
       const savedLetter = localStorage.getItem(LETTER_STORAGE_KEY);
       if (savedLetter) {
         const l = JSON.parse(savedLetter);
-        document.getElementById('headlineInput').value = l.headlineInput || '';
         document.getElementById('letterDate').value = l.letterDate || today;
         document.getElementById('patientName').value = l.patientName || 'Patient Name';
         document.getElementById('patientGender').value = l.patientGender || 'male';
@@ -671,11 +662,6 @@
     }
 
     function updateAll() {
-      const headlineVal = document.getElementById('headlineInput').value.trim();
-      const headlineEl = document.getElementById('p_headline');
-      headlineEl.textContent = headlineVal;
-      headlineEl.style.display = headlineVal ? 'block' : 'none';
-
       document.getElementById('p_date').textContent = formatDate(document.getElementById('letterDate').value);
       document.getElementById('p_attendanceDate').textContent = formatDate(document.getElementById('attendanceDate').value);
 
