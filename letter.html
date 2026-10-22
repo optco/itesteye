@@ -372,7 +372,12 @@
         </div>
         <div class="field"><label>Additional Notes</label><textarea id="additionalNotes" rows="3" placeholder="Leave blank to hide..."></textarea></div>
       </div>
-
+ <div class="control-section">
+        <div class="field">
+          <label>Explain terms for patient understanding</label>
+          <textarea id="termsDefinitions" rows="4" placeholder="e.g., OD = Right Eye, OS = Left Eye, Sph = Sphere..."></textarea>
+        </div>
+      </div>
       <div class="control-section">
         <h3>Patient Prescription (Optional)</h3>
         <div class="field">
@@ -395,12 +400,7 @@
         </div>
       </div>
 
-      <div class="control-section">
-        <div class="field">
-          <label>Explain terms for patient understanding</label>
-          <textarea id="termsDefinitions" rows="4" placeholder="e.g., OD = Right Eye, OS = Left Eye, Sph = Sphere..."></textarea>
-        </div>
-      </div>
+     
 
       <div class="control-section">
         <button class="btn-export" id="btnPrint" onclick="printLetter()"><i class="fa fa-print" aria-hidden="true"></i> Print / Save as PDF</button>
