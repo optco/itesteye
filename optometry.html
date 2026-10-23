@@ -242,11 +242,13 @@
             const seOSExact = convertedSphOS + (convertedCylOS / 2);
             const seOSRounded = mround(seOSExact, 0.25);
 
-            // Check the INPUT value to ensure 0.75 is never hidden, while 0.50, 0.25, and 0 remain hidden
-            const showCylOD = Math.abs(cylOD) >= 0.75;
-            const showCylOS = Math.abs(cylOS) >= 0.75;
-            const showActualCylOD = Math.abs(cylOD) >= 0.75;
-            const showActualCylOS = Math.abs(cylOS) >= 0.75;
+            // Show cylinder if user entered >= 0.75 OR if the actual converted cylinder is >= 0.75
+            const showCylOD = Math.abs(cylOD) >= 0.75 || Math.abs(actualCylOD) >= 0.75;
+            const showCylOS = Math.abs(cylOS) >= 0.75 || Math.abs(actualCylOS) >= 0.75;
+            
+            // For the "Actual Conversion" text line, only show if the actual converted value is >= 0.75
+            const showActualCylOD = Math.abs(actualCylOD) >= 0.75;
+            const showActualCylOS = Math.abs(actualCylOS) >= 0.75;
 
             const sphStyleOD = getPowerStyle(convertedSphOD);
             const cylStyleOD = getPowerStyle(convertedCylOD);
@@ -298,28 +300,32 @@
             const d4OD = sphOD + cylOD;
             const d7OD = convertPower(sphOD, vertexDistance);
             const d14OD = convertPower(d4OD, vertexDistance);
-            const convertedCylOD = roundCLCylinder(d14OD - d7OD);
+            const d9OD = d14OD - d7OD;
+            const actualCylOD = mround(d9OD, 0.25);
+            const convertedCylOD = roundCLCylinder(d9OD);
             const convertedSphOD = mround(d7OD, 0.25);
             const roundedAxisOD = roundAxis(axisOD);
             
             const d4OS = sphOS + cylOS;
             const d7OS = convertPower(sphOS, vertexDistance);
             const d14OS = convertPower(d4OS, vertexDistance);
-            const convertedCylOS = roundCLCylinder(d14OS - d7OS);
+            const d9OS = d14OS - d7OS;
+            const actualCylOS = mround(d9OS, 0.25);
+            const convertedCylOS = roundCLCylinder(d9OS);
             const convertedSphOS = mround(d7OS, 0.25);
             const roundedAxisOS = roundAxis(axisOS);
 
-            // Match display logic: show if user entered >= 0.75
-            const showCylOD = Math.abs(cylOD) >= 0.75;
-            const showCylOS = Math.abs(cylOS) >= 0.75;
+            // Match display logic for copy: show if input >= 0.75 OR actual converted >= 0.75
+            const showCylODCopy = Math.abs(cylOD) >= 0.75 || Math.abs(actualCylOD) >= 0.75;
+            const showCylOSCopy = Math.abs(cylOS) >= 0.75 || Math.abs(actualCylOS) >= 0.75;
 
             let textToCopy = `Right Eye (OD)\nSPH: ${convertedSphOD.toFixed(2)} D`;
-            if (showCylOD) {
+            if (showCylODCopy) {
                 textToCopy += `\nCYL: ${convertedCylOD.toFixed(2)} D\nAxis: ${roundedAxisOD}`;
             }
             
             textToCopy += `\n\nLeft Eye (OS)\nSPH: ${convertedSphOS.toFixed(2)} D`;
-            if (showCylOS) {
+            if (showCylOSCopy) {
                 textToCopy += `\nCYL: ${convertedCylOS.toFixed(2)} D\nAxis: ${roundedAxisOS}`;
             }
 
