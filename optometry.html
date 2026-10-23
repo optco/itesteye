@@ -61,6 +61,7 @@
         <div class="tab-content glass">
             <h2><i class="fa fa-random" aria-hidden="true"></i> Spectacles To Contact Lens Converter</h2>
             <div class="main">
+                <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Spectacles Script</h3>
                 <div class="input-section">
                     <div class="radio-group">
                         <div class="radio-options">
@@ -93,7 +94,7 @@
                             <label for="axisOD">Axis:</label>
                             <div class="stepper">
                                 <button class="stepper-btn" type="button" onclick="adjustAxis('axisOD', -5)">−</button>
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOD" placeholder="180" oninput="convertPrescription()">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOD" placeholder="0" oninput="convertPrescription()">
                                 <button class="stepper-btn" type="button" onclick="adjustAxis('axisOD', 5)">+</button>
                             </div>
                         </div>
@@ -121,7 +122,7 @@
                             <label for="axisOS">Axis:</label>
                             <div class="stepper">
                                 <button class="stepper-btn" type="button" onclick="adjustAxis('axisOS', -5)">−</button>
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOS" placeholder="180" oninput="convertPrescription()">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOS" placeholder="0" oninput="convertPrescription()">
                                 <button class="stepper-btn" type="button" onclick="adjustAxis('axisOS', 5)">+</button>
                             </div>
                         </div>
@@ -129,7 +130,7 @@
                 </div>
 
                 <div class="result-section glass">
-                    <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Results</h3>
+                    <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Contact Lens Script</h3>
                     <div id="liveResults"></div>
                     <span class="disclaimer" style="display: block; margin-top: 12px; font-size: 0.85rem; opacity: 0.8;">Results may vary for values greater than 10.75</span>
                 </div> 
@@ -153,7 +154,7 @@
             if (val === 0 && delta < 0) {
                 val = 180;
             } else if (val === 180 && delta > 0) {
-                val = 1;
+                val = 0;
             } else {
                 val = val + delta;
                 if (val < 0) val = 0;
