@@ -159,6 +159,14 @@
             return rounded === 0 ? 180 : rounded;
         }
 
+        function roundCLCylinder(value) {
+            if (Math.abs(value) < 0.75) return 0;
+            const absVal = Math.abs(value);
+            const n = Math.floor((absVal - 0.75) / 0.5);
+            const roundedAbs = n * 0.5 + 0.75;
+            return value < 0 ? -roundedAbs : roundedAbs;
+        }
+
         function getVertexDistance() {
             return parseFloat(document.querySelector('input[name="vertexDistance"]:checked').value);
         }
@@ -183,7 +191,7 @@
             const d7OD = convertPower(sphOD, vertexDistance);
             const d14OD = convertPower(d4OD, vertexDistance);
             const d9OD = d14OD - d7OD;
-            const convertedCylOD = mround(d9OD, 0.25);
+            const convertedCylOD = roundCLCylinder(d9OD);
             const convertedSphOD = mround(d7OD, 0.25);
             const roundedAxisOD = roundAxis(axisOD);
             const seODExact = convertedSphOD + (convertedCylOD / 2);
@@ -197,7 +205,7 @@
             const d7OS = convertPower(sphOS, vertexDistance);
             const d14OS = convertPower(d4OS, vertexDistance);
             const d9OS = d14OS - d7OS;
-            const convertedCylOS = mround(d9OS, 0.25);
+            const convertedCylOS = roundCLCylinder(d9OS);
             const convertedSphOS = mround(d7OS, 0.25);
             const roundedAxisOS = roundAxis(axisOS);
             const seOSExact = convertedSphOS + (convertedCylOS / 2);
@@ -248,14 +256,14 @@
             const d4OD = sphOD + cylOD;
             const d7OD = convertPower(sphOD, vertexDistance);
             const d14OD = convertPower(d4OD, vertexDistance);
-            const convertedCylOD = mround(d14OD - d7OD, 0.25);
+            const convertedCylOD = roundCLCylinder(d14OD - d7OD);
             const convertedSphOD = mround(d7OD, 0.25);
             const roundedAxisOD = roundAxis(axisOD);
             
             const d4OS = sphOS + cylOS;
             const d7OS = convertPower(sphOS, vertexDistance);
             const d14OS = convertPower(d4OS, vertexDistance);
-            const convertedCylOS = mround(d14OS - d7OS, 0.25);
+            const convertedCylOS = roundCLCylinder(d14OS - d7OS);
             const convertedSphOS = mround(d7OS, 0.25);
             const roundedAxisOS = roundAxis(axisOS);
 
