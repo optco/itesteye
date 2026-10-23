@@ -92,9 +92,9 @@
                         <div class="input-group">
                             <label for="axisOD">Axis:</label>
                             <div class="stepper">
-                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOD', -5)">−</button>
+                                <button class="stepper-btn" type="button" onclick="adjustAxis('axisOD', -5)">−</button>
                                 <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOD" placeholder="180" oninput="convertPrescription()">
-                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOD', 5)">+</button>
+                                <button class="stepper-btn" type="button" onclick="adjustAxis('axisOD', 5)">+</button>
                             </div>
                         </div>
                     </div>
@@ -120,16 +120,16 @@
                         <div class="input-group">
                             <label for="axisOS">Axis:</label>
                             <div class="stepper">
-                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOS', -5)">−</button>
+                                <button class="stepper-btn" type="button" onclick="adjustAxis('axisOS', -5)">−</button>
                                 <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOS" placeholder="180" oninput="convertPrescription()">
-                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOS', 5)">+</button>
+                                <button class="stepper-btn" type="button" onclick="adjustAxis('axisOS', 5)">+</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="result-section glass">
-                    <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Contact Lens Script</h3>
+                    <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Results</h3>
                     <div id="liveResults"></div>
                     <span class="disclaimer" style="display: block; margin-top: 12px; font-size: 0.85rem; opacity: 0.8;">Results may vary for values greater than 10.75</span>
                 </div> 
@@ -143,6 +143,24 @@
             let val = parseFloat(input.value) || 0;
             val = Math.round((val + delta) * 4) / 4;
             input.value = val.toFixed(2);
+            convertPrescription();
+        }
+
+        function adjustAxis(id, delta) {
+            const input = document.getElementById(id);
+            let val = parseInt(input.value) || 0;
+            
+            if (val === 0 && delta < 0) {
+                val = 180;
+            } else if (val === 180 && delta > 0) {
+                val = 1;
+            } else {
+                val = val + delta;
+                if (val < 0) val = 0;
+                if (val > 180) val = 180;
+            }
+            
+            input.value = val;
             convertPrescription();
         }
 
@@ -182,7 +200,7 @@
 
             const sphOD = parseFloat(document.getElementById("sphOD").value) || 0;
             const cylOD = parseFloat(document.getElementById("cylOD").value) || 0;
-            const axisOD = parseFloat(document.getElementById("axisOD").value) || 0;
+            const axisOD = parseInt(document.getElementById("axisOD").value) || 0;
 
             const d4OD = sphOD + cylOD;
             const d7OD = convertPower(sphOD, vertexDistance);
@@ -198,7 +216,7 @@
 
             const sphOS = parseFloat(document.getElementById("sphOS").value) || 0;
             const cylOS = parseFloat(document.getElementById("cylOS").value) || 0;
-            const axisOS = parseFloat(document.getElementById("axisOS").value) || 0;
+            const axisOS = parseInt(document.getElementById("axisOS").value) || 0;
 
             const d4OS = sphOS + cylOS;
             const d7OS = convertPower(sphOS, vertexDistance);
@@ -252,10 +270,10 @@
         function copyResults() {
             const sphOD = parseFloat(document.getElementById("sphOD").value) || 0;
             const cylOD = parseFloat(document.getElementById("cylOD").value) || 0;
-            const axisOD = parseFloat(document.getElementById("axisOD").value) || 0;
+            const axisOD = parseInt(document.getElementById("axisOD").value) || 0;
             const sphOS = parseFloat(document.getElementById("sphOS").value) || 0;
             const cylOS = parseFloat(document.getElementById("cylOS").value) || 0;
-            const axisOS = parseFloat(document.getElementById("axisOS").value) || 0;
+            const axisOS = parseInt(document.getElementById("axisOS").value) || 0;
             const vertexDistance = getVertexDistance();
             
             const d4OD = sphOD + cylOD;
