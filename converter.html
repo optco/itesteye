@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Lens Converter | Optometry Tools</title>
+    <link rel="icon" type="image/x-icon" href="https://akhtar.co.za/favicons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://akhtar.co.za/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://akhtar.co.za/favicons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://akhtar.co.za/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="https://akhtar.co.za/favicons/site.webmanifest">
+    
+    <meta name="keywords" content="contact lens script converter, spectacle to contact lens conversion, vertex distance calculator, cylinder conversion for contact lenses, online contact lens formula tool, offline contact lens converter, toric lens prescription tool, eyecare professional tool, optometry calculator, glasses to contacts conversion, contact lens vertex formula, contact lens sph cyl axis converter, south africa">
+    <meta name="description" content="An offline contact lens prescription converter that calculates contact lens power from spectacle scripts using vertex distance, cylinder conversion, and axis rounding. Ideal for optometrists and eyecare professionals.">
+
+    <link rel="stylesheet" href="/css/optometry.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <button class="hamburger-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    <div class="hamburger-menu" id="hamburgerMenu">
+        <div class="menu-links">
+            <a class="menu-item" href="index.html">
+                <i class="fas fa-th-large" aria-hidden="true"></i> All Resources
+            </a>
+            <a class="menu-item" href="https://itesteye.com/therapeutics" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-prescription-bottle-medical" aria-hidden="true"></i> Therapeutics
+            </a>
+            <a href="https://shamsi.co.za" target="_blank" rel="noopener noreferrer" class="menu-item">
+                <i class="fas fa-house-chimney" aria-hidden="true"></i> Properties
+            </a>
+            <a class="menu-item" href="https://theattn.com/poster" rel="noopener noreferrer" target="_blank">
+                <i class="fas fa-image" aria-hidden="true"></i> Poster Maker
+            </a>
+            <a class="menu-item" href="https://theattn.com/invoice" rel="noopener noreferrer" target="_blank">
+                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Invoice Maker
+            </a>
+            <a class="menu-item" href="/letter" rel="noopener noreferrer" target="_blank" title="A valid sick note must be issued and signed by a medical practitioner registered with the HPCSA">
+                <i class="fas fa-file-pen" aria-hidden="true"></i> Letter Maker
+            </a>
+            <a href="/search" target="_blank" rel="noopener noreferrer" class="menu-item">
+                <i class="fas fa-magnifying-glass" aria-hidden="true"></i> Advanced Search
+            </a>
+            <a href="https://gbps.me" target="_blank" rel="noopener noreferrer" class="menu-item">
+                <i class="fas fa-gauge-high" aria-hidden="true"></i> Speed Test
+            </a>
+            <a href="https://instagram.com/itesteye" target="_blank" rel="noopener noreferrer" class="menu-item">
+                <i class="fas fa-user" aria-hidden="true"></i> Follow Akhtar
+            </a>
+        </div> 
+    </div>
+
+    <div class="main-container">
+        <div style="margin-bottom: 20px;">
+            <a href="index.html" style="color: var(--accent-glow, #3b82f6); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back to All Resources
+            </a>
+        </div>
+
+        <div class="tab-content glass">
+            <h2><i class="fa fa-random" aria-hidden="true"></i> Spectacles To Contact Lens Converter</h2>
+            <div class="main">
+                <div class="input-section">
+                    <div class="radio-group">
+                        <div class="radio-options">
+                            <span class="radio-title">BVD:</span>
+                            <label><input type="radio" name="vertexDistance" value="10" onchange="convertPrescription()"> 10mm</label>
+                            <label><input type="radio" name="vertexDistance" value="12" checked onchange="convertPrescription()"> 12mm</label>
+                            <label><input type="radio" name="vertexDistance" value="14" onchange="convertPrescription()"> 14mm</label>
+                        </div>
+                    </div>
+
+                    <div class="result-section glass">
+                        <h3 style="font-size: 1.3rem;">Right Eye (OD)</h3>
+                        <div class="input-group">
+                            <label for="sphOD">Sphere:</label>
+                            <div class="stepper">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('sphOD', -0.25)">−</button>
+                                <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="sphOD" placeholder="0.00" oninput="convertPrescription()">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('sphOD', 0.25)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="cylOD">Cylinder:</label>
+                            <div class="stepper">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('cylOD', -0.25)">−</button>
+                                <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="cylOD" placeholder="0.00" oninput="convertPrescription()">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('cylOD', 0.25)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="axisOD">Axis:</label>
+                            <div class="stepper">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOD', -5)">−</button>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOD" placeholder="180" oninput="convertPrescription()">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOD', 5)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="result-section glass">
+                        <h3 style="font-size: 1.3rem;">Left Eye (OS)</h3>
+                        <div class="input-group">
+                            <label for="sphOS">Sphere:</label>
+                            <div class="stepper">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('sphOS', -0.25)">−</button>
+                                <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="sphOS" placeholder="0.00" oninput="convertPrescription()">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('sphOS', 0.25)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="cylOS">Cylinder:</label>
+                            <div class="stepper">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('cylOS', -0.25)">−</button>
+                                <input type="text" inputmode="decimal" pattern="[+-]?[0-9]*\.?[0-9]*" id="cylOS" placeholder="0.00" oninput="convertPrescription()">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('cylOS', 0.25)">+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="axisOS">Axis:</label>
+                            <div class="stepper">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOS', -5)">−</button>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="axisOS" placeholder="180" oninput="convertPrescription()">
+                                <button class="stepper-btn" type="button" onclick="adjustValue('axisOS', 5)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-section glass">
+                    <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Results</h3>
+                    <div id="liveResults"></div>
+                    <span class="disclaimer" style="display: block; margin-top: 12px; font-size: 0.85rem; opacity: 0.8;">Results may vary for values &gt;10.75</span>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function adjustValue(id, delta) {
+            const input = document.getElementById(id);
+            let val = parseFloat(input.value) || 0;
+            val = Math.round((val + delta) * 4) / 4;
+            input.value = val.toFixed(2);
+            convertPrescription();
+        }
+
+        function mround(value, multiple) {
+            return Math.round(value / multiple) * multiple;
+        }
+
+        function convertPower(value, vertexDistance) {
+            return ((value * value) * vertexDistance / 1000) + value;
+        }
+
+        function roundAxis(axis) {
+            let rounded = mround(axis, 10);
+            return rounded === 0 ? 180 : rounded;
+        }
+
+        function getVertexDistance() {
+            return parseFloat(document.querySelector('input[name="vertexDistance"]:checked').value);
+        }
+
+        function convertPrescription() {
+            const vertexDistance = getVertexDistance();
+            const liveResults = document.getElementById("liveResults");
+            liveResults.innerHTML = "";
+
+            const resultsBox = document.createElement("div");
+            resultsBox.style.lineHeight = "1.6";
+            resultsBox.style.padding = "20px";
+            resultsBox.style.border = "1px solid var(--glass-border, #ccc)";
+            resultsBox.style.borderRadius = "20px";
+            resultsBox.style.backgroundColor = "rgba(255, 255, 255, 0.4)";
+
+            const sphOD = parseFloat(document.getElementById("sphOD").value) || 0;
+            const cylOD = parseFloat(document.getElementById("cylOD").value) || 0;
+            const axisOD = parseFloat(document.getElementById("axisOD").value) || 0;
+
+            const d4OD = sphOD + cylOD;
+            const d7OD = convertPower(sphOD, vertexDistance);
+            const d14OD = convertPower(d4OD, vertexDistance);
+            const d9OD = d14OD - d7OD;
+            const convertedCylOD = mround(d9OD, 0.25);
+            const convertedSphOD = mround(d7OD, 0.25);
+            const roundedAxisOD = roundAxis(axisOD);
+            const seODExact = convertedSphOD + (convertedCylOD / 2);
+            const seODRounded = mround(seODExact, 0.25);
+
+            const sphOS = parseFloat(document.getElementById("sphOS").value) || 0;
+            const cylOS = parseFloat(document.getElementById("cylOS").value) || 0;
+            const axisOS = parseFloat(document.getElementById("axisOS").value) || 0;
+
+            const d4OS = sphOS + cylOS;
+            const d7OS = convertPower(sphOS, vertexDistance);
+            const d14OS = convertPower(d4OS, vertexDistance);
+            const d9OS = d14OS - d7OS;
+            const convertedCylOS = mround(d9OS, 0.25);
+            const convertedSphOS = mround(d7OS, 0.25);
+            const roundedAxisOS = roundAxis(axisOS);
+            const seOSExact = convertedSphOS + (convertedCylOS / 2);
+            const seOSRounded = mround(seOSExact, 0.25);
+
+            const output = `
+                <div id="resultsText">
+                    <div><strong>Right Eye (OD)</strong><br>
+                        <b>SPH:</b> ${convertedSphOD.toFixed(2)} D &nbsp; 
+                        <b>CYL:</b> ${convertedCylOD.toFixed(2)} D &nbsp; 
+                        <b>Axis:</b> ${roundedAxisOD}<br>
+                        <small style="color: var(--text-secondary, #666);">Spherical Eq: ${seODExact.toFixed(2)} D (or ${seODRounded.toFixed(2)} D)</small>
+                    </div><br>
+                    <div><strong>Left Eye (OS)</strong><br>
+                        <b>SPH:</b> ${convertedSphOS.toFixed(2)} D &nbsp; 
+                        <b>CYL:</b> ${convertedCylOS.toFixed(2)} D &nbsp; 
+                        <b>Axis:</b> ${roundedAxisOS}<br>
+                        <small style="color: var(--text-secondary, #666);">Spherical Eq: ${seOSExact.toFixed(2)} D (or ${seOSRounded.toFixed(2)} D)</small>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; text-align: left;">
+                    <button onclick="copyResults()" class="buttons" title="Copy results" style="padding: 8px 16px; border-radius: 8px; border: none; background: var(--accent-glow, #3b82f6); color: white; cursor: pointer; margin-right: 8px;"><i class="fa fa-clipboard" aria-hidden="true"></i> Copy</button>
+                    <button onclick="resetForm()" class="buttons" title="Reset" style="padding: 8px 16px; border-radius: 8px; border: none; background: #6b7280; color: white; cursor: pointer;"><i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+                </div> 
+            `;
+            resultsBox.innerHTML = output;
+            liveResults.appendChild(resultsBox);
+        }
+
+        function copyResults() {
+            const sphOD = parseFloat(document.getElementById("sphOD").value) || 0;
+            const cylOD = parseFloat(document.getElementById("cylOD").value) || 0;
+            const axisOD = parseFloat(document.getElementById("axisOD").value) || 0;
+            const sphOS = parseFloat(document.getElementById("sphOS").value) || 0;
+            const cylOS = parseFloat(document.getElementById("cylOS").value) || 0;
+            const axisOS = parseFloat(document.getElementById("axisOS").value) || 0;
+            const vertexDistance = getVertexDistance();
+            
+            const d4OD = sphOD + cylOD;
+            const d7OD = convertPower(sphOD, vertexDistance);
+            const d14OD = convertPower(d4OD, vertexDistance);
+            const convertedCylOD = mround(d14OD - d7OD, 0.25);
+            const convertedSphOD = mround(d7OD, 0.25);
+            const roundedAxisOD = roundAxis(axisOD);
+            
+            const d4OS = sphOS + cylOS;
+            const d7OS = convertPower(sphOS, vertexDistance);
+            const d14OS = convertPower(d4OS, vertexDistance);
+            const convertedCylOS = mround(d14OS - d7OS, 0.25);
+            const convertedSphOS = mround(d7OS, 0.25);
+            const roundedAxisOS = roundAxis(axisOS);
+
+            const textToCopy = 
+`Right Eye (OD)
+SPH: ${convertedSphOD.toFixed(2)} D
+CYL: ${convertedCylOD.toFixed(2)} D
+Axis: ${roundedAxisOD}
+
+Left Eye (OS)
+SPH: ${convertedSphOS.toFixed(2)} D
+CYL: ${convertedCylOS.toFixed(2)} D
+Axis: ${roundedAxisOS}`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("Copied");
+            }).catch(err => {
+                console.error("Copy failed:", err);
+                alert("Failed to copy");
+            });
+        }
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.textContent = msg;
+            t.style.cssText = `position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;z-index:9999;animation:slideIn 0.2s ease,fadeOut 0.2s ease 1.5s forwards`;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 1800);
+        }
+
+        function resetForm() {
+            document.querySelector('input[name="vertexDistance"][value="12"]').checked = true;
+            document.getElementById("sphOD").value = "";
+            document.getElementById("cylOD").value = "";
+            document.getElementById("axisOD").value = "";
+            document.getElementById("sphOS").value = "";
+            document.getElementById("cylOS").value = "";
+            document.getElementById("axisOS").value = "";
+            document.getElementById("liveResults").innerHTML = "";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputs = document.querySelectorAll("input[type='number'], input[type='text']");
+            inputs.forEach(input => input.addEventListener("input", convertPrescription));
+            inputs.forEach((input, index) => {
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        const nextIndex = (index + 1) % inputs.length;
+                        inputs[nextIndex].focus();
+                    }
+                });
+            });
+            convertPrescription();
+        });
+
+        function toggleMenu() {
+            const btn = document.getElementById('menuBtn');
+            const menu = document.getElementById('hamburgerMenu');
+            menu.classList.toggle('active');
+            btn.classList.toggle('active');
+            btn.textContent = menu.classList.contains('active') ? '✕' : '☰';
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('hamburgerMenu');
+            const btn = document.getElementById('menuBtn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('active');
+                btn.classList.remove('active');
+                btn.textContent = '☰';
+            }
+        });
+    </script>
+    <script src="https://theattn.com/load.js"></script>
+</body>
+</html>
