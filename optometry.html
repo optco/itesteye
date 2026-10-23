@@ -251,9 +251,9 @@
             const showActualCylOS = Math.abs(actualCylOS) >= 0.75;
 
             const sphStyleOD = getPowerStyle(convertedSphOD);
-            const cylStyleOD = getPowerStyle(convertedCylOD);
+            const cylStyleOD = getPowerStyle(actualCylOD);
             const sphStyleOS = getPowerStyle(convertedSphOS);
-            const cylStyleOS = getPowerStyle(convertedCylOS);
+            const cylStyleOS = getPowerStyle(actualCylOS);
             const axisStyle = "background: #dbeafe; color: #1e3a8a; border: 1px solid #93c5fd;";
 
             const output = `
@@ -262,7 +262,7 @@
                         <strong style="display: block; margin-bottom: 12px; font-size: 1.2rem; color: var(--accent-glow, #3b82f6); text-transform: uppercase; letter-spacing: 0.5px;">Right Eye (OD) Script</strong>
                         <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
                             <span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${sphStyleOD}">SPH: ${convertedSphOD.toFixed(2)} D</span>
-                            ${showCylOD ? `<span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${cylStyleOD}">CYL: ${convertedCylOD.toFixed(2)} D</span>` : ''}
+                            ${showCylOD ? `<span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${cylStyleOD}">CYL: ${actualCylOD.toFixed(2)} D</span>` : ''}
                             ${showCylOD ? `<span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${axisStyle}">Axis: ${roundedAxisOD}</span>` : ''}
                         </div>
                         <small style="color: var(--text-secondary, #666); font-weight: 400; display: block; margin-top: 12px; font-size: 0.9rem;">Spherical Equivalent: ${seODExact.toFixed(2)} D (or ${seODRounded.toFixed(2)} D)</small>
@@ -272,7 +272,7 @@
                         <strong style="display: block; margin-bottom: 12px; font-size: 1.2rem; color: var(--accent-glow, #3b82f6); text-transform: uppercase; letter-spacing: 0.5px;">Left Eye (OS) Script</strong>
                         <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
                             <span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${sphStyleOS}">SPH: ${convertedSphOS.toFixed(2)} D</span>
-                            ${showCylOS ? `<span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${cylStyleOS}">CYL: ${convertedCylOS.toFixed(2)} D</span>` : ''}
+                            ${showCylOS ? `<span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${cylStyleOS}">CYL: ${actualCylOS.toFixed(2)} D</span>` : ''}
                             ${showCylOS ? `<span style="font-weight: 700; font-size: 1.25rem; padding: 8px 14px; border-radius: 8px; ${axisStyle}">Axis: ${roundedAxisOS}</span>` : ''}
                         </div>
                         <small style="color: var(--text-secondary, #666); font-weight: 400; display: block; margin-top: 12px; font-size: 0.9rem;">Spherical Equivalent: ${seOSExact.toFixed(2)} D (or ${seOSRounded.toFixed(2)} D)</small>
@@ -321,12 +321,12 @@
 
             let textToCopy = `Right Eye (OD)\nSPH: ${convertedSphOD.toFixed(2)} D`;
             if (showCylODCopy) {
-                textToCopy += `\nCYL: ${convertedCylOD.toFixed(2)} D\nAxis: ${roundedAxisOD}`;
+                textToCopy += `\nCYL: ${actualCylOD.toFixed(2)} D\nAxis: ${roundedAxisOD}`;
             }
             
             textToCopy += `\n\nLeft Eye (OS)\nSPH: ${convertedSphOS.toFixed(2)} D`;
             if (showCylOSCopy) {
-                textToCopy += `\nCYL: ${convertedCylOS.toFixed(2)} D\nAxis: ${roundedAxisOS}`;
+                textToCopy += `\nCYL: ${actualCylOS.toFixed(2)} D\nAxis: ${roundedAxisOS}`;
             }
 
             navigator.clipboard.writeText(textToCopy).then(() => {
