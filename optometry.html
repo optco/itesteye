@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="result-section glass">
-                        <h3 style="font-size: 1.3rem;">RIGHT EYE (OD)</h3>
+                        <h3 style="font-size: 1.3rem;">Right Eye (OD)</h3>
                         <div class="input-group">
                             <label for="sphOD">Sphere:</label>
                             <div class="stepper">
@@ -102,7 +102,7 @@
                     </div>
                     <br>
                     <div class="result-section glass">
-                        <h3 style="font-size: 1.3rem;">LEFT EYE (OS)</h3>
+                        <h3 style="font-size: 1.3rem;">Left Eye (OS)</h3>
                         <div class="input-group">
                             <label for="sphOS">Sphere:</label>
                             <div class="stepper">
@@ -242,10 +242,11 @@
             const seOSExact = convertedSphOS + (convertedCylOS / 2);
             const seOSRounded = mround(seOSExact, 0.25);
 
-            const showCylOD = Math.abs(convertedCylOD) >= 0.75;
-            const showCylOS = Math.abs(convertedCylOS) >= 0.75;
-            const showActualCylOD = Math.abs(actualCylOD) >= 0.75;
-            const showActualCylOS = Math.abs(actualCylOS) >= 0.75;
+            // Check the INPUT value to ensure 0.75 is never hidden, while 0.50, 0.25, and 0 remain hidden
+            const showCylOD = Math.abs(cylOD) >= 0.75;
+            const showCylOS = Math.abs(cylOS) >= 0.75;
+            const showActualCylOD = Math.abs(cylOD) >= 0.75;
+            const showActualCylOS = Math.abs(cylOS) >= 0.75;
 
             const sphStyleOD = getPowerStyle(convertedSphOD);
             const cylStyleOD = getPowerStyle(convertedCylOD);
@@ -308,8 +309,9 @@
             const convertedSphOS = mround(d7OS, 0.25);
             const roundedAxisOS = roundAxis(axisOS);
 
-            const showCylOD = Math.abs(convertedCylOD) >= 0.75;
-            const showCylOS = Math.abs(convertedCylOS) >= 0.75;
+            // Match display logic: show if user entered >= 0.75
+            const showCylOD = Math.abs(cylOD) >= 0.75;
+            const showCylOS = Math.abs(cylOS) >= 0.75;
 
             let textToCopy = `Right Eye (OD)\nSPH: ${convertedSphOD.toFixed(2)} D`;
             if (showCylOD) {
