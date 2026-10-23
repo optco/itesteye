@@ -177,11 +177,8 @@
             liveResults.innerHTML = "";
 
             const resultsBox = document.createElement("div");
-            resultsBox.style.padding = "24px";
-            resultsBox.style.borderRadius = "16px";
-            resultsBox.style.backgroundColor = "rgba(59, 130, 246, 0.08)";
-            resultsBox.style.border = "2px solid var(--accent-glow, #3b82f6)";
-            resultsBox.style.boxShadow = "0 4px 12px rgba(59, 130, 246, 0.15)";
+            resultsBox.style.padding = "20px";
+            resultsBox.style.borderRadius = "12px";
 
             const sphOD = parseFloat(document.getElementById("sphOD").value) || 0;
             const cylOD = parseFloat(document.getElementById("cylOD").value) || 0;
@@ -191,6 +188,8 @@
             const d7OD = convertPower(sphOD, vertexDistance);
             const d14OD = convertPower(d4OD, vertexDistance);
             const d9OD = d14OD - d7OD;
+            const actualSphOD = mround(d7OD, 0.25);
+            const actualCylOD = mround(d9OD, 0.25);
             const convertedCylOD = roundCLCylinder(d9OD);
             const convertedSphOD = mround(d7OD, 0.25);
             const roundedAxisOD = roundAxis(axisOD);
@@ -205,6 +204,8 @@
             const d7OS = convertPower(sphOS, vertexDistance);
             const d14OS = convertPower(d4OS, vertexDistance);
             const d9OS = d14OS - d7OS;
+            const actualSphOS = mround(d7OS, 0.25);
+            const actualCylOS = mround(d9OS, 0.25);
             const convertedCylOS = roundCLCylinder(d9OS);
             const convertedSphOS = mround(d7OS, 0.25);
             const roundedAxisOS = roundAxis(axisOS);
@@ -213,10 +214,12 @@
 
             const showCylOD = Math.abs(convertedCylOD) >= 0.75;
             const showCylOS = Math.abs(convertedCylOS) >= 0.75;
+            const showActualCylOD = Math.abs(actualCylOD) >= 0.75;
+            const showActualCylOS = Math.abs(actualCylOS) >= 0.75;
 
             const output = `
                 <div id="resultsText" style="font-size: 1.1rem; line-height: 1.8;">
-                    <div style="margin-bottom: 20px; padding: 20px; background: rgba(255, 255, 255, 0.85); border-radius: 12px; border-left: 5px solid var(--accent-glow, #3b82f6);">
+                    <div style="margin-bottom: 24px; padding: 20px; background: rgba(255, 255, 255, 0.85); border-radius: 12px; border-left: 5px solid var(--accent-glow, #3b82f6);">
                         <strong style="display: block; margin-bottom: 12px; font-size: 1.2rem; color: var(--accent-glow, #3b82f6); text-transform: uppercase; letter-spacing: 0.5px;">Right Eye (OD) Script</strong>
                         <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
                             <span style="font-weight: 700; font-size: 1.25rem; color: #1e3a8a; background: #dbeafe; padding: 8px 14px; border-radius: 8px; border: 1px solid #93c5fd;">SPH: ${convertedSphOD.toFixed(2)} D</span>
@@ -224,6 +227,7 @@
                             ${showCylOD ? `<span style="font-weight: 700; font-size: 1.25rem; color: #1e3a8a; background: #dbeafe; padding: 8px 14px; border-radius: 8px; border: 1px solid #93c5fd;">Axis: ${roundedAxisOD}</span>` : ''}
                         </div>
                         <small style="color: var(--text-secondary, #666); font-weight: 400; display: block; margin-top: 12px; font-size: 0.9rem;">Spherical Equivalent: ${seODExact.toFixed(2)} D (or ${seODRounded.toFixed(2)} D)</small>
+                        <small style="color: var(--text-secondary, #666); font-weight: 400; display: block; margin-top: 8px; font-size: 0.85rem; opacity: 0.75;">Actual Conversion: SPH ${actualSphOD.toFixed(2)} D${showActualCylOD ? `, CYL ${actualCylOD.toFixed(2)} D` : ''}</small>
                     </div>
                     <div style="padding: 20px; background: rgba(255, 255, 255, 0.85); border-radius: 12px; border-left: 5px solid var(--accent-glow, #3b82f6);">
                         <strong style="display: block; margin-bottom: 12px; font-size: 1.2rem; color: var(--accent-glow, #3b82f6); text-transform: uppercase; letter-spacing: 0.5px;">Left Eye (OS) Script</strong>
@@ -233,6 +237,7 @@
                             ${showCylOS ? `<span style="font-weight: 700; font-size: 1.25rem; color: #1e3a8a; background: #dbeafe; padding: 8px 14px; border-radius: 8px; border: 1px solid #93c5fd;">Axis: ${roundedAxisOS}</span>` : ''}
                         </div>
                         <small style="color: var(--text-secondary, #666); font-weight: 400; display: block; margin-top: 12px; font-size: 0.9rem;">Spherical Equivalent: ${seOSExact.toFixed(2)} D (or ${seOSRounded.toFixed(2)} D)</small>
+                        <small style="color: var(--text-secondary, #666); font-weight: 400; display: block; margin-top: 8px; font-size: 0.85rem; opacity: 0.75;">Actual Conversion: SPH ${actualSphOS.toFixed(2)} D${showActualCylOS ? `, CYL ${actualCylOS.toFixed(2)} D` : ''}</small>
                     </div>
                 </div>
                 <div style="margin-top: 20px; text-align: left;">
