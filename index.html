@@ -29,6 +29,8 @@
         .dlvs-table tr.section-top td { border-top: 6px solid #ccc; }
         .dlvs-table .plus { font-size: 18px; font-weight: bold; padding: 0 4px; }
         .dlvs-wrap .dlvs-table tbody tr:last-child td { border-bottom: 1px solid #ccc; }
+        .back{display:inline-flex;align-items:center;gap:8px;margin:0 0 14px;padding:8px 22px;border:1px solid var(--accent);background:transparent;color:var(--accent);text-decoration:none}
+
     </style>
 </head>
 <body>
@@ -37,7 +39,7 @@
     <div class="hamburger-menu" id="hamburgerMenu">
         <div class="menu-links">
             <a class="menu-item" href="calculator.html">
-                <i class="fa fa-random" aria-hidden="true"></i> CL Converter
+                <i class="fa fa-random" aria-hidden="true"></i> Calculator
             </a>
             <a class="menu-item" href="https://itesteye.com/therapeutics" target="_blank" rel="noopener noreferrer">
                 <i class="fas fa-prescription-bottle-medical" aria-hidden="true"></i> Therapeutics
@@ -67,6 +69,7 @@
     </div>
 
     <div class="main-container">
+        <a class="back" href="index.html"><span aria-hidden="true">←</span> Back to all resources</a>
         <div class="tab-buttons">
             <button class="tab-button active" onclick="openTab('tab1', event)"><i class="fas fa-id-card" aria-hidden="true"></i> Driver's</button>
             <button class="tab-button" onclick="openTab('tab2', event)"><i class="fas fa-eye" aria-hidden="true"></i> Vision Charts</button>
