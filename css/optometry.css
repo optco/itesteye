@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
 /* ===== VARIABLES & RESET ===== */
 :root {
     --glass-bg: rgba(255, 255, 255, 0.65);
@@ -15,7 +17,7 @@
 
 /* ===== BASE & BACKGROUND ===== */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: 'Barlow Condensed', sans-serif;
     font-size: 16px;
     line-height: 1.6;
     letter-spacing: 0.25px;
@@ -43,8 +45,13 @@ body::before {
 }
 
 /* ===== TYPOGRAPHY ===== */
-h1, h2, h3, h4, h5, h6, p, div, span, label, td, th, input, button, select, textarea {
+h1, h2, h3, h4, h5, h6, p, div, span, label, button, select, textarea {
     font-family: inherit; color: var(--text-primary);
+}
+
+/* Monospace override for data and inputs */
+td, th, input[type="number"], input[type="text"], .stepper input {
+    font-family: 'Share Tech Mono', monospace;
 }
 
 h2 {
