@@ -122,13 +122,17 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .stp .up:hover{background:#1e8e4e;border-color:#1e8e4e;color:#fff}
 }
 @media (max-width:560px){input{padding:10px;font-size:1.25rem}.res strong{font-size:1.6rem}h1{font-size:2.1rem}}
+.back{display:inline-flex;align-items:center;gap:8px;margin:0 0 14px;padding:8px 22px;border-radius:999px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;transition:background .15s,color .15s,transform .1s}
+.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.back:active{background:var(--accent);color:var(--accent-t);transform:scale(.97)}
+@media (hover:hover){.back:hover{background:var(--accent);color:var(--accent-t)}}
+
 </style>
 </head>
 <body>
-  <div style="margin-bottom: 20px;"> <a href="index.html" style="color: var(--accent-glow, #3b82f6); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600;"> <i class="fas fa-arrow-left"></i> Back to All Resources
-            </a>
-        </div>
+  
 <main>
+<a class="back" href="index.html"><span aria-hidden="true">←</span> Back to all resources</a>
 <h1>Spectacle ⇄ Contact Lens Converter</h1>
 <p class="sub">Vertex-distance compensated, power rounded to 0.25 D, axis rounded to the nearest 10°.</p>
 
@@ -267,7 +271,17 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       btn.addEventListener("contextmenu",function(e){e.preventDefault()});
     });
   });
-
+  /* ---- Enter = next field (Shift+Enter = previous) ---- */
+  var fields = Array.prototype.slice.call(document.querySelectorAll("main input"));
+  fields.forEach(function(inp, i){
+    inp.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      var next = fields[i + (e.shiftKey ? -1 : 1)];
+      if(next){ next.focus(); next.select(); }
+      else inp.blur(); // last field: close the mobile keyboard
+    });
+  });
   document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",all)});
   q("#swap").addEventListener("click",function(){
     toCL=!toCL;
