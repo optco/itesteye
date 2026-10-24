@@ -189,18 +189,19 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     if(s===""&&c===""){out.textContent="—";return}
     var sph=parseFloat(s||"0"), cyl=parseFloat(c||"0"), d=(parseFloat(q("#vd").value)||0)/1000;
     if(isNaN(sph)||isNaN(cyl)){out.textContent="—";return}
-   if(cyl!==0.50){
-      var ax=parseFloat(a);
-      if(isNaN(ax)||ax<0||ax>180){out.textContent="—";err.textContent="Cylinder may not be available in toric contact lenses.";return}
-    } 
-    var m1=sph, m2=sph+cyl;
+
+        var m1=sph, m2=sph+cyl;
     if(1-d*m1<=0||1-d*m2<=0||1+d*m1<=0||1+d*m2<=0){out.textContent="—";err.textContent="Value out of range.";return}
     var n1=conv(m1,d), n2=conv(m2,d);
     var ns=r25(n1), nc=r25(n2-n1);
+    var ax=parseFloat(a), hasAx=!isNaN(ax);
     if(cyl===0||nc===0){
       out.textContent=fmt(ns)+(nc===0?" DS":"");
     }else{
-      out.textContent=fmt(ns)+" / "+fmt(nc)+" × "+rAxis(parseFloat(a));
+      out.textContent=fmt(ns)+" / "+fmt(nc)+(hasAx?" × "+rAxis(ax):"");
+      if(toCL&&Math.abs(nc)<0.75){
+        err.textContent=fmt(nc)+" cylinder may not be available in toric contact lenses.";
+      }
     }
   }
   function all(){document.querySelectorAll(".eye").forEach(calc)}
