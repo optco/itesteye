@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Primary SEO -->
+<title>Spectacle to Contact Lens Converter | Vertex Distance Calculator – iTestEye</title>
+<meta name="description" content="Free spectacle to contact lens power converter with vertex distance compensation. Convert sphere, cylinder and axis for glasses and contact lens prescriptions (and back) in seconds. By Akhtar, iTestEye.">
+<meta name="keywords" content="spectacle to contact lens converter, vertex distance calculator, contact lens power calculator, glasses to contact lens prescription, optometry calculator, contact lens Rx converter, sphere cylinder axis converter, toric contact lens calculator, optometrist tools, iTestEye">
+<meta name="author" content="Akhtar">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0a7c86">
+<link rel="canonical" href="https://itesteye.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="iTestEye">
+<meta property="og:title" content="Spectacle ⇄ Contact Lens Converter – Vertex Distance Calculator">
+<meta property="og:description" content="Convert glasses prescriptions to contact lens powers and back, with vertex distance compensation. Free optometry tool by Akhtar.">
+<meta property="og:url" content="https://itesteye.com/">
+<meta property="og:locale" content="en_ZA">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spectacle ⇄ Contact Lens Converter – iTestEye">
+<meta name="twitter:description" content="Free vertex distance calculator: convert spectacle Rx to contact lens Rx and back.">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Spectacle to Contact Lens Converter",
+  "alternateName": "Vertex Distance Calculator",
+  "url": "https://itesteye.com/",
+  "description": "Free online tool that converts spectacle prescriptions to contact lens prescriptions (and back) using vertex distance compensation, for sphere, cylinder and axis.",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "creator": { "@type": "Person", "name": "Akhtar" },
+  "publisher": { "@type": "Organization", "name": "iTestEye", "url": "https://itesteye.com/" }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap">
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#14202b;--muted:#5d6b78;--line:#d9e0e6;--accent:#0a7c86;--accent-h:#075a62;--accent-t:#fff;--res:#e6f4f5;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e151b;--card:#18222b;--text:#e8eef3;--muted:#93a3b0;--line:#2b3a46;--accent:#35b7c2;--accent-h:#67d3dc;--accent-t:#06242a;--res:#12303a}}
+:root[data-theme="dark"]{--bg:#0e151b;--card:#18222b;--text:#e8eef3;--muted:#93a3b0;--line:#2b3a46;--accent:#35b7c2;--accent-h:#67d3dc;--accent-t:#06242a;--res:#12303a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.4rem;margin:8px 0 4px}
+.sub{color:var(--muted);margin:0 0 18px;font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.mode{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mode b{font-size:1.05rem}
+.switch{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-t);border:0;border-radius:999px;padding:9px 16px;font:600 .95rem inherit;font-family:inherit;cursor:pointer}
+.switch:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.vd{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem;margin-top:12px}
+.vd input{width:70px}
+.eyes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.eyes{grid-template-columns:1fr}}
+.eye h2{font-size:1rem;margin:0 0 10px;color:var(--accent)}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:3px}
+input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+.res{margin-top:12px;background:var(--res);border-radius:10px;padding:10px 12px}
+.res small{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+.res strong{font-size:1.25rem;font-variant-numeric:tabular-nums}
+.note{color:var(--muted);font-size:.82rem;margin:4px 0 0}
+.err{color:#c0392b;font-size:.82rem;min-height:1.1em;margin-top:6px}
+body{font:22px/1.4 'Barlow Condensed',sans-serif}
+main{max-width:1000px;padding:28px 20px 56px}
+h1{font-size:2.6rem;text-transform:uppercase;letter-spacing:.03em;line-height:1.1}
+.sub{font-size:1.2rem}
+.card{padding:24px;border-radius:16px}
+.mode b{font-size:1.6rem}
+.switch,.btn,.copy{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.switch,.btn{padding:12px 26px;border-radius:999px}
+.btn{border:1px solid var(--accent);background:transparent;color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-t)}
+.copy{position:absolute;top:12px;right:12px;padding:6px 16px;border-radius:999px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:1.05rem}
+.btn:focus-visible,.copy:focus-visible,.stp button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.vd{font-size:1.2rem}
+.vd input{width:100px}
+.eye h2{font-size:1.7rem;letter-spacing:.05em;text-transform:uppercase}
+label{font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase}
+.row{gap:12px}
+input{padding:14px;border-radius:10px;font-family:'Share Tech Mono',monospace;font-size:1.5rem}
+.res{position:relative;padding:16px 18px;margin-top:16px}
+.res small{font-size:1.05rem}
+.res strong{display:block;font-family:'Share Tech Mono',monospace;font-size:2rem;font-weight:400;overflow-wrap:anywhere}
+.note,.err{font-size:1.05rem}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 18px}
+/* axis: hide native spinner, use wrap-around stepper */
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.stp{display:flex;gap:6px;margin-top:6px}
+.stp button{flex:1;padding:2px 0;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:8px;font:600 1.3rem/1.2 'Barlow Condensed',sans-serif;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.vd .stp{margin-top:0}
+.vd .stp button{flex:none;width:44px;padding:6px 0}
+.switch,.btn,.copy{transition:background .15s,color .15s,border-color .15s,transform .1s}
+.switch:active,.btn.primary:active{background:var(--accent-h);transform:scale(.97)}
+.btn:not(.primary):active,.copy:active{background:var(--accent);color:var(--accent-t);transform:scale(.97)}
+@media (hover:hover){
+.switch:hover,.btn.primary:hover{background:var(--accent-h)}
+.btn:not(.primary):hover,.copy:hover{background:var(--accent);color:var(--accent-t)}
+}
+.stp button{transition:background .15s,color .15s,border-color .15s}
+.stp .dn:active{background:#c0392b;border-color:#c0392b;color:#fff}
+.stp .up:active{background:#1e8e4e;border-color:#1e8e4e;color:#fff}
+@media (hover:hover){
+.stp .dn:hover{background:#c0392b;border-color:#c0392b;color:#fff}
+.stp .up:hover{background:#1e8e4e;border-color:#1e8e4e;color:#fff}
+}
+@media (max-width:560px){input{padding:10px;font-size:1.25rem}.res strong{font-size:1.6rem}h1{font-size:2.1rem}}
+</style>
+</head>
+<body>
+<main>
+<h1>Spectacle ⇄ Contact Lens Converter</h1>
+<p class="sub">Vertex-distance compensated, power rounded to 0.25 D, axis rounded to the nearest 10°.</p>
+
+<div class="card">
+  <div class="mode">
+    <div><small style="color:var(--muted)">Direction</small><br><b id="modeLabel">Spectacle → Contact lens</b></div>
+    <button class="switch" id="swap" type="button">⇄ Switch direction</button>
+  </div>
+  <div class="vd"><label for="vd" style="margin:0">Vertex distance (mm)</label><input id="vd" type="number" value="12" min="0" max="20" step="1" inputmode="decimal"><div class="stp"><button type="button" class="dn" aria-label="Decrease vertex distance">−</button><button type="button" class="up" aria-label="Increase vertex distance">+</button></div></div>
+</div>
+
+<div class="eyes">
+  <div class="card eye" data-eye="od">
+    <h2>Right eye (OD)</h2>
+    <div class="row">
+      <div><label>Sphere</label><input class="sph" type="number" step="0.25" inputmode="decimal" placeholder="-5.00"><div class="stp"><button type="button" class="dn" aria-label="Decrease sphere">−</button><button type="button" class="up" aria-label="Increase sphere">+</button></div></div>
+      <div><label>Cylinder</label><input class="cyl" type="number" step="0.25" inputmode="decimal" placeholder="-1.50"><div class="stp"><button type="button" class="dn" aria-label="Decrease cylinder">−</button><button type="button" class="up" aria-label="Increase cylinder">+</button></div></div>
+      <div><label>Axis</label><input class="ax" type="number" step="1" inputmode="numeric" placeholder="85" aria-label="Axis, 0 to 180, wraps around"><div class="stp"><button type="button" class="dn" aria-label="Decrease axis">−</button><button type="button" class="up" aria-label="Increase axis">+</button></div></div>
+    </div>
+    <div class="err"></div>
+    <div class="res"><small class="rl">Contact lens Rx</small><strong class="out">—</strong></div>
+  </div>
+  <div class="card eye" data-eye="os">
+    <h2>Left eye (OS)</h2>
+    <div class="row">
+      <div><label>Sphere</label><input class="sph" type="number" step="0.25" inputmode="decimal" placeholder="-4.50"><div class="stp"><button type="button" class="dn" aria-label="Decrease sphere">−</button><button type="button" class="up" aria-label="Increase sphere">+</button></div></div>
+      <div><label>Cylinder</label><input class="cyl" type="number" step="0.25" inputmode="decimal" placeholder="-0.75"><div class="stp"><button type="button" class="dn" aria-label="Decrease cylinder">−</button><button type="button" class="up" aria-label="Increase cylinder">+</button></div></div>
+      <div><label>Axis</label><input class="ax" type="number" step="1" inputmode="numeric" placeholder="95" aria-label="Axis, 0 to 180, wraps around"><div class="stp"><button type="button" class="dn" aria-label="Decrease axis">−</button><button type="button" class="up" aria-label="Increase axis">+</button></div></div>
+    </div>
+    <div class="err"></div>
+    <div class="res"><small class="rl">Contact lens Rx</small><strong class="out">—</strong></div>
+  </div>
+</div>
+<div class="toolbar">
+  <button class="btn primary" id="copyAll" type="button">Copy results</button>
+  <button class="btn" id="reset" type="button">Reset</button>
+</div>
+<p class="note">Method: each principal meridian is converted with F′ = F ÷ (1 − d·F) (spectacle → CL) or F = F′ ÷ (1 + d·F′) (CL → spectacle), then the cylinder is the difference between meridians. Always verify against clinical judgement and the lens manufacturer’s available parameters.</p>
+</main>
+
+<script>
+(function(){
+  var toCL = true;
+  var q = function(s,r){return (r||document).querySelector(s)};
+  var r25 = function(x){var v = Math.sign(x)*Math.round(Math.abs(x)*4)/4; return v===0?0:v};
+  var fmt = function(x){return (x>0?"+":x<0?"−":"")+Math.abs(x).toFixed(2)};
+  function rAxis(a){var v=Math.round(a/10)*10; if(v<=0||v>180) v=180; return v}
+  function conv(F,d){return toCL ? F/(1-d*F) : F/(1+d*F)}
+
+  function calc(card){
+    var s=q(".sph",card).value, c=q(".cyl",card).value, a=q(".ax",card).value;
+    var out=q(".out",card), err=q(".err",card);
+    err.textContent="";
+    if(s===""&&c===""){out.textContent="—";return}
+    var sph=parseFloat(s||"0"), cyl=parseFloat(c||"0"), d=(parseFloat(q("#vd").value)||0)/1000;
+    if(isNaN(sph)||isNaN(cyl)){out.textContent="—";return}
+    if(cyl!==0){
+      var ax=parseFloat(a);
+      if(isNaN(ax)||ax<0||ax>180){out.textContent="—";err.textContent="Enter an axis between 0 and 180.";return}
+    }
+    var m1=sph, m2=sph+cyl;
+    if(1-d*m1<=0||1-d*m2<=0||1+d*m1<=0||1+d*m2<=0){out.textContent="—";err.textContent="Value out of range.";return}
+    var n1=conv(m1,d), n2=conv(m2,d);
+    var ns=r25(n1), nc=r25(n2-n1);
+    if(cyl===0||nc===0){
+      out.textContent=fmt(ns)+(nc===0?" DS":"");
+    }else{
+      out.textContent=fmt(ns)+" / "+fmt(nc)+" × "+rAxis(parseFloat(a));
+    }
+  }
+  function all(){document.querySelectorAll(".eye").forEach(calc)}
+
+  /* ---- Axis: round-robin 0–180 (181 → 0, −1 → 180) ---- */
+  function wrapAxis(v){return ((v%181)+181)%181}
+  function setAxis(inp,v){
+    inp.value=v;
+    inp.dispatchEvent(new Event("input",{bubbles:true}));
+  }
+  function stepAxis(inp,delta){
+    var v=parseInt(inp.value,10);
+    if(isNaN(v)){ setAxis(inp, delta>0 ? 0 : 180); return; }
+    setAxis(inp, wrapAxis(v+delta));
+  }
+  document.querySelectorAll("input.ax").forEach(function(inp){
+    // typed / native-spinner values outside 0–180 wrap around
+    inp.addEventListener("input",function(){
+      if(inp.value==="") return;
+      var v=parseInt(inp.value,10);
+      if(isNaN(v)) return;
+      if(v<0||v>180) inp.value=wrapAxis(v);
+    });
+    // arrow keys (Shift = 10°)
+    inp.addEventListener("keydown",function(e){
+      if(e.key!=="ArrowUp"&&e.key!=="ArrowDown") return;
+      e.preventDefault();
+      var step=e.shiftKey?10:1;
+      stepAxis(inp,e.key==="ArrowUp"?step:-step);
+    });
+    // mouse wheel while focused
+    inp.addEventListener("wheel",function(e){
+      if(document.activeElement!==inp) return;
+      e.preventDefault();
+      stepAxis(inp,e.deltaY<0?1:-1);
+    },{passive:false});
+  });
+
+  // generic stepper for every field (axis wraps, others clamp to min/max if set)
+  function stepField(inp,dir){
+    if(inp.classList.contains("ax")){stepAxis(inp,dir);return}
+    var st=parseFloat(inp.step)||1, v=parseFloat(inp.value);
+    if(isNaN(v)) v=0;
+    var n=Math.round((v+dir*st)*100)/100;
+    if(inp.min!==""&&n<parseFloat(inp.min)) n=parseFloat(inp.min);
+    if(inp.max!==""&&n>parseFloat(inp.max)) n=parseFloat(inp.max);
+    inp.value=n;
+    inp.dispatchEvent(new Event("input",{bubbles:true}));
+  }
+  // ± buttons with press-and-hold repeat
+  document.querySelectorAll(".stp").forEach(function(box){
+    var inp=box.previousElementSibling;
+    [["dn",-1],["up",1]].forEach(function(p){
+      var btn=q("."+p[0],box), dir=p[1], t=null, iv=null, held=false;
+      function stop(){clearTimeout(t);clearInterval(iv);t=iv=null}
+      btn.addEventListener("pointerdown",function(){
+        held=false;
+        t=setTimeout(function(){
+          held=true;
+          iv=setInterval(function(){stepField(inp,dir)},70);
+        },450);
+      });
+      ["pointerup","pointerleave","pointercancel"].forEach(function(ev){btn.addEventListener(ev,stop)});
+      btn.addEventListener("click",function(){
+        if(held){held=false;return}
+        stepField(inp,dir);
+      });
+      btn.addEventListener("contextmenu",function(e){e.preventDefault()});
+    });
+  });
+
+  document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",all)});
+  q("#swap").addEventListener("click",function(){
+    toCL=!toCL;
+    q("#modeLabel").textContent = toCL ? "Spectacle → Contact lens" : "Contact lens → Spectacle";
+    document.querySelectorAll(".rl").forEach(function(e){e.textContent = toCL ? "Contact lens Rx" : "Spectacle Rx"});
+    all();
+  });
+
+  function plain(t){return t.replace(/\u2212/g,"-").replace(/\u00d7/g,"x")}
+  function flash(btn,msg){var o=btn.dataset.o||btn.textContent;btn.dataset.o=o;btn.textContent=msg;setTimeout(function(){btn.textContent=o},1300)}
+  function copy(text,btn){
+    function fallback(){
+      var t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";
+      document.body.appendChild(t);t.select();
+      var ok=false;try{ok=document.execCommand("copy")}catch(e){}
+      document.body.removeChild(t);flash(btn,ok?"Copied ✓":"Copy failed");
+    }
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){flash(btn,"Copied ✓")},fallback);
+      }else fallback();
+    }catch(e){fallback()}
+  }
+  function eyeText(card){
+    var v=q(".out",card).textContent;
+    return v==="—"?"":(card.dataset.eye==="od"?"OD: ":"OS: ")+plain(v);
+  }
+
+  document.querySelectorAll(".eye").forEach(function(card){
+    var b=document.createElement("button");
+    b.type="button";b.className="copy";b.textContent="Copy";
+    q(".res",card).appendChild(b);
+    b.addEventListener("click",function(){
+      var t=eyeText(card);
+      if(!t){flash(b,"Nothing yet");return}
+      copy(t,b);
+    });
+  });
+
+  q("#copyAll").addEventListener("click",function(){
+    var lines=[];
+    document.querySelectorAll(".eye").forEach(function(c){var t=eyeText(c);if(t)lines.push(t)});
+    if(!lines.length){flash(this,"Nothing yet");return}
+    copy((toCL?"Contact lens Rx":"Spectacle Rx")+"\n"+lines.join("\n"),this);
+  });
+
+  q("#reset").addEventListener("click",function(){
+    document.querySelectorAll(".eye input").forEach(function(i){i.value=""});
+    q("#vd").value=12;
+    all();
+  });
+})();
+</script>
+
+    <script src="https://theattn.com/load.js"></script>
+</body>
+</html>
