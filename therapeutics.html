@@ -110,6 +110,7 @@
             background: rgba(59, 130, 246, 0.1) !important;
             color: var(--text-primary);
             text-align: left;
+            white-space: nowrap;          /* headings never wrap */
         }
         .med-table td {
             padding: 12px;
@@ -117,7 +118,6 @@
             color: var(--text-secondary);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .med-table th,
         .med-table td {
             overflow-wrap: break-word;    /* breaks a word only as a last resort */
             word-break: normal;
@@ -276,11 +276,11 @@
     <table class="med-table glass shadow">
         <thead>
             <tr>
-                <th style="width: 16%;">Pharmacological Classification</th>
+                <th style="width: 16%;" title="Pharmacological Classification">Classification</th>
                 <th style="width: 20%;">Substance</th>
-                <th style="width: 8%;">Schedule</th>
-                <th style="width: 14%;">Route of Administration</th>
-                <th style="width: 27%;">Indications</th>
+                <th style="width: 10%;">Schedule</th>
+                <th style="width: 13%;" title="Route of Administration">Route</th>
+                <th style="width: 26%;">Indications</th>
                 <th style="width: 15%;" title="Permitted Optometry Category">Category</th>
             </tr>
         </thead>
