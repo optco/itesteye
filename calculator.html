@@ -86,6 +86,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .res strong{display:block;font-family:'Share Tech Mono',monospace;font-size:2rem;font-weight:400;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .note{color:var(--muted);font-size:1.05rem;margin:4px 0 0}
 .err{color:#c0392b;font-size:1.05rem;min-height:1.1em;margin-top:6px}
+.cls{color:var(--muted);font-size:1.05rem;min-height:1.1em;margin-top:6px}
 
 /* ---------- Buttons ---------- */
 .switch,.btn,.back{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border-radius:999px;transition:background .15s,color .15s,border-color .15s,transform .1s}
@@ -150,6 +151,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     </div>
     <div class="err"></div>
     <div class="res"><small class="rl">Contact lens Rx</small><strong class="out">—</strong></div>
+    <div class="cls"></div>
   </div>
   <div class="card eye" data-eye="os">
     <h2>Left eye (OS)</h2>
@@ -160,6 +162,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     </div>
     <div class="err"></div>
     <div class="res"><small class="rl">Contact lens Rx</small><strong class="out">—</strong></div>
+    <div class="cls"></div>
   </div>
 </div>
 <div class="toolbar">
@@ -178,10 +181,21 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   function rAxis(a){var v=Math.round(a/10)*10; if(v<=0||v>180) v=180; return v}
   function conv(F,d){return toCL ? F/(1-d*F) : F/(1+d*F)}
 
+  /* ---- Refractive type from the two principal meridians ---- */
+  function describe(s,c){
+    var m1=s, m2=s+c;
+    if(m1===0&&m2===0) return "Plano";
+    if(c===0) return m1<0 ? "Myopia" : "Hyperopia";
+    if(m1===0||m2===0) return "Simple "+((m1||m2)<0?"myopic":"hyperopic")+" astigmatism";
+    if(m1<0&&m2<0) return "Compound myopic astigmatism";
+    if(m1>0&&m2>0) return "Compound hyperopic astigmatism";
+    return "Mixed astigmatism";
+  }
+
   function calc(card){
     var s=q(".sph",card).value, c=q(".cyl",card).value, a=q(".ax",card).value;
-    var out=q(".out",card), err=q(".err",card);
-    err.textContent="";
+    var out=q(".out",card), err=q(".err",card), cl=q(".cls",card);
+    err.textContent=""; cl.textContent="";
     if(s===""&&c===""){out.textContent="—";return}
     var sph=parseFloat(s||"0"), cyl=parseFloat(c||"0"), d=(parseFloat(q("#vd").value)||0)/1000;
     if(isNaN(sph)||isNaN(cyl)){out.textContent="—";return}
@@ -199,6 +213,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         err.textContent=fmt(nc)+" cylinder may not be available in toric contact lenses.";
       }
     }
+    cl.textContent=describe(ns,nc);
   }
   function all(){document.querySelectorAll(".eye").forEach(calc)}
 
