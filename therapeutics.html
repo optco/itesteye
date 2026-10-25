@@ -138,6 +138,36 @@
             .category-legend { flex-direction: column; gap: 8px; align-items: stretch; }
             .legend-item { justify-content: center; }
         }
+        .med-table {
+    width: 100%;
+    table-layout: fixed;      /* respects the column widths you set */
+    font-size: 0.9rem;
+    border-collapse: collapse;
+}
+.med-table th,
+.med-table td {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;  /* breaks long words if needed */
+    hyphens: auto;
+}
+        @media (max-width: 768px) {
+    .med-table { font-size: 0.72rem; }
+    .med-table th, .med-table td { padding: 6px 4px; }
+    .glass[style*="padding: 24px"] { padding: 10px !important; }
+    .schedule-badge, .legend-badge { font-size: 0.7rem; padding: 2px 5px; }
+}
+        @media (max-width: 600px) {
+    .med-table thead { display: none; }
+    .med-table, .med-table tbody, .med-table tr, .med-table td { display: block; width: 100%; }
+    .med-table tr:not(.category-header) {
+        margin-bottom: 12px;
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 10px;
+        padding: 8px;
+    }
+    .med-table td { border: none; padding: 4px 8px; }
+    .med-table td[rowspan] { display: none; } /* classification already shown in the category header */
+}
     </style>
 </head>
 <body>
@@ -195,7 +225,7 @@
     </div>
 </div>
 
-<div class="glass" style="padding: 24px; overflow-x: auto;">
+<div class="glass" style="padding: 24px; overflow-x: visible;">
     <table class="med-table glass shadow">
         <thead>
             <tr>
