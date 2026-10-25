@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="/css/optometry.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <style>
         :root {
             --glass-bg: rgba(255, 255, 255, 0.75);
@@ -34,10 +34,6 @@
             text-align: center;
             margin-bottom: 32px;
             padding: 24px;
-        }
-        .hpcsa-logo {
-            max-width: 300px;
-            margin-bottom: 16px;
         }
         .hpcsa-title {
             font-size: 1.8rem;
@@ -88,15 +84,23 @@
             border-radius: 6px;
             font-weight: 600;
             font-size: 0.85rem;
+            white-space: nowrap;
+            display: inline-block;
         }
         .badge-i { background: rgba(34, 197, 94, 0.15); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.3); }
         .badge-d { background: rgba(59, 130, 246, 0.15); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.3); }
         .badge-t { background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); }
         .badge-idt { background: rgba(139, 92, 246, 0.15); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.3); }
         .badge-dt { background: rgba(139, 92, 246, 0.15); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.3); }
-        
+
+        /* ---------- Table: fits its container, no horizontal scroll ---------- */
+        .table-wrap {
+            padding: 24px;
+            overflow-x: visible;
+        }
         .med-table {
             width: 100%;
+            table-layout: fixed;          /* use the column widths below */
             font-size: 0.9rem;
             border-collapse: collapse;
         }
@@ -113,6 +117,17 @@
             color: var(--text-secondary);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
+        .med-table th,
+        .med-table td {
+            overflow-wrap: break-word;    /* breaks a word only as a last resort */
+            word-break: normal;
+            hyphens: manual;
+        }
+        .med-table .legend-badge,
+        .med-table .schedule-badge {
+            white-space: nowrap;          /* "I, D, T" and "3, 4" stay on one line */
+            display: inline-block;
+        }
         .category-header {
             background: rgba(59, 130, 246, 0.08) !important;
             font-weight: 700;
@@ -124,7 +139,6 @@
             padding-bottom: 16px;
         }
         .schedule-badge {
-            display: inline-block;
             padding: 2px 8px;
             border-radius: 4px;
             background: rgba(0, 0, 0, 0.05);
@@ -132,42 +146,75 @@
             font-size: 0.85rem;
             color: var(--text-primary);
         }
-        @media (max-width: 768px) {
+
+        /* ---------- Tablet / small laptop ---------- */
+        @media (max-width: 900px) {
+            .table-wrap { padding: 14px; }
             .med-table { font-size: 0.8rem; }
-            .med-table th, .med-table td { padding: 8px 6px; }
-            .category-legend { flex-direction: column; gap: 8px; align-items: stretch; }
-            .legend-item { justify-content: center; }
+            .med-table th { font-size: 0.75rem; padding: 10px 8px; }
+            .med-table td { padding: 10px 8px; }
+            .med-table .legend-badge { padding: 3px 6px; font-size: 0.75rem; }
+            .med-table .schedule-badge { padding: 2px 6px; font-size: 0.75rem; }
         }
-        .med-table {
-    width: 100%;
-    table-layout: fixed;      /* respects the column widths you set */
-    font-size: 0.9rem;
-    border-collapse: collapse;
-}
-.med-table th,
-.med-table td {
-    word-wrap: break-word;
-    overflow-wrap: anywhere;  /* breaks long words if needed */
-    hyphens: auto;
-}
-        @media (max-width: 768px) {
-    .med-table { font-size: 0.72rem; }
-    .med-table th, .med-table td { padding: 6px 4px; }
-    .glass[style*="padding: 24px"] { padding: 10px !important; }
-    .schedule-badge, .legend-badge { font-size: 0.7rem; padding: 2px 5px; }
-}
-        @media (max-width: 600px) {
-    .med-table thead { display: none; }
-    .med-table, .med-table tbody, .med-table tr, .med-table td { display: block; width: 100%; }
-    .med-table tr:not(.category-header) {
-        margin-bottom: 12px;
-        border: 1px solid rgba(0,0,0,0.08);
-        border-radius: 10px;
-        padding: 8px;
-    }
-    .med-table td { border: none; padding: 4px 8px; }
-    .med-table td[rowspan] { display: none; } /* classification already shown in the category header */
-}
+
+        /* ---------- Phones: each medicine becomes a card ---------- */
+        @media (max-width: 640px) {
+            .hpcsa-header { padding: 16px; }
+            .hpcsa-title { font-size: 1.3rem; }
+            .hpcsa-subtitle { font-size: 0.95rem; line-height: 1.6; }
+            .category-legend { flex-direction: column; gap: 8px; align-items: stretch; padding: 12px; }
+            .legend-item { justify-content: center; }
+
+            .table-wrap { padding: 10px; }
+
+            .med-table,
+            .med-table tbody,
+            .med-table tr,
+            .med-table td { display: block; width: 100%; }
+            .med-table { font-size: 0.9rem; }
+            .med-table thead { display: none; }
+
+            .med-table tr.category-header {
+                margin: 16px 0 8px;
+                border-radius: 8px;
+            }
+            .med-table tr.category-header:first-child { margin-top: 0; }
+            .med-table tr.category-header td { padding: 10px 12px; border: none; }
+
+            .med-table tr:not(.category-header) {
+                margin-bottom: 10px;
+                padding: 8px 4px;
+                background: rgba(255, 255, 255, 0.6);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                border-radius: 10px;
+            }
+            .med-table tr:not(.category-header) td {
+                border: none;
+                padding: 4px 10px;
+            }
+            /* classification is already shown in the category header */
+            .med-table td[rowspan] { display: none; }
+
+            /* labels on each line */
+            .med-table td[data-label]::before {
+                content: attr(data-label);
+                display: block;
+                font-size: 0.7rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                color: var(--text-secondary);
+                opacity: 0.7;
+                margin-bottom: 2px;
+            }
+            /* substance as the card title */
+            .med-table td[data-label="Substance"] {
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+            .med-table td[data-label="Substance"]::before { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -196,15 +243,15 @@
 </div>
 
 <div class="hpcsa-header glass">
-  
+
     <h1 class="hpcsa-title">HPCSA: APPROVED LIST OF MEDICINES FOR USE BY OPTOMETRISTS</h1>
     <p class="hpcsa-subtitle">
-        The below table consists of a list of medicines for use by optometrists registered in the categories of 
-        <strong>independent practice (I)</strong>, <strong>ocular diagnostics (D)</strong> and 
-        <strong>ocular therapeutics (T)</strong>, as approved by the South African Health Products Regulatory Authority (SAHPRA) 
+        The below table consists of a list of medicines for use by optometrists registered in the categories of
+        <strong>independent practice (I)</strong>, <strong>ocular diagnostics (D)</strong> and
+        <strong>ocular therapeutics (T)</strong>, as approved by the South African Health Products Regulatory Authority (SAHPRA)
         and currently reflected in the Schedules of the Medicines and Related Substances Act (Act 101 of 1965).
     </p>
-    
+
     <div class="category-legend">
         <div class="legend-item" data-filter="I">
             <span class="legend-badge badge-i">I</span>
@@ -225,16 +272,16 @@
     </div>
 </div>
 
-<div class="glass" style="padding: 24px; overflow-x: visible;">
+<div class="glass table-wrap">
     <table class="med-table glass shadow">
         <thead>
             <tr>
-                <th style="width: 20%;">Pharmacological Classification</th>
+                <th style="width: 16%;">Pharmacological Classification</th>
                 <th style="width: 20%;">Substance</th>
-                <th style="width: 10%;">Schedule</th>
-                <th style="width: 15%;">Route of Administration</th>
-                <th style="width: 25%;">Indications</th>
-                <th style="width: 10%;">Permitted Optometry Category</th>
+                <th style="width: 8%;">Schedule</th>
+                <th style="width: 14%;">Route of Administration</th>
+                <th style="width: 27%;">Indications</th>
+                <th style="width: 15%;" title="Permitted Optometry Category">Category</th>
             </tr>
         </thead>
         <tbody>
@@ -243,297 +290,297 @@
             </tr>
             <tr data-categories="I D T">
                 <td rowspan="1"><strong>Ophthalmic Preparations (other)</strong></td>
-                <td>Fluorescein</td>
-                <td><span class="schedule-badge">1</span></td>
-                <td>Topical</td>
-                <td>Ocular surface staining in diagnosis of corneal conditions and fitment of hard contact lenses</td>
-                <td><span class="legend-badge badge-idt">I, D, T</span></td>
+                <td data-label="Substance">Fluorescein</td>
+                <td data-label="Schedule"><span class="schedule-badge">1</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Ocular surface staining in diagnosis of corneal conditions and fitment of hard contact lenses</td>
+                <td data-label="Category"><span class="legend-badge badge-idt">I, D, T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Mydriatic/Cycloplegics</td>
             </tr>
             <tr data-categories="D T">
                 <td rowspan="4"><strong>Mydriatic/Cycloplegics</strong></td>
-                <td>Atropine</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical</td>
-                <td>Cycloplegics refraction<br>Treatment of uveitis</td>
-                <td><span class="legend-badge badge-dt">D, T</span></td>
+                <td data-label="Substance">Atropine</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Cycloplegics refraction<br>Treatment of uveitis</td>
+                <td data-label="Category"><span class="legend-badge badge-dt">D, T</span></td>
             </tr>
             <tr data-categories="D T">
-                <td>Tropicamide</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical</td>
-                <td>Cycloplegic/mydriatic</td>
-                <td><span class="legend-badge badge-dt">D, T</span></td>
+                <td data-label="Substance">Tropicamide</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Cycloplegic/mydriatic</td>
+                <td data-label="Category"><span class="legend-badge badge-dt">D, T</span></td>
             </tr>
             <tr data-categories="D T">
-                <td>Cyclopentylate</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical</td>
-                <td>Cycloplegic/mydriatic</td>
-                <td><span class="legend-badge badge-dt">D, T</span></td>
+                <td data-label="Substance">Cyclopentylate</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Cycloplegic/mydriatic</td>
+                <td data-label="Category"><span class="legend-badge badge-dt">D, T</span></td>
             </tr>
             <tr data-categories="D T">
-                <td>Homatropine</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical</td>
-                <td>Cycloplegic/mydriatic</td>
-                <td><span class="legend-badge badge-dt">D, T</span></td>
+                <td data-label="Substance">Homatropine</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Cycloplegic/mydriatic</td>
+                <td data-label="Category"><span class="legend-badge badge-dt">D, T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Sympathomimetic</td>
             </tr>
             <tr data-categories="D T">
                 <td rowspan="1"><strong>Sympathomimetic</strong></td>
-                <td>Phenylephrine</td>
-                <td><span class="schedule-badge">1</span></td>
-                <td>Topical</td>
-                <td>Minor ocular irritation</td>
-                <td><span class="legend-badge badge-dt">D, T</span></td>
+                <td data-label="Substance">Phenylephrine</td>
+                <td data-label="Schedule"><span class="schedule-badge">1</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Minor ocular irritation</td>
+                <td data-label="Category"><span class="legend-badge badge-dt">D, T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Antihistamine/Vasoconstrictor/Mast cell stabilisers</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="5"><strong>Antihistamine/Vasoconstrictor/Mast cell stabilisers</strong></td>
-                <td>Tetrazoline</td>
-                <td><span class="schedule-badge">2</span></td>
-                <td>Topical</td>
-                <td>Minor ocular irritation<br>Red eye</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Tetrazoline</td>
+                <td data-label="Schedule"><span class="schedule-badge">2</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Minor ocular irritation<br>Red eye</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Sodium Cromoglycate</td>
-                <td><span class="schedule-badge">2</span></td>
-                <td>Topical (Drops)</td>
-                <td>Vernal Kerato conjunctivitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Sodium Cromoglycate</td>
+                <td data-label="Schedule"><span class="schedule-badge">2</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Vernal Kerato conjunctivitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Cetirizine, loratadine, levocetirizine</td>
-                <td><span class="schedule-badge">2</span></td>
-                <td>Oral</td>
-                <td>Atopic dermatitis involving the eyelids</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Cetirizine, loratadine, levocetirizine</td>
+                <td data-label="Schedule"><span class="schedule-badge">2</span></td>
+                <td data-label="Route">Oral</td>
+                <td data-label="Indications">Atopic dermatitis involving the eyelids</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Oxymetazoline</td>
-                <td><span class="schedule-badge">2</span></td>
-                <td>Topical (Drops)</td>
-                <td>Minor ocular irritation<br>Red eye</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Oxymetazoline</td>
+                <td data-label="Schedule"><span class="schedule-badge">2</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Minor ocular irritation<br>Red eye</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Antazoline</td>
-                <td><span class="schedule-badge">2</span></td>
-                <td>Topical</td>
-                <td>Allergic and atopic conjunctivitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Antazoline</td>
+                <td data-label="Schedule"><span class="schedule-badge">2</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Allergic and atopic conjunctivitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Analgesic and Anti-inflammatory</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="2"><strong>Analgesic and anti-inflammatory</strong></td>
-                <td>Paracetamol</td>
-                <td><span class="schedule-badge">1</span></td>
-                <td>Oral</td>
-                <td>Mild Pain</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Paracetamol</td>
+                <td data-label="Schedule"><span class="schedule-badge">1</span></td>
+                <td data-label="Route">Oral</td>
+                <td data-label="Indications">Mild Pain</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Ibuprofen</td>
-                <td><span class="schedule-badge">1</span></td>
-                <td>Oral</td>
-                <td>Mild to Moderate Pain</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Ibuprofen</td>
+                <td data-label="Schedule"><span class="schedule-badge">1</span></td>
+                <td data-label="Route">Oral</td>
+                <td data-label="Indications">Mild to Moderate Pain</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Steroidal Anti Inflammatory</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="1"><strong>Steroidal Anti Inflammatory</strong></td>
-                <td>Hydrocortisone</td>
-                <td><span class="schedule-badge">2</span></td>
-                <td>Topical</td>
-                <td>Dermatitis<br>Eczema atopic/seborrheic eczema</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Hydrocortisone</td>
+                <td data-label="Schedule"><span class="schedule-badge">2</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Dermatitis<br>Eczema atopic/seborrheic eczema</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Anti-Glaucoma</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="5"><strong>Anti-Glaucoma</strong></td>
-                <td>Pilocarpine</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical (Drops)</td>
-                <td>Acute glaucoma</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Pilocarpine</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Acute glaucoma</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Timolol</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical (drops)</td>
-                <td>Acute glaucoma</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Timolol</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical (drops)</td>
+                <td data-label="Indications">Acute glaucoma</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Betaxolol</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical (Drops)</td>
-                <td>Treatment of open-angle glaucoma in adults</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Betaxolol</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Treatment of open-angle glaucoma in adults</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Levobunolol</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical (Drops)</td>
-                <td>Treatment of open-angle glaucoma in adults</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Levobunolol</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Treatment of open-angle glaucoma in adults</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Brimonidine</td>
-                <td><span class="schedule-badge">3</span></td>
-                <td>Topical (Drops)</td>
-                <td>Treatment of open-angle glaucoma in adults</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Brimonidine</td>
+                <td data-label="Schedule"><span class="schedule-badge">3</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Treatment of open-angle glaucoma in adults</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Prostaglandin Analogues (PGAs)</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="1"><strong>Prostaglandin Analogues (PGAs)</strong></td>
-                <td>Latanoprost, Travoprost, Bimatoprost</td>
-                <td><span class="schedule-badge">3, 4</span></td>
-                <td>Drops</td>
-                <td>Glaucoma</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Latanoprost, Travoprost, Bimatoprost</td>
+                <td data-label="Schedule"><span class="schedule-badge">3, 4</span></td>
+                <td data-label="Route">Drops</td>
+                <td data-label="Indications">Glaucoma</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Local Anaesthetic</td>
             </tr>
             <tr data-categories="D T">
                 <td rowspan="2"><strong>Local Anaesthetic</strong></td>
-                <td>Tetracaine</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical (Drops)</td>
-                <td>Diagnostic aide</td>
-                <td><span class="legend-badge badge-dt">D, T</span></td>
+                <td data-label="Substance">Tetracaine</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Diagnostic aide</td>
+                <td data-label="Category"><span class="legend-badge badge-dt">D, T</span></td>
             </tr>
             <tr data-categories="D T">
-                <td>Oxybuprocaine and other equivalent local anaesthetics</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical (Drops)</td>
-                <td>Diagnostic aide</td>
-                <td><span class="legend-badge badge-dt">D, T</span></td>
+                <td data-label="Substance">Oxybuprocaine and other equivalent local anaesthetics</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical (Drops)</td>
+                <td data-label="Indications">Diagnostic aide</td>
+                <td data-label="Category"><span class="legend-badge badge-dt">D, T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Antibacterials</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="6"><strong>Antibacterials</strong></td>
-                <td>Mupirocin</td>
-                <td><span class="schedule-badge">2</span></td>
-                <td>Topical</td>
-                <td>Impetigo (eyelids)<br>External hordeolum<br>Infected atopic dermatitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Mupirocin</td>
+                <td data-label="Schedule"><span class="schedule-badge">2</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Impetigo (eyelids)<br>External hordeolum<br>Infected atopic dermatitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Chloramphenicol</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical (Drops or Ointment)</td>
-                <td>Bacterial conjunctivitis<br>Anterior blepharitis<br>Posterior blepharitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Chloramphenicol</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical (Drops or Ointment)</td>
+                <td data-label="Indications">Bacterial conjunctivitis<br>Anterior blepharitis<br>Posterior blepharitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Tetracycline</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical and oral</td>
-                <td>Chlamydial conjunctivitis, blepharitis, trachoma</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Tetracycline</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical and oral</td>
+                <td data-label="Indications">Chlamydial conjunctivitis, blepharitis, trachoma</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Erythromycin</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical</td>
-                <td>Chlamydial conjunctivitis, blepharitis, impetigo (not as 1st line treatment)</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Erythromycin</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Chlamydial conjunctivitis, blepharitis, impetigo (not as 1st line treatment)</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Doxycycline</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Oral</td>
-                <td>Trachoma</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Doxycycline</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Oral</td>
+                <td data-label="Indications">Trachoma</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Azithromycin</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Oral</td>
-                <td>Trachoma</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Azithromycin</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Oral</td>
+                <td data-label="Indications">Trachoma</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Antibiotics</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="4"><strong>Antibiotics</strong></td>
-                <td>Fusidic acid</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical (Drops or Ointment)</td>
-                <td>Blepharitis and stye</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Fusidic acid</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical (Drops or Ointment)</td>
+                <td data-label="Indications">Blepharitis and stye</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Neomycin</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical (Drops or Ointment)</td>
-                <td>Blepharitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Neomycin</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical (Drops or Ointment)</td>
+                <td data-label="Indications">Blepharitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Bacitracin</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Ointment</td>
-                <td>Blepharitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Bacitracin</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Ointment</td>
+                <td data-label="Indications">Blepharitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
             <tr data-categories="T">
-                <td>Polymyxin B</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Ointment</td>
-                <td>Blepharitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Polymyxin B</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Ointment</td>
+                <td data-label="Indications">Blepharitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
-            
+
             <tr class="category-header">
                 <td colspan="6">Antiviral and Antifungal</td>
             </tr>
             <tr data-categories="T">
                 <td rowspan="1"><strong>Antiviral and Antifungal</strong></td>
-                <td>Acyclovir</td>
-                <td><span class="schedule-badge">4</span></td>
-                <td>Topical</td>
-                <td>Herpes simplex blepharitis, Conjunctivitis, Epithelial keratitis</td>
-                <td><span class="legend-badge badge-t">T</span></td>
+                <td data-label="Substance">Acyclovir</td>
+                <td data-label="Schedule"><span class="schedule-badge">4</span></td>
+                <td data-label="Route">Topical</td>
+                <td data-label="Indications">Herpes simplex blepharitis, Conjunctivitis, Epithelial keratitis</td>
+                <td data-label="Category"><span class="legend-badge badge-t">T</span></td>
             </tr>
         </tbody>
     </table>
 </div>
 
 <div class="glass" style="margin-top: 24px; padding: 24px; text-align: center;">
-   
+
     <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 16px; opacity: 0.85;">
         <em>Source: Health Professions Council of South Africa (HPCSA) - Professional Board for Optometry and Dispensing Opticians</em>
     </p>
