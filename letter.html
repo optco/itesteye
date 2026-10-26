@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #d9534f;
+      --text-color: #1e2430;
+      --muted: #5b6475;
+      --letter-bg: #ffffff;
+      --glass-bg: rgba(255, 255, 255, 0.55);
+      --glass-strong: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.7);
+      --field-border: rgba(30, 36, 48, 0.14);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 28px 16px 60px;
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e8edf7 0%, #f6e9ee 50%, #e6f1ef 100%);
+      background-attachment: fixed;
+    }
+    /* soft colour blobs behind the glass */
+    body::before, body::after {
+      content: ""; position: fixed; z-index: -1; border-radius: 50%; filter: blur(80px); opacity: .55;
+      pointer-events: none;
+    }
+    body::before { width: 420px; height: 420px; background: var(--primary-color); top: -120px; left: -100px; opacity: .28; }
+    body::after  { width: 480px; height: 480px; background: #6aa7ff; bottom: -160px; right: -120px; opacity: .3; }
+
+    .app { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+    /* ---------- Page heading ---------- */
+    .page-head { text-align: center; padding: 6px 0 4px; }
+    .page-head h1 { margin: 0; font-size: 1.6rem; letter-spacing: .2px; }
+    .page-head p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; }
+    .page-head i { color: var(--primary-color); margin-right: 8px; }
+
+    /* ---------- Glass panels ---------- */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 28px rgba(31, 38, 70, 0.10), inset 0 1px 0 rgba(255,255,255,.8);
+    }
+
+    details.section > summary {
+      list-style: none; cursor: pointer;
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; font-weight: 700; font-size: 1rem; user-select: none;
+    }
+    details.section > summary::-webkit-details-marker { display: none; }
+    details.section > summary .ico {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      display: grid; place-items: center; color: #fff; font-size: .9rem;
+      background: var(--primary-color);
+      box-shadow: 0 4px 10px rgba(0,0,0,.15);
+    }
+    details.section > summary .hint { font-weight: 500; font-size: .8rem; color: var(--muted); margin-left: auto; }
+    details.section > summary .chev { color: var(--muted); font-size: .8rem; transition: transform .2s; }
+    details.section[open] > summary .chev { transform: rotate(180deg); }
+    details.section > summary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; border-radius: var(--radius); }
+    .section-body { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+    .subhead {
+      font-size: .78rem; font-weight: 700; color: var(--muted);
+      padding-bottom: 6px; border-bottom: 1px solid var(--field-border);
+    }
+
+    /* ---------- Fields ---------- */
+    .field label, .field .label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: 5px; color: #3c4456; }
+    .field input[type="text"], .field input[type="email"], .field input[type="tel"], .field input[type="date"],
+    .field select, .field textarea {
+      width: 100%; padding: 10px 12px; font: inherit; font-size: .92rem; color: var(--text-color);
+      background: var(--glass-strong); border: 1px solid var(--field-border); border-radius: 10px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none; border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 22%, transparent);
+    }
+    .field textarea { resize: vertical; min-height: 64px; }
+    .field input[type="color"] { width: 100%; height: 42px; padding: 3px; border: 1px solid var(--field-border); border-radius: 10px; background: var(--glass-strong); cursor: pointer; }
+    .checkbox-label {
+      display: flex !important; align-items: center; gap: 10px; cursor: pointer; margin: 0 !important;
+      padding: 10px 12px; background: var(--glass-strong); border: 1px solid var(--field-border); border-radius: 10px;
+      font-size: .9rem !important; font-weight: 600;
+    }
+    .checkbox-label input { width: 18px; height: 18px; accent-color: var(--primary-color); margin: 0; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .hidden { display: none !important; }
+
+    /* ---------- Buttons ---------- */
+    .actions { display: flex; gap: 12px; padding: 16px 20px; flex-wrap: wrap; }
+    .btn {
+      flex: 1 1 200px; padding: 13px 16px; border: none; border-radius: 12px; cursor: pointer;
+      font: inherit; font-weight: 700; font-size: .95rem; color: #fff;
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      transition: transform .12s, filter .15s;
+    }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible { outline: 2px solid var(--text-color); outline-offset: 2px; }
+    .btn-print { background: #1f9d55; box-shadow: 0 6px 16px rgba(31,157,85,.3); }
+    .btn-reset { background: rgba(60, 68, 86, .85); }
+
+    .preview-label { text-align: center; color: var(--muted); font-size: .85rem; font-weight: 600; margin: 6px 0 -6px; }
+    .preview-label i { margin-right: 6px; }
+    .preview-wrap { overflow-x: auto; padding: 4px 0 8px; }
+
+    /* ---------- The letter (paper) ---------- */
+    #letter-preview {
+      background: var(--letter-bg); width: 210mm; min-height: 297mm;
+      padding: 12mm 20mm 20mm 20mm;
+      margin: 0 auto; color: #111;
+      box-shadow: 0 14px 40px rgba(31, 38, 70, 0.22);
+      position: relative;
+    }
+    .letter-header { display: flex; justify-content: space-between; align-items: center; position: relative; }
+    .logo-area {
+      width: 200px; height: auto; max-height: 110px; object-fit: contain;
+      background: var(--letter-bg); display: block; flex-shrink: 0; margin-right: 40px;
+    }
+    .practice-info { text-align: right; font-size: .85rem; line-height: 1.6; color: #444; flex: 1; }
+    .practice-info strong { color: #111; }
+
+    .color-strip {
+      width: 100%; height: 2px; background: var(--primary-color);
+      margin: 15px 0 20px;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .letter-body { font-size: 11pt; line-height: 1.7; }
+    .letter-body p { margin: 10px 0; }
+    .signature { margin-top: 40px; }
+    .signature p { margin: 4px 0; }
+
+    .notes-box {
+      margin-top: 15px; padding: 10px; border-left: 3px solid var(--primary-color);
+      background: #f8f9fa; font-size: .95em; white-space: pre-wrap;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .terms-box {
+      margin: 15px 0 10px; padding: 10px 15px; border-left: 2px solid #6c757d;
+      background: #f8f9fa; font-size: .85em; line-height: 1.4;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .rx-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin: 15px 0; }
+    .rx-table th, .rx-table td { border: 1px solid #ced4da; padding: 8px; text-align: center; }
+    .rx-table th { background: #f8f9fa; font-weight: 600; border-bottom: 2px solid var(--primary-color); }
+    .rx-table td:first-child { text-align: left; font-weight: 600; }
+
+    .letter-footer {
+      margin-top: 50px; padding: 15px 20px; background: #fff9e6; border: 1px solid #f0e6b8;
+      border-radius: 12px; text-align: center; font-size: .8rem; color: #666;
+    }
+    .letter-footer p { margin: 6px 0; }
+    .letter-footer a { color: var(--primary-color); text-decoration: none; }
+    .letter-footer a:hover { text-decoration: underline; }
+
+    /* ---------- Print ---------- */
+    @media print {
+      body { background: #fff; margin: 0; padding: 0; min-height: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body::before, body::after { display: none; }
+      .app { display: block; max-width: none; }
+      .page-head, .controls, .actions, .preview-label, .letter-footer { display: none !important; }
+      .preview-wrap { overflow: visible; padding: 0; }
+      #letter-preview {
+        box-shadow: none !important; margin: 0 !important;
+        padding: 8mm 15mm 15mm 15mm !important;
+        width: 100% !important; min-height: auto !important; page-break-inside: avoid;
+      }
+      .letter-header { display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; page-break-inside: avoid; }
+      .logo-area { width: 200px !important; height: auto !important; max-height: 110px !important; margin-right: 40px !important; flex-shrink: 0 !important; }
+      .practice-info { text-align: right !important; flex: 1 !important; }
+      .color-strip { height: 2px !important; background: var(--primary-color) !important; }
+      .rx-table th, .rx-table td { border: 1px solid #999 !important; }
+      @page { size: A4 portrait; margin: 0; }
+    }
+
+    @media (max-width: 700px) {
+      .row { grid-template-columns: 1fr; }
+      .row-4 { grid-template-columns: repeat(2, 1fr); }
+      details.section > summary .hint { display: none; }
+      #letter-preview { width: 210mm; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+
+    <header class="page-head">
+      <h1><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>Letter Generator</h1>
+      <p>Fill in the sections below. The letter updates live.</p>
+    </header>
+
+    <div class="controls" style="display:flex; flex-direction:column; gap:14px;">
+
+      <!-- 1. PRACTICE -->
+      <details class="section glass">
+        <summary>
+          <span class="ico"><i class="fa-solid fa-hospital" aria-hidden="true"></i></span>
+          Practice &amp; branding
+          <span class="hint">Saved between letters</span>
+          <i class="fa-solid fa-chevron-down chev" aria-hidden="true"></i>
+        </summary>
+        <div class="section-body">
+          <div class="subhead">Logo &amp; appearance</div>
+          <div class="row">
+            <div class="field">
+              <label for="logoSelector">Logo</label>
+              <select id="logoSelector">
+                <option value="specsavers">Spec Savers</option>
+                <option value="execuspecs">Execuspecs</option>
+                <option value="company" selected>Company</option>
+                <option value="custom">Custom upload</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="themeColor">Theme colour</label>
+              <input type="color" id="themeColor" value="#d9534f">
+            </div>
+          </div>
+          <div class="field hidden" id="customLogoField">
+            <label for="logoUpload">Upload custom logo</label>
+            <input type="file" id="logoUpload" accept="image/*">
+          </div>
+
+          <div class="subhead">Practice details</div>
+          <div class="row">
+            <div class="field"><label for="practiceNo">Practice no.</label><input type="text" id="practiceNo" value="0XXXXXX"></div>
+            <div class="field"><label for="letterDate">Letter date</label><input type="date" id="letterDate"></div>
+          </div>
+          <div class="field"><label for="practiceName">Practice name</label><input type="text" id="practiceName" value="123 Clinic"></div>
+          <div class="field"><label for="practiceAddress">Address</label><textarea id="practiceAddress" rows="2">XYZ Centre, ABC Drive, PQR City</textarea></div>
+          <div class="row">
+            <div class="field"><label for="practiceEmail">Email</label><input type="email" id="practiceEmail" value="clinic@example.co.za"></div>
+            <div class="field"><label for="practicePhone">Phone</label><input type="tel" id="practicePhone" value="011 XXX XXXX"></div>
+          </div>
+
+          <div class="subhead">Optometrist</div>
+          <div class="row">
+            <div class="field"><label for="doctorName">Name</label><input type="text" id="doctorName" value="XYZ"></div>
+            <div class="field"><label for="doctorQual">Qualifications</label><input type="text" id="doctorQual" value="Qualification (UJ)"></div>
+          </div>
+        </div>
+      </details>
+
+      <!-- 2. PATIENT -->
+      <details class="section glass" open>
+        <summary>
+          <span class="ico"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          Patient
+          <i class="fa-solid fa-chevron-down chev" aria-hidden="true"></i>
+        </summary>
+        <div class="section-body">
+          <div class="row">
+            <div class="field"><label for="patientName">Full name</label><input type="text" id="patientName" value="Patient Name"></div>
+            <div class="field">
+              <label for="patientGender">Gender</label>
+              <select id="patientGender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Non-binary / Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="attendanceDate">Attendance date</label><input type="date" id="attendanceDate"></div>
+            <div class="field">
+              <label for="escort">Escorted by</label>
+              <select id="escort">
+                <option value="Self">Self</option>
+                <option value="Parent/Guardian">Parent/Guardian</option>
+                <option value="None">None</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- 3. LETTER CONTENT -->
+      <details class="section glass" open>
+        <summary>
+          <span class="ico"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></span>
+          Letter content
+          <i class="fa-solid fa-chevron-down chev" aria-hidden="true"></i>
+        </summary>
+        <div class="section-body">
+          <div class="field">
+            <label for="salutationSelect">Addressed to</label>
+            <select id="salutationSelect">
+              <option value="To whom it may concern,">To whom it may concern</option>
+              <option value="Dear Ophthalmologist,">Dear Ophthalmologist</option>
+              <option value="Dear GP,">Dear GP</option>
+              <option value="Dear Pharmacist,">Dear Pharmacist</option>
+              <option value="Dear Optometrist,">Dear Optometrist</option>
+              <option value="custom">Custom…</option>
+            </select>
+          </div>
+          <div class="field hidden" id="salutationCustomField">
+            <label for="salutationCustom">Custom salutation</label>
+            <input type="text" id="salutationCustom" placeholder="e.g., Dear Dr Smith,">
+          </div>
+
+          <div class="field">
+            <label for="letterSubject">Subject / title (optional)</label>
+            <input type="text" id="letterSubject" placeholder="e.g., SUBJECT: MEDICAL CERTIFICATE">
+          </div>
+          <div class="field">
+            <label for="reason">Reason / prescription text</label>
+            <textarea id="reason" rows="3">was present at our clinic for a full eye test and was prescribed new spectacles for regular use.</textarea>
+          </div>
+
+          <div class="subhead">Excuse</div>
+          <div class="field">
+            <label class="checkbox-label">
+              <input type="checkbox" id="showExcuse" checked>
+              Include "Kindly excuse…" sentence
+            </label>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="excuseType">Excuse from</label>
+              <select id="excuseType">
+                <option value="work">Work</option>
+                <option value="school">School</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="durationType">Duration</label>
+              <select id="durationType">
+                <option value="the day">the day</option>
+                <option value="the time">the time</option>
+                <option value="the day and time">the day and time</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="additionalNotes">Comments</label>
+            <textarea id="additionalNotes" rows="3" placeholder="Leave blank to hide…"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- 4. PRESCRIPTION -->
+      <details class="section glass">
+        <summary>
+          <span class="ico"><i class="fa-solid fa-glasses" aria-hidden="true"></i></span>
+          Prescription
+          <span class="hint">Optional</span>
+          <i class="fa-solid fa-chevron-down chev" aria-hidden="true"></i>
+        </summary>
+        <div class="section-body">
+          <div class="field">
+            <span class="label">Right eye (OD)</span>
+            <div class="row-4">
+              <div class="field"><label for="odSph">Sph</label><input type="text" id="odSph" placeholder="-"></div>
+              <div class="field"><label for="odCyl">Cyl</label><input type="text" id="odCyl" placeholder="-"></div>
+              <div class="field"><label for="odAxis">Axis</label><input type="text" id="odAxis" placeholder="-"></div>
+              <div class="field"><label for="odAdd">Add</label><input type="text" id="odAdd" placeholder="-"></div>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label">Left eye (OS)</span>
+            <div class="row-4">
+              <div class="field"><label for="osSph">Sph</label><input type="text" id="osSph" placeholder="-"></div>
+              <div class="field"><label for="osCyl">Cyl</label><input type="text" id="osCyl" placeholder="-"></div>
+              <div class="field"><label for="osAxis">Axis</label><input type="text" id="osAxis" placeholder="-"></div>
+              <div class="field"><label for="osAdd">Add</label><input type="text" id="osAdd" placeholder="-"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="termsDefinitions">Explain terms for patient understanding</label>
+            <textarea id="termsDefinitions" rows="4" placeholder="e.g., OD = Right Eye, OS = Left Eye, Sph = Sphere..."></textarea>
+          </div>
+        </div>
+      </details>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions glass">
+      <button class="btn btn-print" id="btnPrint" onclick="printLetter()"><i class="fa-solid fa-print" aria-hidden="true"></i> Print / Save as PDF</button>
+      <button class="btn btn-reset" onclick="resetLetterDefaults()"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Clear patient data</button>
+    </div>
+
+    <div class="preview-label"><i class="fa-regular fa-eye" aria-hidden="true"></i>Live preview</div>
+
+    <div class="preview-wrap">
+      <div id="letter-preview">
+        <div class="letter-header">
+          <img id="logoImg" class="logo-area" src="" alt="Practice Logo">
+
+          <div class="practice-info">
+            <strong>Practice No.: <span id="p_practiceNo">0XXXXXX</span></strong><br>
+            <strong>Date: <span id="p_date"></span></strong><br><br>
+            <span id="p_practiceName">123 Clinic</span><br>
+            <span id="p_address">XYZ Centre, ABC Drive, PQR City</span><br>
+            <a id="p_email">clinic@example.co.za</a><br><span id="p_phone">011 XXX XXXX</span>
+          </div>
+        </div>
+
+        <p id="p_letterSubject" style="font-weight: bold; text-align: center; margin: 15px 0 10px 0; font-size: 12pt; text-transform: uppercase; display: none;"></p>
+
+        <div class="color-strip"></div>
+
+        <div class="letter-body">
+          <p id="p_salutation">To whom it may concern,</p>
+          <p>This is to certify that <span id="p_titleName"></span> <span id="p_patientName"></span> <span id="p_reason"></span></p>
+
+          <p><span id="p_pronounCap"></span> attended our clinic on: <span id="p_attendanceDate"></span></p>
+          <p id="escortRow" style="margin: 8px 0;"><b>Escorted by:</b> <span id="p_escort">Self</span></p>
+          <p style="margin: 8px 0;"><b>Tested by:</b> <span id="p_doctor">Optometrist XYZ</span></p>
+
+          <p id="p_excuseParagraph">Kindly excuse <span id="p_pronounObj"></span> from <span id="p_excuseType"></span> for <span id="p_duration"></span> spent at our clinic.</p>
+
+          <div id="p_prescription" style="display:none;">
+            <b>Patient Prescription:</b>
+            <table class="rx-table">
+              <thead>
+                <tr><th>Eye</th><th>Sph</th><th>Cyl</th><th>Axis</th><th>Add</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>OD (Right)</td>
+                  <td id="p_odSph">-</td><td id="p_odCyl">-</td><td id="p_odAxis">-</td><td id="p_odAdd">-</td>
+                </tr>
+                <tr>
+                  <td>OS (Left)</td>
+                  <td id="p_osSph">-</td><td id="p_osCyl">-</td><td id="p_osAxis">-</td><td id="p_osAdd">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <b>Comments:</b>
+          <div id="p_notes" class="notes-box" style="display:none;"></div>
+
+          <div id="p_terms" class="terms-box" style="display:none;">
+            <span id="p_termsText"></span>
+          </div>
+
+          <p>Should there be any queries, please do not hesitate to contact us.</p>
+
+          <div class="signature">
+            <p>Kind regards,</p>
+            <p><strong id="p_doctorSign">Optometrist XYZ</strong><br>
+            <span id="p_qual">Qualification (UJ)</span></p>
+          </div>
+
+          <div class="color-strip"></div>
+        </div>
+
+        <div class="letter-footer">
+          <p>A valid sick note must be issued and signed by a medical practitioner registered with the Health Professions Council of South Africa (HPCSA).</p>
+          <p>© 2026 <a href="https://itesteye.com" target="_blank" rel="noopener">itesteye.com</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LOGOS = {
+      execuspecs: "/img/execuspecs.png",
+      specsavers: "/img/specsavers.png",
+      company: "/img/company.png"
+    };
+    const PRACTICE_STORAGE_KEY = 'optom_practice_settings';
+    const LETTER_STORAGE_KEY = 'optom_letter_settings';
+    const DEFAULT_SALUTATION = 'To whom it may concern,';
+    const $ = (id) => document.getElementById(id);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      toggleSalutationCustom();
+      updateAll();
+
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+        el.addEventListener('input', updateAll);
+        el.addEventListener('change', updateAll);
+      });
+
+      $('salutationSelect').addEventListener('change', () => {
+        toggleSalutationCustom();
+        if ($('salutationSelect').value === 'custom') $('salutationCustom').focus();
+      });
+
+      $('themeColor').addEventListener('input', (e) => {
+        document.documentElement.style.setProperty('--primary-color', e.target.value);
+      });
+
+      $('logoSelector').addEventListener('change', (e) => {
+        const customField = $('customLogoField');
+        if (e.target.value === 'custom') {
+          customField.classList.remove('hidden');
+        } else {
+          customField.classList.add('hidden');
+          updateLogo();
+        }
+      });
+
+      $('logoUpload').addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            $('logoImg').src = evt.target.result;
+            updateAll();
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    });
+
+    function toggleSalutationCustom() {
+      $('salutationCustomField').classList.toggle('hidden', $('salutationSelect').value !== 'custom');
+    }
+
+    function getSalutation() {
+      if ($('salutationSelect').value === 'custom') {
+        return $('salutationCustom').value.trim() || DEFAULT_SALUTATION;
+      }
+      return $('salutationSelect').value;
+    }
+
+    function saveState() {
+      const practiceData = {
+        logoSelector: $('logoSelector').value,
+        customLogoData: $('logoSelector').value === 'custom' ? $('logoImg').src : '',
+        themeColor: $('themeColor').value,
+        practiceNo: $('practiceNo').value,
+        practiceName: $('practiceName').value,
+        practiceAddress: $('practiceAddress').value,
+        practiceEmail: $('practiceEmail').value,
+        practicePhone: $('practicePhone').value,
+        doctorName: $('doctorName').value,
+        doctorQual: $('doctorQual').value,
+      };
+
+      const letterData = {
+        patientName: $('patientName').value,
+        patientGender: $('patientGender').value,
+        escort: $('escort').value,
+        salutationChoice: $('salutationSelect').value,
+        salutationCustom: $('salutationCustom').value,
+        letterSubject: $('letterSubject').value,
+        reason: $('reason').value,
+        showExcuse: $('showExcuse').checked,
+        excuseType: $('excuseType').value,
+        durationType: $('durationType').value,
+        additionalNotes: $('additionalNotes').value,
+        odSph: $('odSph').value, odCyl: $('odCyl').value, odAxis: $('odAxis').value, odAdd: $('odAdd').value,
+        osSph: $('osSph').value, osCyl: $('osCyl').value, osAxis: $('osAxis').value, osAdd: $('osAdd').value,
+        termsDefinitions: $('termsDefinitions').value
+      };
+
+      try {
+        localStorage.setItem(PRACTICE_STORAGE_KEY, JSON.stringify(practiceData));
+        localStorage.setItem(LETTER_STORAGE_KEY, JSON.stringify(letterData));
+      } catch (e) {
+        console.warn('localStorage quota exceeded. Custom logo may be too large.');
+      }
+    }
+
+    function loadState() {
+      const today = new Date().toISOString().split('T')[0];
+
+      // Dates always reset to today on page load
+      $('letterDate').value = today;
+      $('attendanceDate').value = today;
+
+      let savedPractice = null, savedLetter = null;
+      try {
+        savedPractice = localStorage.getItem(PRACTICE_STORAGE_KEY);
+        savedLetter = localStorage.getItem(LETTER_STORAGE_KEY);
+      } catch (e) {}
+
+      if (savedPractice) {
+        const p = JSON.parse(savedPractice);
+        $('logoSelector').value = p.logoSelector || 'company';
+        if (p.logoSelector === 'custom' && p.customLogoData) {
+          $('logoImg').src = p.customLogoData;
+          $('customLogoField').classList.remove('hidden');
+        } else {
+          updateLogo();
+        }
+        $('themeColor').value = p.themeColor || '#d9534f';
+        document.documentElement.style.setProperty('--primary-color', $('themeColor').value);
+        $('practiceNo').value = p.practiceNo || '0XXXXXX';
+        $('practiceName').value = p.practiceName || '123 Clinic';
+        $('practiceAddress').value = p.practiceAddress || 'XYZ Centre, ABC Drive, PQR City';
+        $('practiceEmail').value = p.practiceEmail || 'clinic@example.co.za';
+        $('practicePhone').value = p.practicePhone || '011 XXX XXXX';
+        $('doctorName').value = p.doctorName || 'XYZ';
+        $('doctorQual').value = p.doctorQual || 'Qualification (UJ)';
+      } else {
+        updateLogo();
+      }
+
+      if (savedLetter) {
+        const l = JSON.parse(savedLetter);
+        $('patientName').value = l.patientName || 'Patient Name';
+        $('patientGender').value = l.patientGender || 'male';
+        $('escort').value = l.escort || 'Self';
+
+        // Salutation: new format, with fallback for letters saved by the old version
+        const sel = $('salutationSelect');
+        const optionValues = Array.from(sel.options).map(o => o.value);
+        if (l.salutationChoice && optionValues.includes(l.salutationChoice)) {
+          sel.value = l.salutationChoice;
+          $('salutationCustom').value = l.salutationCustom || '';
+        } else if (l.salutation) {
+          if (optionValues.includes(l.salutation)) {
+            sel.value = l.salutation;
+          } else {
+            sel.value = 'custom';
+            $('salutationCustom').value = l.salutation;
+          }
+        }
+
+        $('letterSubject').value = l.letterSubject || '';
+        $('reason').value = l.reason || 'was present at our clinic for a full eye test and was prescribed new spectacles for regular use.';
+        $('showExcuse').checked = l.showExcuse !== undefined ? l.showExcuse : true;
+        $('excuseType').value = l.excuseType || 'work';
+        $('durationType').value = l.durationType || 'the day';
+        $('additionalNotes').value = l.additionalNotes || '';
+        ['odSph','odCyl','odAxis','odAdd','osSph','osCyl','osAxis','osAdd'].forEach(k => { $(k).value = l[k] || ''; });
+        $('termsDefinitions').value = l.termsDefinitions || '';
+      }
+    }
+
+    function resetLetterDefaults() {
+      try { localStorage.removeItem(LETTER_STORAGE_KEY); } catch (e) {}
+      location.reload();
+    }
+
+    function printLetter() {
+      const patientName = $('patientName').value.trim() || 'Patient';
+      const safeName = patientName.replace(/[^a-zA-Z0-9\s\-_]/g, '').replace(/\s+/g, '_');
+      const originalTitle = document.title;
+
+      document.title = `Letter_${safeName}`;
+
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => { document.title = originalTitle; }, 1000);
+      }, 100);
+    }
+
+    function updateLogo() {
+      const selector = $('logoSelector').value;
+      if (selector === 'custom') return;
+      if (LOGOS[selector]) $('logoImg').src = LOGOS[selector];
+    }
+
+    function updateExcuseVisibility() {
+      $('p_excuseParagraph').style.display = $('showExcuse').checked ? 'block' : 'none';
+    }
+
+    function updateAll() {
+      $('p_date').textContent = formatDate($('letterDate').value);
+      $('p_attendanceDate').textContent = formatDate($('attendanceDate').value);
+
+      $('p_practiceNo').textContent = $('practiceNo').value || '[Practice No.]';
+      $('p_practiceName').textContent = $('practiceName').value || '[Practice Name]';
+      $('p_address').innerHTML = escapeHtml($('practiceAddress').value || '[Address]').replace(/\n/g, '<br>');
+      $('p_email').textContent = $('practiceEmail').value;
+      $('p_phone').textContent = $('practicePhone').value;
+
+      const name = $('patientName').value.trim() || '[Patient Name]';
+      const gender = $('patientGender').value;
+      let title = 'Mr', pronounSubj = 'He', pronounObj = 'him';
+      if (gender === 'female') { title = 'Ms'; pronounSubj = 'She'; pronounObj = 'her'; }
+      else if (gender === 'other') { title = 'Mx'; pronounSubj = 'They'; pronounObj = 'them'; }
+
+      $('p_titleName').textContent = title;
+      $('p_patientName').textContent = name;
+      $('p_pronounCap').textContent = pronounSubj;
+      $('p_pronounObj').textContent = pronounObj;
+
+      $('p_salutation').textContent = getSalutation();
+
+      const subjectVal = $('letterSubject').value.trim();
+      const subjectEl = $('p_letterSubject');
+      if (subjectVal) {
+        subjectEl.textContent = subjectVal;
+        subjectEl.style.display = 'block';
+      } else {
+        subjectEl.style.display = 'none';
+      }
+
+      $('p_reason').textContent = $('reason').value || '[reason/prescription text]';
+
+      const escortVal = $('escort').value;
+      const escortRow = $('escortRow');
+      if (escortVal === 'None') {
+        escortRow.style.display = 'none';
+      } else {
+        escortRow.style.display = 'block';
+        $('p_escort').textContent = escortVal;
+      }
+
+      const docName = $('doctorName').value.trim();
+      const formattedDocName = docName ? `Optometrist ${docName}` : 'Optometrist [Name]';
+      $('p_doctor').textContent = formattedDocName;
+      $('p_doctorSign').textContent = formattedDocName;
+      $('p_qual').textContent = $('doctorQual').value;
+
+      $('p_excuseType').textContent = $('excuseType').value;
+      $('p_duration').textContent = $('durationType').value;
+
+      const notes = $('additionalNotes').value.trim();
+      const notesEl = $('p_notes');
+      if (notes) {
+        notesEl.style.display = 'block';
+        notesEl.textContent = notes;
+      } else {
+        notesEl.style.display = 'none';
+      }
+
+      const hasRx = $('odSph').value || $('odCyl').value || $('osSph').value || $('osCyl').value;
+      const rxDiv = $('p_prescription');
+      if (hasRx) {
+        rxDiv.style.display = 'block';
+        ['odSph','odCyl','odAxis','odAdd','osSph','osCyl','osAxis','osAdd'].forEach(k => {
+          $('p_' + k).textContent = $(k).value || '-';
+        });
+      } else {
+        rxDiv.style.display = 'none';
+      }
+
+      const terms = $('termsDefinitions').value.trim();
+      const termsEl = $('p_terms');
+      if (terms) {
+        termsEl.style.display = 'block';
+        $('p_termsText').innerHTML = terms.split('\n').map(line => escapeHtml(line.trim())).join('<br>');
+      } else {
+        termsEl.style.display = 'none';
+      }
+
+      updateExcuseVisibility();
+      saveState();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '[Date]';
+      const [y, m, d] = dateStr.split('-');
+      return `${d}/${m}/${y}`;
+    }
+  </script>
+</body>
+</html>
