@@ -343,9 +343,20 @@
           </div>
 
           <div class="field">
-            <label for="letterSubject">Subject / title (optional)</label>
+            <label for="subjectSelect">Subject / title (optional)</label>
+            <select id="subjectSelect">
+              <option value="none" selected>None</option>
+              <option value="Work Excuse Letter">Work Excuse Letter</option>
+              <option value="Prescription">Prescription</option>
+              <option value="Referral">Referral</option>
+              <option value="custom">Custom…</option>
+            </select>
+          </div>
+          <div class="field hidden" id="subjectCustomField">
+            <label for="letterSubject">Custom subject</label>
             <input type="text" id="letterSubject" placeholder="e.g., SUBJECT: MEDICAL CERTIFICATE">
           </div>
+
           <div class="field">
             <label for="reason">Reason / prescription text</label>
             <textarea id="reason" rows="3">was present at our clinic for a full eye test and was prescribed new spectacles for regular use.</textarea>
@@ -517,6 +528,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       loadState();
       toggleSalutationCustom();
+      toggleSubjectCustom();
       updateAll();
 
       document.querySelectorAll('input, select, textarea').forEach(el => {
@@ -527,6 +539,11 @@
       $('salutationSelect').addEventListener('change', () => {
         toggleSalutationCustom();
         if ($('salutationSelect').value === 'custom') $('salutationCustom').focus();
+      });
+
+      $('subjectSelect').addEventListener('change', () => {
+        toggleSubjectCustom();
+        if ($('subjectSelect').value === 'custom') $('letterSubject').focus();
       });
 
       $('themeColor').addEventListener('input', (e) => {
@@ -566,6 +583,17 @@
       return $('salutationSelect').value;
     }
 
+    function toggleSubjectCustom() {
+      $('subjectCustomField').classList.toggle('hidden', $('subjectSelect').value !== 'custom');
+    }
+
+    function getSubject() {
+      const v = $('subjectSelect').value;
+      if (v === 'none') return '';
+      if (v === 'custom') return $('letterSubject').value.trim();
+      return v;
+    }
+
     function saveState() {
       const practiceData = {
         logoSelector: $('logoSelector').value,
@@ -586,6 +614,7 @@
         escort: $('escort').value,
         salutationChoice: $('salutationSelect').value,
         salutationCustom: $('salutationCustom').value,
+        subjectChoice: $('subjectSelect').value,
         letterSubject: $('letterSubject').value,
         reason: $('reason').value,
         showExcuse: $('showExcuse').checked,
@@ -661,7 +690,21 @@
           }
         }
 
-        $('letterSubject').value = l.letterSubject || '';
+        // Subject: new format, with fallback for letters saved by the old version
+        const subSel = $('subjectSelect');
+        const subOpts = Array.from(subSel.options).map(o => o.value);
+        if (l.subjectChoice && subOpts.includes(l.subjectChoice)) {
+          subSel.value = l.subjectChoice;
+          $('letterSubject').value = l.letterSubject || '';
+        } else if (l.letterSubject) {
+          if (subOpts.includes(l.letterSubject)) {
+            subSel.value = l.letterSubject;
+          } else {
+            subSel.value = 'custom';
+            $('letterSubject').value = l.letterSubject;
+          }
+        }
+
         $('reason').value = l.reason || 'was present at our clinic for a full eye test and was prescribed new spectacles for regular use.';
         $('showExcuse').checked = l.showExcuse !== undefined ? l.showExcuse : true;
         $('excuseType').value = l.excuseType || 'work';
@@ -723,7 +766,7 @@
 
       $('p_salutation').textContent = getSalutation();
 
-      const subjectVal = $('letterSubject').value.trim();
+      const subjectVal = getSubject();
       const subjectEl = $('p_letterSubject');
       if (subjectVal) {
         subjectEl.textContent = subjectVal;
