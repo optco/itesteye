@@ -32,13 +32,17 @@ h2 small{opacity:.85;font-weight:500}
 .row.copied .code::after{content:" ✓"}
 .empty{text-align:center;color:var(--muted);padding:30px}
 footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:20px}
+  a, a:hover, a:visited {
+  text-decoration: none;
+  color: inherit; /* optional: keeps the surrounding text colour instead of browser blue/purple */
+}
 </style>
 </head>
 <body>
 <main>
-  <a class="tag" href="index.html"><span aria-hidden="true">←</span> Back to all resources</a>
+  
 <header>
-<span class="tag">OPTOMETRY</span>
+<a class="tag" href="index.html"><span aria-hidden="true">←</span> Back to all resources</a> <span class="tag">OPTOMETRY</span>
 <h1>Optometry Tariff Codes</h1>
 <p>Tariffs with effect from 1 January 2020 · <span id="total"></span> codes</p>
 </header>
