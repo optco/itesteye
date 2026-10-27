@@ -18,6 +18,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+:root {
+  --bg1: #e9f7ee;
+  --bg2: #d4eef0;
+  --green: #13a538;
+  --teal: #00a99d;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg1: #0a1f17;
+    --bg2: #08262b;
+    color-scheme: dark;
+  }
+}
+
+body {
+  background-color: var(--bg1);
+  background-image: 
+    radial-gradient(circle at 15% 0, var(--green) 0, transparent 35%),
+    radial-gradient(circle at 90% 30%, var(--teal) 0, transparent 30%),
+    linear-gradient(160deg, var(--bg1), var(--bg2));
+}
+</style>
     <style>
 /* ---------- Theme (shared with the converter page) ---------- */
 :root{--bg:#f4f6f8;--card:#fff;--soft:#f4f6f8;--text:#14202b;--muted:#5d6b78;--line:#d9e0e6;--accent:#0a7c86;--accent-h:#075a62;--accent-t:#fff;--res:#e6f4f5;--shadow:0 2px 10px rgba(20,32,43,.08);
