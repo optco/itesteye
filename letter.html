@@ -221,6 +221,7 @@
       #letter-preview { width: 210mm; }
     }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    .tag, a, a:hover, a:visited{display:inline-block;background:var(--green);color:#fff;font-weight:700;letter-spacing:.12em;font-size:12px;padding:5px 14px;border-radius:99px; text-decoration: none}
   </style>
 </head>
 <body>
@@ -228,7 +229,7 @@
   <div class="app">
 
     <header class="page-head">
-      <h1><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>Letter Generator</h1>
+      <h1><a class="tag" href="index.html"><span aria-hidden="true">←</span> Back to all resources</a> <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>Letter Generator</h1>
       <p>Fill in the sections below. The letter updates live.</p>
     </header>
 
