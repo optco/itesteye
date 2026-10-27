@@ -13,7 +13,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:var(--bg1);background-image:radial-gradient(circle at 15% 0,var(--green) 0,transparent 35%),radial-gradient(circle at 90% 30%,var(--teal) 0,transparent 30%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
 main{max-width:760px;margin:0 auto;padding:28px 16px 48px}
 header{text-align:center;margin-bottom:20px}
-.tag{display:inline-block;background:var(--green);color:#fff;font-weight:700;letter-spacing:.12em;font-size:12px;padding:5px 14px;border-radius:99px}
+.tag, a, a:hover, a:visited{display:inline-block;background:var(--green);color:#fff;font-weight:700;letter-spacing:.12em;font-size:12px;padding:5px 14px;border-radius:99px; text-decoration: none}
 h1{margin:12px 0 4px;font-size:clamp(26px,6vw,38px);letter-spacing:-.02em}
 header p{margin:0;color:var(--muted);font-size:14px}
 .glass{background:var(--glass);border:1px solid var(--edge);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-radius:20px;box-shadow:0 8px 30px rgba(0,60,30,.12)}
@@ -31,7 +31,7 @@ h2 small{opacity:.85;font-weight:500}
 .row.copied .code::after{content:" ✓"}
 .empty{text-align:center;color:var(--muted);padding:30px}
 footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:20px}
-a, a:hover, a:visited {text-decoration: none;color: inherit}
+
 
 #sidebar{position:fixed;top:0;left:0;width:280px;max-width:80vw;height:100vh;z-index:100;transform:translateX(-100%);transition:transform .3s ease;padding:24px 20px;overflow-y:auto;border-radius:0 20px 20px 0;border-left:0}
 #sidebar.open{transform:translateX(0)}
