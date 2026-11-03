@@ -206,31 +206,43 @@ body::before {
     `;
     document.head.appendChild(style);
 
-    // 4. Inject HTML with the new links
-    const menuHTML = `
-        
-            <a href="https://theattn.com" target="_blank" rel="noopener noreferrer" class="menu-item">
-                <i class="fa-solid fa-newspaper" aria-hidden="true"></i> News
-            </a>
-             <a href="https://amslergr.id/" target="_blank" rel="noopener noreferrer" class="menu-item">
-                <i class="fas fa-eye" aria-hidden="true"></i> Optometry Charts
-            </a>
-              
-              <a href="https://gbps.me" target="_blank" rel="noopener noreferrer" class="menu-item">
-                <i class="fas fa-magnifying-glass" aria-hidden="true"></i> More Tools
-            </a>
-                 <a href="https://shamsi.co.za" target="_blank" rel="noopener noreferrer" class="menu-item">
-                <i class="fas fa-house-chimney" aria-hidden="true"></i> Properties
-            </a>
-            <a href="https://instagram.com/itesteye" target="_blank" rel="noopener noreferrer" class="menu-item">
-                <i class="fas fa-user" aria-hidden="true"></i> Follow Akhtar
-            </a>
-           
-            
+           const menuHTML = `
+        <button class="hamburger-btn" id="menuBtn" aria-label="Menu">☰</button>
+        <div class="hamburger-menu" id="hamburgerMenu">
+            <div class="menu-links">
+                <a class="menu-item" href="calc.html">
+                    <i class="fa fa-random" aria-hidden="true"></i> Calculator
+                </a>
+                <a class="menu-item" href="/letter" target="_blank" rel="noopener noreferrer" title="A valid sick note must be issued and signed by a medical practitioner registered with the HPCSA">
+                    <i class="fas fa-file-pen" aria-hidden="true"></i> Letter Maker
+                </a>
+                <a class="menu-item" href="https://itesteye.com/therapeutics" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-prescription-bottle-medical" aria-hidden="true"></i> Therapeutics
+                </a>
+                <a class="menu-item" href="https://theattn.com/poster" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-image" aria-hidden="true"></i> Poster Maker
+                </a>
+                <a class="menu-item" href="https://theattn.com/invoice" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Invoice Maker
+                </a>
+                <a class="menu-item" href="https://theattn.com" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-newspaper" aria-hidden="true"></i> News
+                </a>
+                <a class="menu-item" href="https://amslergr.id/" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-eye" aria-hidden="true"></i> Optometry Charts
+                </a>
+                <a class="menu-item" href="https://gbps.me" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-magnifying-glass" aria-hidden="true"></i> More Tools
+                </a>
+                <a class="menu-item" href="https://shamsi.co.za" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-house-chimney" aria-hidden="true"></i> Properties
+                </a>
+                <a class="menu-item" href="https://instagram.com/itesteye" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-user" aria-hidden="true"></i> Follow Akhtar
+                </a>
+            </div>
         </div>
-    </div>
     `;
-
     const wrapper = document.createElement('div');
     wrapper.innerHTML = menuHTML;
     document.body.appendChild(wrapper);
