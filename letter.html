@@ -10,6 +10,7 @@
     <link rel="manifest" href="https://akhtar.co.za/favicons/site.webmanifest">
   <title>Letter</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+ <link rel="stylesheet" href="bg.css">
   <style>
     :root {
       --primary-color: #d9534f;
@@ -31,7 +32,7 @@
       padding: 28px 16px 60px;
       color: var(--text-color);
       min-height: 100vh;
-      background: linear-gradient(135deg, #e8edf7 0%, #f6e9ee 50%, #e6f1ef 100%);
+     
       background-attachment: fixed;
     }
     /* soft colour blobs behind the glass */
@@ -39,8 +40,7 @@
       content: ""; position: fixed; z-index: -1; border-radius: 50%; filter: blur(80px); opacity: .55;
       pointer-events: none;
     }
-    body::before { width: 420px; height: 420px; background: var(--primary-color); top: -120px; left: -100px; opacity: .28; }
-    body::after  { width: 480px; height: 480px; background: #6aa7ff; bottom: -160px; right: -120px; opacity: .3; }
+  
 
     .app {
       max-width: 1280px; margin: 0 auto;
