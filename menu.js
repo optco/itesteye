@@ -28,8 +28,8 @@
                 --hm-card: #fff;
                 --hm-text: #14202b;
                 --hm-line: #d9e0e6;
-                --hm-accent: #0a7c86;
-                --hm-accent-h: #075a62;
+                --hm-accent: #0284C7;
+                --hm-accent-h: #0EA5E9;
                 --hm-accent-t: #fff;
                 --hm-shadow: 0 4px 12px rgba(20, 32, 43, 0.12);
             }
