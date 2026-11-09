@@ -1,24 +1,58 @@
-/* ===== Shared page background (gradient + soft colour blobs) ===== */
-:root{
-  --bg-from:#e8edf7; --bg-mid:#f6e9ee; --bg-to:#e6f1ef;
-  --blob-a:var(--primary-color, var(--accent, #d9534f));
-  --blob-b:#6aa7ff;
-  --blob-opacity:1;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg-from:#0e151b;--bg-mid:#121b22;--bg-to:#0f1c1f;--blob-opacity:.45}
-}
-:root[data-theme="dark"]{--bg-from:#0e151b;--bg-mid:#121b22;--bg-to:#0f1c1f;--blob-opacity:.45}
+/* ==========================================================
+   bg.css - shared static background (colours only, no animation)
+   Based on the CV page: soft blue, green and yellow blobs.
+   Usage: <link rel="stylesheet" href="bg.css"> AFTER your other styles.
+   ========================================================== */
 
-body{
-  background:linear-gradient(135deg,var(--bg-from) 0%,var(--bg-mid) 50%,var(--bg-to) 100%);
-  background-attachment:fixed;
-  min-height:100vh;
+:root {
+  --bg-base: #F8FAFC;
+  --blob1-a: #BAE6FD; --blob1-b: #7DD3FC;   /* blue, top-left */
+  --blob2-a: #A7F3D0; --blob2-b: #6EE7B7;   /* green, bottom-right */
+  --blob3-a: #FDE68A; --blob3-b: #FCD34D;   /* yellow, middle-right */
+  --blob-opacity: 1;                        /* dims all blobs in dark mode */
 }
-body::before,body::after{
-  content:"";position:fixed;z-index:-1;border-radius:50%;
-  filter:blur(80px);pointer-events:none;
+
+/* Dark mode (follows the same switches your index page uses) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg-base: #0e151b; --blob-opacity: .28; }
 }
-body::before{width:420px;height:420px;background:var(--blob-a);top:-120px;left:-100px;opacity:calc(.28*var(--blob-opacity))}
-body::after{width:480px;height:480px;background:var(--blob-b);bottom:-160px;right:-120px;opacity:calc(.3*var(--blob-opacity))}
-@media print{body::before,body::after{display:none}}
+:root[data-theme="dark"] { --bg-base: #0e151b; --blob-opacity: .28; }
+
+/* Base colour goes on <html> so it sits behind everything */
+html { background: var(--bg-base) !important; }
+body { background: transparent !important; min-height: 100vh; }
+
+/* Three blobs: html::before, body::before, body::after */
+html::before, body::before, body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+body::before {            /* blue */
+  width: 500px; height: 500px;
+  top: -10%; left: -10%;
+  background: linear-gradient(135deg, var(--blob1-a), var(--blob1-b));
+  opacity: calc(.7 * var(--blob-opacity));
+}
+body::after {             /* green */
+  width: 400px; height: 400px;
+  bottom: 10%; right: -5%;
+  background: linear-gradient(135deg, var(--blob2-a), var(--blob2-b));
+  opacity: calc(.7 * var(--blob-opacity));
+}
+html::before {            /* yellow, subtle */
+  width: 300px; height: 300px;
+  top: 40%; left: 60%;
+  background: linear-gradient(135deg, var(--blob3-a), var(--blob3-b));
+  opacity: calc(.2 * var(--blob-opacity));
+}
+
+/* Keep blobs off paper */
+@media print {
+  html::before, body::before, body::after { display: none !important; }
+  html { background: #fff !important; }
+}
