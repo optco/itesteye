@@ -1,10 +1,30 @@
 (function() {
   function init() {
     // --- UNIFIED STYLES ---
-    if (!document.getElementById('pl-bottombar-styles-v5')) {
+    if (!document.getElementById('pl-bottombar-styles-v6')) {
+      // remove the old version's styles if they are still around
+      const old = document.getElementById('pl-bottombar-styles-v5');
+      if (old) old.remove();
+
       const style = document.createElement('style');
-      style.id = 'pl-bottombar-styles-v5';
+      style.id = 'pl-bottombar-styles-v6';
       style.textContent = `
+        :root {
+          --pl-bar-height: 30px;
+          --pl-glass-bg: rgba(255, 255, 255, 0.55);
+          --pl-glass-border: rgba(255, 255, 255, 0.35);
+          --pl-glass-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+          --pl-text: #111111;
+        }
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --pl-glass-bg: rgba(15, 15, 20, 0.5);
+            --pl-glass-border: rgba(255, 255, 255, 0.08);
+            --pl-glass-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
+            --pl-text: #f2f2f2;
+          }
+        }
+
         /* --- Loader --- */
         #pl-indicator {
           position: fixed;
@@ -53,21 +73,26 @@
           100% { left: calc(100vw + 10px); top: 50%; opacity: 0; }
         }
 
-        /* --- Fixed Bottom Bar --- */
+        /* --- Fixed Bottom Bar (frosted glass) --- */
         #pl-bottombar {
           position: fixed;
           bottom: 0;
           left: 0;
           right: 0;
-          height: 30px;
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(4px);
-          -webkit-backdrop-filter: blur(4px);
+          height: calc(var(--pl-bar-height) + env(safe-area-inset-bottom, 0px));
+          padding: 0 20px env(safe-area-inset-bottom, 0px);
+          box-sizing: border-box;
           z-index: 99999;
           display: flex;
           align-items: center;
-          padding: 0 20px;
-          box-sizing: border-box;
+
+          /* the glass: semi-transparent fill + blur of whatever is behind */
+          background: var(--pl-glass-bg);
+          -webkit-backdrop-filter: blur(14px) saturate(160%);
+          backdrop-filter: blur(14px) saturate(160%);
+          border-top: 1px solid var(--pl-glass-border);
+          box-shadow: var(--pl-glass-shadow);
+
           transform: translateY(100%);
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -78,7 +103,7 @@
           display: flex;
           align-items: center;
           text-decoration: none;
-          color: #000;
+          color: var(--pl-text);
           width: 100%;
         }
         #pl-bottombar .pl-logo {
@@ -93,7 +118,7 @@
         #pl-page-title {
           font-size: 15px;
           font-weight: 600;
-          color: #111111;
+          color: var(--pl-text);
           font-family: "Barlow Condensed", sans-serif;
           white-space: nowrap;
           overflow: hidden;
@@ -123,16 +148,23 @@
       const cleanTitle = rawTitle.trim();
       const pageTitle = cleanTitle || window.location.pathname.split('/').pop().replace('.html', '') || 'attn:invoice';
 
-      document.body.style.paddingBottom = '30px';
+      // keep page content from being hidden under the fixed bar
+      document.body.style.paddingBottom = 'calc(30px + env(safe-area-inset-bottom, 0px))';
 
       const bottombar = document.createElement('div');
       bottombar.id = 'pl-bottombar';
-      bottombar.innerHTML = `
-        <a href="/index.html" rel="noopener" title="Home">
-          <span id="pl-page-title">${pageTitle}</span>
-        </a>
-      `;
 
+      const link = document.createElement('a');
+      link.href = '/index.html';
+      link.rel = 'noopener';
+      link.title = 'Home';
+
+      const titleEl = document.createElement('span');
+      titleEl.id = 'pl-page-title';
+      titleEl.textContent = pageTitle;   // textContent avoids injecting HTML from the title
+
+      link.appendChild(titleEl);
+      bottombar.appendChild(link);
       document.body.appendChild(bottombar);
 
       // Logo: inserted before the title only if /logo.png actually loads
@@ -142,8 +174,7 @@
         probe.className = 'pl-logo';
         probe.alt = '';
         probe.draggable = false;
-        const titleEl = document.getElementById('pl-page-title');
-        if (titleEl && titleEl.parentNode) {
+        if (titleEl.parentNode) {
           titleEl.parentNode.insertBefore(probe, titleEl);
         }
       };
