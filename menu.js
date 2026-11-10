@@ -21,40 +21,54 @@
             document.head.appendChild(bf);
         }
 
-        // 3. Inject CSS
+       // 3. Inject CSS
         const style = document.createElement('style');
         style.textContent = `
             .hamburger-btn, .hamburger-menu {
-                --hm-card: #fff;
+                --hm-card: #fff;                          /* fallback if blur is unsupported */
+                --hm-glass: rgba(255, 255, 255, 0.6);     /* glass fill */
+                --hm-glass-line: rgba(255, 255, 255, 0.45);
+                --hm-tint: rgba(2, 132, 199, 0.16);       /* hover / pressed highlight */
+                --hm-tint-strong: rgba(2, 132, 199, 0.28);
                 --hm-text: #14202b;
                 --hm-line: #d9e0e6;
                 --hm-accent: #0284C7;
                 --hm-accent-h: #0EA5E9;
                 --hm-accent-t: #fff;
-                --hm-shadow: 0 4px 12px rgba(20, 32, 43, 0.12);
+                --hm-shadow: 0 4px 24px rgba(20, 32, 43, 0.14);
             }
             @media (prefers-color-scheme: dark) {
                 :root:not([data-theme="light"]) .hamburger-btn,
                 :root:not([data-theme="light"]) .hamburger-menu {
                     --hm-card: #18222b;
+                    --hm-glass: rgba(24, 34, 43, 0.55);
+                    --hm-glass-line: rgba(255, 255, 255, 0.1);
+                    --hm-tint: rgba(53, 183, 194, 0.2);
+                    --hm-tint-strong: rgba(53, 183, 194, 0.32);
                     --hm-text: #e8eef3;
                     --hm-line: #2b3a46;
                     --hm-accent: #35b7c2;
                     --hm-accent-h: #67d3dc;
                     --hm-accent-t: #06242a;
-                    --hm-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                    --hm-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
                 }
             }
             :root[data-theme="dark"] .hamburger-btn,
             :root[data-theme="dark"] .hamburger-menu {
                 --hm-card: #18222b;
+                --hm-glass: rgba(24, 34, 43, 0.55);
+                --hm-glass-line: rgba(255, 255, 255, 0.1);
+                --hm-tint: rgba(53, 183, 194, 0.2);
+                --hm-tint-strong: rgba(53, 183, 194, 0.32);
                 --hm-text: #e8eef3;
                 --hm-line: #2b3a46;
                 --hm-accent: #35b7c2;
                 --hm-accent-h: #67d3dc;
                 --hm-accent-t: #06242a;
-                --hm-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                --hm-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
             }
+
+            /* --- Button (glass circle, accent-colored icon) --- */
             .hamburger-btn {
                 position: fixed;
                 top: calc(16px + env(safe-area-inset-top, 0px));
@@ -64,9 +78,11 @@
                 height: 48px;
                 padding: 0;
                 border-radius: 999px;
-                border: 1px solid var(--hm-accent);
-                background: var(--hm-accent);
-                color: var(--hm-accent-t);
+                border: 1px solid var(--hm-glass-line);
+                background: var(--hm-glass);
+                -webkit-backdrop-filter: blur(14px) saturate(160%);
+                backdrop-filter: blur(14px) saturate(160%);
+                color: var(--hm-accent);
                 font: 600 1.5rem/1 'Barlow Condensed', sans-serif;
                 cursor: pointer;
                 box-shadow: var(--hm-shadow);
@@ -76,12 +92,14 @@
                 justify-content: center;
             }
             .hamburger-btn:active {
-                background: var(--hm-accent-h);
+                background: var(--hm-tint-strong);
                 transform: scale(.95);
             }
             @media (hover: hover) {
-                .hamburger-btn:hover { background: var(--hm-accent-h); }
+                .hamburger-btn:hover { background: var(--hm-tint); }
             }
+
+            /* --- Menu panel (glass card) --- */
             .hamburger-menu {
                 position: fixed;
                 top: calc(72px + env(safe-area-inset-top, 0px));
@@ -90,8 +108,10 @@
                 width: min(280px, calc(100vw - 32px));
                 max-height: calc(100vh - 90px);
                 overflow-y: auto;
-                background: var(--hm-card);
-                border: 1px solid var(--hm-line);
+                background: var(--hm-glass);
+                -webkit-backdrop-filter: blur(14px) saturate(160%);
+                backdrop-filter: blur(14px) saturate(160%);
+                border: 1px solid var(--hm-glass-line);
                 border-radius: 16px;
                 padding: 8px;
                 box-shadow: var(--hm-shadow);
@@ -105,6 +125,16 @@
                 visibility: visible;
                 transform: translateY(0);
             }
+
+            /* browsers without backdrop-filter get a solid, readable fallback */
+            @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+                .hamburger-btn,
+                .hamburger-menu {
+                    background: var(--hm-card);
+                    border-color: var(--hm-line);
+                }
+            }
+
             .menu-links {
                 display: flex;
                 flex-direction: column;
@@ -131,17 +161,14 @@
                 color: var(--hm-accent);
                 transition: color .15s;
             }
+            /* tinted highlight instead of a solid block, so the glass stays visible */
             .menu-item:active {
-                background: var(--hm-accent);
-                color: var(--hm-accent-t);
+                background: var(--hm-tint-strong);
             }
-            .menu-item:active i { color: var(--hm-accent-t); }
             @media (hover: hover) {
                 .menu-item:hover {
-                    background: var(--hm-accent);
-                    color: var(--hm-accent-t);
+                    background: var(--hm-tint);
                 }
-                .menu-item:hover i { color: var(--hm-accent-t); }
             }
             .hamburger-btn:focus-visible,
             .menu-item:focus-visible {
