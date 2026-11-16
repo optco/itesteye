@@ -189,7 +189,7 @@
                         <i class="fas fa-rectangle-ad" aria-hidden="true"></i> AdStudio
                     </a>
                     <a class="menu-item" href="calc.html">
-                        <i class="fa fa-random" aria-hidden="true"></i> Calculator
+                        <i class="fa fa-random" aria-hidden="true"></i> Spectacle ⇄ Contact Lens
                     </a>
                     <a class="menu-item" href="https://itesteye.com/chromia.html">
                         <i class="fas fa-swatchbook" aria-hidden="true"></i> Chromia
