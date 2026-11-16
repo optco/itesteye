@@ -166,7 +166,38 @@
       link.appendChild(titleEl);
       bottombar.appendChild(link);
       document.body.appendChild(bottombar);
+      // --- VISIT COUNTER ---
+      if (/(^|\.)itesteye\.com$/.test(location.hostname)) {
+        const COUNTER_URL = 'https://counter.yourname.workers.dev/';
 
+        if (!document.getElementById('pl-visits-style')) {
+          const cs = document.createElement('style');
+          cs.id = 'pl-visits-style';
+          cs.textContent =
+            '#pl-visits{position:absolute;right:20px;top:50%;transform:translateY(-50%);' +
+            'font:600 14px "Barlow Condensed",sans-serif;color:var(--pl-text);opacity:.75;' +
+            'white-space:nowrap;pointer-events:none}';
+          document.head.appendChild(cs);
+        }
+
+        const counter = document.createElement('span');
+        counter.id = 'pl-visits';
+        bottombar.appendChild(counter);
+
+        const page = location.pathname;
+        let isNew = false;
+        try {
+          const k = 'pv:' + page;
+          if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, '1'); isNew = true; }
+        } catch (e) {}
+
+        fetch(COUNTER_URL + '?p=' + encodeURIComponent(page), { method: isNew ? 'POST' : 'GET' })
+          .then(r => r.json())
+          .then(d => {
+            if (typeof d.n === 'number') counter.textContent = d.n.toLocaleString('en-ZA') + ' visits';
+          })
+          .catch(() => {});
+      }
       // Logo: inserted before the title only if /logo.png actually loads
       const probe = new Image();
       probe.onload = function() {
