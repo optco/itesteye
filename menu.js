@@ -21,7 +21,7 @@
             document.head.appendChild(bf);
         }
 
-       // 3. Inject CSS
+        // 3. Inject CSS
         const style = document.createElement('style');
         style.textContent = `
             .hamburger-btn, .hamburger-menu {
@@ -178,42 +178,63 @@
         `;
         document.head.appendChild(style);
 
-        // 4. Inject HTML
+        // 4. Inject HTML (links in alphabetical order)
         const menuHTML = `
             <button id="menuBtn" class="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
                 <i class="fas fa-bars"></i>
             </button>
             <div id="hamburgerMenu" class="hamburger-menu">
                 <div class="menu-links">
+                    <a class="menu-item" href="https://shamsi.co.za/ad" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-rectangle-ad" aria-hidden="true"></i> AdStudio
+                    </a>
                     <a class="menu-item" href="calc.html">
                         <i class="fa fa-random" aria-hidden="true"></i> Calculator
                     </a>
-                    <a class="menu-item" href="/letter" target="_blank" rel="noopener noreferrer" title="A valid sick note must be issued and signed by a medical practitioner registered with the HPCSA">
-                        <i class="fas fa-file-pen" aria-hidden="true"></i> Letter Maker
+                    <a class="menu-item" href="https://itesteye.com/chromia.html">
+                        <i class="fas fa-swatchbook" aria-hidden="true"></i> Chromia
                     </a>
-                    <a class="menu-item" href="https://itesteye.com/therapeutics" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-prescription-bottle-medical" aria-hidden="true"></i> Therapeutics
+                    <a class="menu-item" href="https://akhtar.co.za/search" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-magnifying-glass" aria-hidden="true"></i> File Search
                     </a>
-                    <a class="menu-item" href="https://theattn.com/poster" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-image" aria-hidden="true"></i> Poster Maker
+                    <a class="menu-item" href="https://instagram.com/itesteye" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-instagram" aria-hidden="true"></i> Follow Akhtar
                     </a>
-                    <a class="menu-item" href="https://theattn.com/invoice" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://akhtar.co.za/halal" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-moon" aria-hidden="true"></i> Halal Stay
+                    </a>
+                    <a class="menu-item" href="https://itesteye.com/invoice" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Invoice Maker
                     </a>
-                    <a class="menu-item" href="https://theattn.com" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://itesteye.com/letter" target="_blank" rel="noopener noreferrer" title="A valid sick note must be issued and signed by a medical practitioner registered with the HPCSA">
+                        <i class="fas fa-file-pen" aria-hidden="true"></i> Letter Maker
+                    </a>
+                    <a class="menu-item" href="https://gbps.me/map" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-globe" aria-hidden="true"></i> Map Tool
+                    </a>
+                    <a class="menu-item" href="https://theattn.com">
                         <i class="fa-solid fa-newspaper" aria-hidden="true"></i> News
                     </a>
                     <a class="menu-item" href="https://amslergr.id/" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-eye" aria-hidden="true"></i> Optometry Charts
                     </a>
-                    <a class="menu-item" href="https://gbps.me" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-magnifying-glass" aria-hidden="true"></i> More Tools
+                    <a class="menu-item" href="https://itesteye.com/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-eye" aria-hidden="true"></i> Optometry Tools
+                    </a>
+                    <a class="menu-item" href="https://itesteye.com/poster" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-image" aria-hidden="true"></i> Poster Maker
+                    </a>
+                    <a class="menu-item" href="https://itesteye.com/profit.html">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i> Profit Calculator
                     </a>
                     <a class="menu-item" href="https://shamsi.co.za" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-house-chimney" aria-hidden="true"></i> Properties
                     </a>
-                    <a class="menu-item" href="https://instagram.com/itesteye" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-user" aria-hidden="true"></i> Follow Akhtar
+                    <a class="menu-item" href="https://itesteye.com/therapeutics" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-prescription-bottle-medical" aria-hidden="true"></i> Therapeutics
+                    </a>
+                    <a class="menu-item" href="https://gbps.me" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-gauge-high" aria-hidden="true"></i> Tools Home
                     </a>
                 </div>
             </div>
