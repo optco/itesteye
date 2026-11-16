@@ -168,7 +168,7 @@
       document.body.appendChild(bottombar);
       // --- VISIT COUNTER ---
       if (/(^|\.)itesteye\.com$/.test(location.hostname)) {
-        const COUNTER_URL = 'https://counter.yourname.workers.dev/';
+        const COUNTER_URL = 'https://counter.tan360.workers.dev/';
 
         if (!document.getElementById('pl-visits-style')) {
           const cs = document.createElement('style');
