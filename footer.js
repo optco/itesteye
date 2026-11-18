@@ -2,7 +2,6 @@
   function init() {
     // --- UNIFIED STYLES ---
     if (!document.getElementById('pl-bottombar-styles-v6')) {
-      // remove the old version's styles if they are still around
       const old = document.getElementById('pl-bottombar-styles-v5');
       if (old) old.remove();
 
@@ -86,7 +85,6 @@
           display: flex;
           align-items: center;
 
-          /* the glass: semi-transparent fill + blur of whatever is behind */
           background: var(--pl-glass-bg);
           -webkit-backdrop-filter: blur(14px) saturate(160%);
           backdrop-filter: blur(14px) saturate(160%);
@@ -108,9 +106,9 @@
         }
         #pl-bottombar .pl-logo {
           display: block;
-          width: 50px;          /* change this to control the logo width */
-          height: auto;         /* height adjusts automatically */
-          max-height: 24px;     /* keeps it inside the 30px bar */
+          width: 50px;
+          height: auto;
+          max-height: 24px;
           object-fit: contain;
           margin-right: 12px;
           user-select: none;
@@ -148,7 +146,6 @@
       const cleanTitle = rawTitle.trim();
       const pageTitle = cleanTitle || window.location.pathname.split('/').pop().replace('.html', '') || 'attn:invoice';
 
-      // keep page content from being hidden under the fixed bar
       document.body.style.paddingBottom = 'calc(30px + env(safe-area-inset-bottom, 0px))';
 
       const bottombar = document.createElement('div');
@@ -161,28 +158,41 @@
 
       const titleEl = document.createElement('span');
       titleEl.id = 'pl-page-title';
-      titleEl.textContent = pageTitle;   // textContent avoids injecting HTML from the title
+      titleEl.textContent = pageTitle;
 
       link.appendChild(titleEl);
       bottombar.appendChild(link);
       document.body.appendChild(bottombar);
-      // --- VISIT COUNTER ---
+
+      // --- COPYRIGHT & VISIT COUNTER ---
       if (/(^|\.)itesteye\.com$/.test(location.hostname)) {
         const COUNTER_URL = 'https://counter.tan360.workers.dev/';
 
-        if (!document.getElementById('pl-visits-style')) {
+        if (!document.getElementById('pl-bottombar-right-styles')) {
           const cs = document.createElement('style');
-          cs.id = 'pl-visits-style';
+          cs.id = 'pl-bottombar-right-styles';
           cs.textContent =
-            '#pl-visits{position:absolute;right:20px;top:50%;transform:translateY(-50%);' +
+            '#pl-bar-right{position:absolute;right:20px;top:50%;transform:translateY(-50%);' +
+            'display:flex;align-items:center;gap:12px;' +
             'font:600 14px "Barlow Condensed",sans-serif;color:var(--pl-text);opacity:.75;' +
-            'white-space:nowrap;pointer-events:none}';
+            'white-space:nowrap;pointer-events:none}' +
+            '#pl-copyright{font-size:13px;opacity:0.9}';
           document.head.appendChild(cs);
         }
 
+        const rightContainer = document.createElement('span');
+        rightContainer.id = 'pl-bar-right';
+
+        const copyright = document.createElement('span');
+        copyright.id = 'pl-copyright';
+        copyright.innerHTML = '&copy; 2026 iTestEye.com All rights reserved';
+
         const counter = document.createElement('span');
         counter.id = 'pl-visits';
-        bottombar.appendChild(counter);
+
+        rightContainer.appendChild(copyright);
+        rightContainer.appendChild(counter);
+        bottombar.appendChild(rightContainer);
 
         const page = location.pathname;
         let isNew = false;
@@ -198,6 +208,7 @@
           })
           .catch(() => {});
       }
+
       // Logo: inserted before the title only if /logo.png actually loads
       const probe = new Image();
       probe.onload = function() {
