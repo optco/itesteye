@@ -186,7 +186,7 @@
             <div id="hamburgerMenu" class="hamburger-menu">
                 <div class="menu-links">
                 <a class="menu-item" href="https://itesteye.com/about" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-instagram" aria-hidden="true"></i> About Me
+                        <i class="fa fa-user" aria-hidden="true"></i> About Me
                     </a>
                     <a class="menu-item" href="https://shamsi.co.za/ad" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-rectangle-ad" aria-hidden="true"></i> AdStudio
