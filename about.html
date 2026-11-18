@@ -184,126 +184,130 @@
             transform: translateY(-2px);
         }
 
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            z-index: 100;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s ease;
-        }
+     /* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); 
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
 
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
 
-        .modal-glass {
-            background: #18181b;
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 2rem;
-            width: 100%;
-            max-width: 440px;
-            position: relative;
-            transform: translateY(10px);
-            transition: transform 0.2s ease;
-        }
+/* Modal Container */
+.modal-glass {
+    background: #ffffff; 
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+    transform: translateY(10px);
+    transition: transform 0.2s ease;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
 
-        .modal-overlay.active .modal-glass {
-            transform: translateY(0);
-        }
+.modal-overlay.active .modal-glass {
+    transform: translateY(0);
+}
 
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0.25rem;
-        }
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #52525b; 
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.25rem;
+}
 
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
+.modal-close:hover {
+    color: #18181b;
+}
 
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #18181b;
+}
 
-        .modal-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
+.modal-desc {
+    color: #52525b;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
 
-        .form-group {
-            margin-bottom: 1rem;
-            text-align: left;
-        }
+/* Form Elements */
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
 
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #52525b;
+    margin-bottom: 0.5rem;
+}
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            transition: border-color 0.2s ease;
-        }
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #f4f4f5; 
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: #18181b; 
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease;
+}
 
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.3);
-        }
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #18181b;
+    background: #ffffff;
+}
 
-        .submit-btn {
-            width: 100%;
-            padding: 0.875rem;
-            background: var(--text-primary);
-            color: var(--bg-color);
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            margin-top: 0.5rem;
-            transition: opacity 0.2s ease;
-        }
+.submit-btn {
+    width: 100%;
+    padding: 0.875rem;
+    background: #18181b; 
+    color: #ffffff; 
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s ease;
+}
 
-        .submit-btn:hover {
-            opacity: 0.9;
-        }
+.submit-btn:hover {
+    opacity: 0.9;
+}
 
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
         footer {
             margin-top: 3rem;
             color: var(--text-secondary);
