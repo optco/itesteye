@@ -1,12 +1,14 @@
 (function() {
   function init() {
-    // --- UNIFIED STYLES ---
-    if (!document.getElementById('pl-bottombar-styles-v6')) {
-      const old = document.getElementById('pl-bottombar-styles-v5');
+    // --- UNIFIED STYLES (Bumped to v7 to clear cache) ---
+    if (!document.getElementById('pl-bottombar-styles-v7')) {
+      const old = document.getElementById('pl-bottombar-styles-v6');
       if (old) old.remove();
+      const old5 = document.getElementById('pl-bottombar-styles-v5');
+      if (old5) old5.remove();
 
       const style = document.createElement('style');
-      style.id = 'pl-bottombar-styles-v6';
+      style.id = 'pl-bottombar-styles-v7';
       style.textContent = `
         :root {
           --pl-bar-height: 30px;
@@ -46,12 +48,8 @@
           background: #d90000;
           opacity: 0;
         }
-        .pl-dot:nth-child(1) {
-          animation: plRace1 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-        }
-        .pl-dot:nth-child(2) {
-          animation: plRace2 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-        }
+        .pl-dot:nth-child(1) { animation: plRace1 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
+        .pl-dot:nth-child(2) { animation: plRace2 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
         @keyframes plRace1 {
           0%   { left: -10px; top: 50%; opacity: 0; }
           5%   { opacity: 1; }
@@ -84,26 +82,28 @@
           z-index: 99999;
           display: flex;
           align-items: center;
-
           background: var(--pl-glass-bg);
           -webkit-backdrop-filter: blur(14px) saturate(160%);
           backdrop-filter: blur(14px) saturate(160%);
           border-top: 1px solid var(--pl-glass-border);
           box-shadow: var(--pl-glass-shadow);
-
           transform: translateY(100%);
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         #pl-bottombar.show {
           transform: translateY(0);
         }
+        
+        /* Link takes available space, but allows shrinking for ellipsis */
         #pl-bottombar a {
           display: flex;
           align-items: center;
           text-decoration: none;
           color: var(--pl-text);
-          width: 100%;
+          flex: 1;
+          min-width: 0; 
         }
+        
         #pl-bottombar .pl-logo {
           display: block;
           width: 50px;
@@ -112,7 +112,9 @@
           object-fit: contain;
           margin-right: 12px;
           user-select: none;
+          flex-shrink: 0;
         }
+        
         #pl-page-title {
           font-size: 15px;
           font-weight: 600;
@@ -121,7 +123,23 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 400px;
+        }
+        
+        /* --- Right Side Container (Copyright + Counter) --- */
+        #pl-bar-right {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font: 600 14px "Barlow Condensed", sans-serif;
+          color: var(--pl-text);
+          opacity: 0.85;
+          white-space: nowrap;
+          margin-left: auto; /* This reliably pushes the container to the far right */
+          flex-shrink: 0;    /* Prevents the copyright/counter from being squished */
+        }
+        #pl-copyright {
+          font-size: 13px;
+          opacity: 0.9;
         }
       `;
       document.head.appendChild(style);
@@ -162,22 +180,9 @@
 
       link.appendChild(titleEl);
       bottombar.appendChild(link);
-      document.body.appendChild(bottombar);
 
-      // --- GLOBAL COPYRIGHT CONTAINER ---
-      if (!document.getElementById('pl-bottombar-right-styles')) {
-        const cs = document.createElement('style');
-        cs.id = 'pl-bottombar-right-styles';
-        cs.textContent =
-          '#pl-bar-right{position:absolute;right:20px;top:50%;transform:translateY(-50%);' +
-          'display:flex;align-items:center;gap:12px;' +
-          'font:600 14px "Barlow Condensed",sans-serif;color:var(--pl-text);opacity:.75;' +
-          'white-space:nowrap;pointer-events:none}' +
-          '#pl-copyright{font-size:13px;opacity:0.9}';
-        document.head.appendChild(cs);
-      }
-
-      const rightContainer = document.createElement('span');
+      // --- GLOBAL COPYRIGHT CONTAINER (Shows on ALL domains) ---
+      const rightContainer = document.createElement('div');
       rightContainer.id = 'pl-bar-right';
 
       const copyright = document.createElement('span');
@@ -187,13 +192,15 @@
       rightContainer.appendChild(copyright);
       bottombar.appendChild(rightContainer);
 
+      document.body.appendChild(bottombar);
+
       // --- VISIT COUNTER (Domain Restricted) ---
       if (/(^|\.)itesteye\.com$/.test(location.hostname)) {
         const COUNTER_URL = 'https://counter.tan360.workers.dev/';
         
         const counter = document.createElement('span');
         counter.id = 'pl-visits';
-        rightContainer.appendChild(counter);
+        rightContainer.appendChild(counter); // Appends next to the copyright
 
         const page = location.pathname;
         let isNew = false;
