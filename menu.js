@@ -197,7 +197,7 @@
                     <a class="menu-item" href="https://akhtar.co.za/search" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-magnifying-glass" aria-hidden="true"></i> File Search
                     </a>
-                    <a class="menu-item" href="https://itesteye/about" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://itesteye.com/about" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-instagram" aria-hidden="true"></i> About Me
                     </a>
                     <a class="menu-item" href="https://akhtar.co.za/halal" target="_blank" rel="noopener noreferrer">
