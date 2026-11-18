@@ -17,14 +17,26 @@
     <link rel="manifest" href="favicons/site.webmanifest">
 <link rel="stylesheet" href="bg.css">
     <style>
-        :root {
         
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #000000;
-            --text-secondary: #cccccc;
-            --accent-hover: rgba(255, 255, 255, 0.1);
-        }
+        :root {
+    /* Slightly off-white background so the glass effect is visible */
+    --bg-color: #f4f4f5; 
+    
+    /* Frosted white background for the cards */
+    --glass-bg: rgba(255, 255, 255, 0.6); 
+    
+    /* Subtle dark border to define the edge against white */
+    --glass-border: rgba(0, 0, 0, 0.08); 
+    
+    /* Deep black/gray for primary text (excellent contrast) */
+    --text-primary: #18181b; 
+    
+    /* Medium gray for secondary text (passes accessibility) */
+    --text-secondary: #52525b; 
+    
+    /* Subtle dark hover effect */
+    --accent-hover: rgba(0, 0, 0, 0.04); 
+}
 
         * {
             margin: 0;
