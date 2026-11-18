@@ -164,35 +164,36 @@
       bottombar.appendChild(link);
       document.body.appendChild(bottombar);
 
-      // --- COPYRIGHT & VISIT COUNTER ---
+      // --- GLOBAL COPYRIGHT CONTAINER ---
+      if (!document.getElementById('pl-bottombar-right-styles')) {
+        const cs = document.createElement('style');
+        cs.id = 'pl-bottombar-right-styles';
+        cs.textContent =
+          '#pl-bar-right{position:absolute;right:20px;top:50%;transform:translateY(-50%);' +
+          'display:flex;align-items:center;gap:12px;' +
+          'font:600 14px "Barlow Condensed",sans-serif;color:var(--pl-text);opacity:.75;' +
+          'white-space:nowrap;pointer-events:none}' +
+          '#pl-copyright{font-size:13px;opacity:0.9}';
+        document.head.appendChild(cs);
+      }
+
+      const rightContainer = document.createElement('span');
+      rightContainer.id = 'pl-bar-right';
+
+      const copyright = document.createElement('span');
+      copyright.id = 'pl-copyright';
+      copyright.innerHTML = '&copy; 2026 iTestEye.com All rights reserved';
+      
+      rightContainer.appendChild(copyright);
+      bottombar.appendChild(rightContainer);
+
+      // --- VISIT COUNTER (Domain Restricted) ---
       if (/(^|\.)itesteye\.com$/.test(location.hostname)) {
         const COUNTER_URL = 'https://counter.tan360.workers.dev/';
-
-        if (!document.getElementById('pl-bottombar-right-styles')) {
-          const cs = document.createElement('style');
-          cs.id = 'pl-bottombar-right-styles';
-          cs.textContent =
-            '#pl-bar-right{position:absolute;right:20px;top:50%;transform:translateY(-50%);' +
-            'display:flex;align-items:center;gap:12px;' +
-            'font:600 14px "Barlow Condensed",sans-serif;color:var(--pl-text);opacity:.75;' +
-            'white-space:nowrap;pointer-events:none}' +
-            '#pl-copyright{font-size:13px;opacity:0.9}';
-          document.head.appendChild(cs);
-        }
-
-        const rightContainer = document.createElement('span');
-        rightContainer.id = 'pl-bar-right';
-
-        const copyright = document.createElement('span');
-        copyright.id = 'pl-copyright';
-        copyright.innerHTML = '&copy; 2026 iTestEye.com All rights reserved';
-
+        
         const counter = document.createElement('span');
         counter.id = 'pl-visits';
-
-        rightContainer.appendChild(copyright);
         rightContainer.appendChild(counter);
-        bottombar.appendChild(rightContainer);
 
         const page = location.pathname;
         let isNew = false;
