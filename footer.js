@@ -1,7 +1,9 @@
 (function() {
   function init() {
-    // --- UNIFIED STYLES (Bumped to v8 to clear cache) ---
-    if (!document.getElementById('pl-bottombar-styles-v8')) {
+    // --- UNIFIED STYLES (Bumped to v9 to clear cache) ---
+    if (!document.getElementById('pl-bottombar-styles-v9')) {
+      const old8 = document.getElementById('pl-bottombar-styles-v8');
+      if (old8) old8.remove();
       const old = document.getElementById('pl-bottombar-styles-v7');
       if (old) old.remove();
       const old6 = document.getElementById('pl-bottombar-styles-v6');
@@ -10,7 +12,7 @@
       if (old5) old5.remove();
 
       const style = document.createElement('style');
-      style.id = 'pl-bottombar-styles-v8';
+      style.id = 'pl-bottombar-styles-v9';
       style.textContent = `
         :root {
           --pl-bar-height: 30px;
@@ -26,50 +28,6 @@
             --pl-glass-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
             --pl-text: #f2f2f2;
           }
-        }
-
-        /* --- Loader --- */
-        #pl-indicator {
-          position: fixed;
-          bottom: 5px;
-          left: 0;
-          right: 0;
-          height: 20px;
-          z-index: 999999;
-          pointer-events: none;
-          transition: opacity 0.3s ease;
-        }
-        .pl-dot {
-          position: absolute;
-          top: 50%;
-          left: -10px;
-          width: 8px;
-          height: 8px;
-          margin-top: -4px;
-          border-radius: 50%;
-          background: #d90000;
-          opacity: 0;
-        }
-        .pl-dot:nth-child(1) { animation: plRace1 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
-        .pl-dot:nth-child(2) { animation: plRace2 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
-        @keyframes plRace1 {
-          0%   { left: -10px; top: 50%; opacity: 0; }
-          5%   { opacity: 1; }
-          25%  { left: 50%; top: 50%; opacity: 1; }
-          50%  { left: 50%; top: 50%; opacity: 1; }
-          75%  { left: calc(100vw + 10px); top: 50%; opacity: 1; }
-          80%  { left: calc(100vw + 10px); top: 50%; opacity: 0; }
-          100% { left: calc(100vw + 10px); top: 50%; opacity: 0; }
-        }
-        @keyframes plRace2 {
-          0%   { left: -10px; top: 50%; opacity: 0; }
-          15%  { left: -10px; top: 50%; opacity: 0; }
-          20%  { opacity: 1; }
-          40%  { left: 50%; top: 50%; opacity: 1; }
-          65%  { left: 50%; top: 50%; opacity: 1; }
-          90%  { left: calc(100vw + 10px); top: 50%; opacity: 1; }
-          95%  { left: calc(100vw + 10px); top: 50%; opacity: 0; }
-          100% { left: calc(100vw + 10px); top: 50%; opacity: 0; }
         }
 
         /* --- Fixed Bottom Bar (frosted glass) --- */
@@ -165,19 +123,6 @@
         }
       `;
       document.head.appendChild(style);
-    }
-
-    // --- LOADER ---
-    if (!document.getElementById('pl-indicator')) {
-      const loader = document.createElement('div');
-      loader.id = 'pl-indicator';
-      loader.innerHTML = '<div class="pl-dot"></div><div class="pl-dot"></div>';
-      document.body.appendChild(loader);
-
-      setTimeout(() => {
-        loader.style.opacity = '0';
-        setTimeout(() => loader.remove(), 400);
-      }, 3500);
     }
 
     // --- BOTTOM BAR ---
