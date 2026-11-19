@@ -30,9 +30,9 @@
                 --hm-glass-line: rgba(255, 255, 255, 0.45);
                 --hm-tint: rgba(2, 132, 199, 0.16);       /* hover / pressed highlight */
                 --hm-tint-strong: rgba(2, 132, 199, 0.28);
-                --hm-text: #14202b;
+                --hm-text: #000;
                 --hm-line: #d9e0e6;
-                --hm-accent: #0284C7;
+                --hm-accent: #000;
                 --hm-accent-h: #0EA5E9;
                 --hm-accent-t: #fff;
                 --hm-shadow: 0 4px 24px rgba(20, 32, 43, 0.14);
@@ -45,9 +45,9 @@
                     --hm-glass-line: rgba(255, 255, 255, 0.1);
                     --hm-tint: rgba(53, 183, 194, 0.2);
                     --hm-tint-strong: rgba(53, 183, 194, 0.32);
-                    --hm-text: #e8eef3;
+                    --hm-text: #000;
                     --hm-line: #2b3a46;
-                    --hm-accent: #35b7c2;
+                    --hm-accent: #000;
                     --hm-accent-h: #67d3dc;
                     --hm-accent-t: #06242a;
                     --hm-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
@@ -60,9 +60,9 @@
                 --hm-glass-line: rgba(255, 255, 255, 0.1);
                 --hm-tint: rgba(53, 183, 194, 0.2);
                 --hm-tint-strong: rgba(53, 183, 194, 0.32);
-                --hm-text: #e8eef3;
+                --hm-text: #000;
                 --hm-line: #2b3a46;
-                --hm-accent: #35b7c2;
+                --hm-accent: #000;
                 --hm-accent-h: #67d3dc;
                 --hm-accent-t: #06242a;
                 --hm-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
