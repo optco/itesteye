@@ -185,10 +185,10 @@
             </button>
             <div id="hamburgerMenu" class="hamburger-menu">
                 <div class="menu-links">
-                <a class="menu-item" href="https://itesteye.com/about" target="_blank" rel="noopener noreferrer">
+                <a class="menu-item" href="https://itesteye.com/about" target="_self" rel="noopener noreferrer">
                         <i class="fa fa-user" aria-hidden="true"></i> About Me
                     </a>
-                    <a class="menu-item" href="https://shamsi.co.za/ad" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://shamsi.co.za/ad" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-rectangle-ad" aria-hidden="true"></i> AdStudio
                     </a>
                     <a class="menu-item" href="https://itesteye.com">
@@ -197,44 +197,44 @@
                     <a class="menu-item" href="https://itesteye.com/chromia.html">
                         <i class="fas fa-swatchbook" aria-hidden="true"></i> Chromia
                     </a>
-                    <a class="menu-item" href="https://akhtar.co.za/search" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://akhtar.co.za/search" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-magnifying-glass" aria-hidden="true"></i> File Search
                     </a>
                     
-                    <a class="menu-item" href="https://akhtar.co.za/halal" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://akhtar.co.za/halal" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-moon" aria-hidden="true"></i> Halal Stay
                     </a>
-                    <a class="menu-item" href="https://itesteye.com/invoice" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://itesteye.com/invoice" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Invoice Maker
                     </a>
-                    <a class="menu-item" href="https://itesteye.com/letter" target="_blank" rel="noopener noreferrer" title="A valid sick note must be issued and signed by a medical practitioner registered with the HPCSA">
+                    <a class="menu-item" href="https://itesteye.com/letter" target="_self" rel="noopener noreferrer" title="A valid sick note must be issued and signed by a medical practitioner registered with the HPCSA">
                         <i class="fas fa-file-pen" aria-hidden="true"></i> Letter Maker
                     </a>
-                    <a class="menu-item" href="https://gbps.me/map" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://gbps.me/map" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-globe" aria-hidden="true"></i> Map Tool
                     </a>
                     <a class="menu-item" href="https://theattn.com">
                         <i class="fa-solid fa-newspaper" aria-hidden="true"></i> News
                     </a>
-                    <a class="menu-item" href="https://amslergr.id/" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://amslergr.id/" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-eye" aria-hidden="true"></i> Optometry Charts
                     </a>
-                    <a class="menu-item" href="https://itesteye.com/" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://itesteye.com/" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-eye" aria-hidden="true"></i> Optometry Tools
                     </a>
-                    <a class="menu-item" href="https://itesteye.com/poster" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://itesteye.com/poster" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-image" aria-hidden="true"></i> Poster Maker
                     </a>
                     <a class="menu-item" href="https://itesteye.com/profit.html">
                         <i class="fas fa-chart-line" aria-hidden="true"></i> Profit Calculator
                     </a>
-                    <a class="menu-item" href="https://shamsi.co.za" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://shamsi.co.za" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-house-chimney" aria-hidden="true"></i> Properties
                     </a>
-                    <a class="menu-item" href="https://itesteye.com/therapeutics" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://itesteye.com/therapeutics" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-prescription-bottle-medical" aria-hidden="true"></i> Therapeutics
                     </a>
-                    <a class="menu-item" href="https://gbps.me" target="_blank" rel="noopener noreferrer">
+                    <a class="menu-item" href="https://gbps.me" target="_self" rel="noopener noreferrer">
                         <i class="fas fa-gauge-high" aria-hidden="true"></i> Tools Home
                     </a>
                 </div>
