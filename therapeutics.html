@@ -14,206 +14,180 @@
 <link rel="stylesheet" href="bg.css">
     <link rel="stylesheet" href="/css/optometry.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    :root {
+        --text-primary: rgba(30, 30, 40, 0.95);
+        --text-secondary: rgba(60, 60, 80, 0.85);
+    }
 
-    <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.9);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            --glass-highlight: rgba(255, 255, 255, 0.5);
-            --text-primary: rgba(30, 30, 40, 0.95);
-            --text-secondary: rgba(60, 60, 80, 0.85);
-            --accent-glow: rgba(50, 120, 200, 0.5);
-        }
+    .hpcsa-header {
+        text-align: center;
+        margin-bottom: 32px;
+        padding: 24px;
+    }
+    .hpcsa-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+    }
+    .hpcsa-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        max-width: 900px;
+        margin: 0 auto 24px;
+    }
+    .category-legend {
+        padding: 16px 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: center;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-radius: 8px;
+        padding: 6px 12px;
+        user-select: none;
+    }
+    .legend-item:hover {
+        transform: translateY(-1px);
+    }
+    .legend-badge {
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        display: inline-block;
+    }
+    .badge-i, .badge-d, .badge-t, .badge-idt, .badge-dt {
+        /* styles provided by bg.css */
+    }
 
-     
+    /* ---------- Table: fits its container, no horizontal scroll ---------- */
+    .table-wrap {
+        padding: 24px;
+        overflow-x: visible;
+    }
+    .med-table {
+        width: 100%;
+        table-layout: fixed;
+        font-size: 0.9rem;
+        border-collapse: collapse;
+    }
+    .med-table th {
+        font-size: 0.85rem;
+        padding: 14px 12px;
+        color: var(--text-primary);
+        text-align: left;
+        white-space: nowrap;
+    }
+    .med-table td {
+        padding: 12px;
+        vertical-align: top;
+        color: var(--text-secondary);
+    }
+    .med-table td {
+        overflow-wrap: break-word;
+        word-break: normal;
+        hyphens: manual;
+    }
+    .med-table .legend-badge,
+    .med-table .schedule-badge {
+        white-space: nowrap;
+        display: inline-block;
+    }
+    .category-header {
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    .category-header td {
+        color: var(--text-primary);
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+    .schedule-badge {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-primary);
+    }
 
-        .hpcsa-header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding: 24px;
-        }
-        .hpcsa-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-        }
-        .hpcsa-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            max-width: 900px;
-            margin: 0 auto 24px;
-        }
-        .category-legend {
-            background: rgba(255,255,255,0.5);
-            padding: 16px 24px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            border: 1px solid var(--glass-border);
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.2s ease;
+    /* ---------- Tablet / small laptop ---------- */
+    @media (max-width: 900px) {
+        .table-wrap { padding: 14px; }
+        .med-table { font-size: 0.8rem; }
+        .med-table th { font-size: 0.75rem; padding: 10px 8px; }
+        .med-table td { padding: 10px 8px; }
+        .med-table .legend-badge { padding: 3px 6px; font-size: 0.75rem; }
+        .med-table .schedule-badge { padding: 2px 6px; font-size: 0.75rem; }
+    }
+
+    /* ---------- Phones: each medicine becomes a card ---------- */
+    @media (max-width: 640px) {
+        .hpcsa-header { padding: 16px; }
+        .hpcsa-title { font-size: 1.3rem; }
+        .hpcsa-subtitle { font-size: 0.95rem; line-height: 1.6; }
+        .category-legend { flex-direction: column; gap: 8px; align-items: stretch; padding: 12px; }
+        .legend-item { justify-content: center; }
+
+        .table-wrap { padding: 10px; }
+
+        .med-table,
+        .med-table tbody,
+        .med-table tr,
+        .med-table td { display: block; width: 100%; }
+        .med-table { font-size: 0.9rem; }
+        .med-table thead { display: none; }
+
+        .med-table tr.category-header {
+            margin: 16px 0 8px;
             border-radius: 8px;
-            padding: 6px 12px;
-            user-select: none;
         }
-        .legend-item:hover {
-            background: rgba(0, 0, 0, 0.04);
-            transform: translateY(-1px);
-        }
-        .legend-item.active-filter {
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3);
-        }
-        .legend-badge {
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            display: inline-block;
-        }
-        .badge-i { background: rgba(34, 197, 94, 0.15); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.3); }
-        .badge-d { background: rgba(59, 130, 246, 0.15); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .badge-t { background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .badge-idt { background: rgba(139, 92, 246, 0.15); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.3); }
-        .badge-dt { background: rgba(139, 92, 246, 0.15); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .med-table tr.category-header:first-child { margin-top: 0; }
+        .med-table tr.category-header td { padding: 10px 12px; border: none; }
 
-        /* ---------- Table: fits its container, no horizontal scroll ---------- */
-        .table-wrap {
-            padding: 24px;
-            overflow-x: visible;
+        .med-table tr:not(.category-header) {
+            margin-bottom: 10px;
+            padding: 8px 4px;
+            border-radius: 10px;
         }
-        .med-table {
-            width: 100%;
-            table-layout: fixed;          /* use the column widths below */
-            font-size: 0.9rem;
-            border-collapse: collapse;
+        .med-table tr:not(.category-header) td {
+            border: none;
+            padding: 4px 10px;
         }
-        .med-table th {
-            font-size: 0.85rem;
-            padding: 14px 12px;
-            background: rgba(59, 130, 246, 0.1) !important;
-            color: var(--text-primary);
-            text-align: left;
-            white-space: nowrap;          /* headings never wrap */
-        }
-        .med-table td {
-            padding: 12px;
-            vertical-align: top;
+        .med-table td[rowspan] { display: none; }
+
+        .med-table td[data-label]::before {
+            content: attr(data-label);
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
             color: var(--text-secondary);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            opacity: 0.7;
+            margin-bottom: 2px;
         }
-        .med-table td {
-            overflow-wrap: break-word;    /* breaks a word only as a last resort */
-            word-break: normal;
-            hyphens: manual;
-        }
-        .med-table .legend-badge,
-        .med-table .schedule-badge {
-            white-space: nowrap;          /* "I, D, T" and "3, 4" stay on one line */
-            display: inline-block;
-        }
-        .category-header {
-            background: rgba(59, 130, 246, 0.08) !important;
+        .med-table td[data-label="Substance"] {
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text-primary);
         }
-        .category-header td {
-            color: var(--text-primary);
-            padding-top: 16px;
-            padding-bottom: 16px;
-        }
-        .schedule-badge {
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: rgba(0, 0, 0, 0.05);
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-primary);
-        }
-
-        /* ---------- Tablet / small laptop ---------- */
-        @media (max-width: 900px) {
-            .table-wrap { padding: 14px; }
-            .med-table { font-size: 0.8rem; }
-            .med-table th { font-size: 0.75rem; padding: 10px 8px; }
-            .med-table td { padding: 10px 8px; }
-            .med-table .legend-badge { padding: 3px 6px; font-size: 0.75rem; }
-            .med-table .schedule-badge { padding: 2px 6px; font-size: 0.75rem; }
-        }
-
-        /* ---------- Phones: each medicine becomes a card ---------- */
-        @media (max-width: 640px) {
-            .hpcsa-header { padding: 16px; }
-            .hpcsa-title { font-size: 1.3rem; }
-            .hpcsa-subtitle { font-size: 0.95rem; line-height: 1.6; }
-            .category-legend { flex-direction: column; gap: 8px; align-items: stretch; padding: 12px; }
-            .legend-item { justify-content: center; }
-
-            .table-wrap { padding: 10px; }
-
-            .med-table,
-            .med-table tbody,
-            .med-table tr,
-            .med-table td { display: block; width: 100%; }
-            .med-table { font-size: 0.9rem; }
-            .med-table thead { display: none; }
-
-            .med-table tr.category-header {
-                margin: 16px 0 8px;
-                border-radius: 8px;
-            }
-            .med-table tr.category-header:first-child { margin-top: 0; }
-            .med-table tr.category-header td { padding: 10px 12px; border: none; }
-
-            .med-table tr:not(.category-header) {
-                margin-bottom: 10px;
-                padding: 8px 4px;
-                background: rgba(255, 255, 255, 0.6);
-                border: 1px solid rgba(0, 0, 0, 0.08);
-                border-radius: 10px;
-            }
-            .med-table tr:not(.category-header) td {
-                border: none;
-                padding: 4px 10px;
-            }
-            /* classification is already shown in the category header */
-            .med-table td[rowspan] { display: none; }
-
-            /* labels on each line */
-            .med-table td[data-label]::before {
-                content: attr(data-label);
-                display: block;
-                font-size: 0.7rem;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                color: var(--text-secondary);
-                opacity: 0.7;
-                margin-bottom: 2px;
-            }
-            /* substance as the card title */
-            .med-table td[data-label="Substance"] {
-                font-size: 1.05rem;
-                font-weight: 700;
-                color: var(--text-primary);
-            }
-            .med-table td[data-label="Substance"]::before { display: none; }
-        }
-    </style>
+        .med-table td[data-label="Substance"]::before { display: none; }
+    }
+</style>
 </head>
 <body>
 
