@@ -1,14 +1,16 @@
 (function() {
   function init() {
-    // --- UNIFIED STYLES (Bumped to v7 to clear cache) ---
-    if (!document.getElementById('pl-bottombar-styles-v7')) {
-      const old = document.getElementById('pl-bottombar-styles-v6');
+    // --- UNIFIED STYLES (Bumped to v8 to clear cache) ---
+    if (!document.getElementById('pl-bottombar-styles-v8')) {
+      const old = document.getElementById('pl-bottombar-styles-v7');
       if (old) old.remove();
+      const old6 = document.getElementById('pl-bottombar-styles-v6');
+      if (old6) old6.remove();
       const old5 = document.getElementById('pl-bottombar-styles-v5');
       if (old5) old5.remove();
 
       const style = document.createElement('style');
-      style.id = 'pl-bottombar-styles-v7';
+      style.id = 'pl-bottombar-styles-v8';
       style.textContent = `
         :root {
           --pl-bar-height: 30px;
@@ -141,6 +143,26 @@
           font-size: 13px;
           opacity: 0.9;
         }
+
+        /* --- Centered Home Icon --- */
+        #pl-bottombar a#pl-home {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          flex: none;
+          width: 32px;
+          height: 24px;
+          justify-content: center;
+          font-size: 16px;
+          color: var(--pl-text);
+          opacity: 0.85;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        #pl-bottombar a#pl-home:hover {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.15);
+        }
       `;
       document.head.appendChild(style);
     }
@@ -180,6 +202,23 @@
 
       link.appendChild(titleEl);
       bottombar.appendChild(link);
+
+      // Load Font Awesome only if the page doesn't already have it
+      if (!document.querySelector('link[href*="font-awesome"], link[href*="fontawesome"]')) {
+        const fa = document.createElement('link');
+        fa.rel = 'stylesheet';
+        fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css';
+        document.head.appendChild(fa);
+      }
+
+      // Centered home icon
+      const homeLink = document.createElement('a');
+      homeLink.id = 'pl-home';
+      homeLink.href = '/index.html';
+      homeLink.title = 'Home';
+      homeLink.setAttribute('aria-label', 'Home');
+      homeLink.innerHTML = '<i class="fas fa-home"></i>';
+      bottombar.appendChild(homeLink);
 
       // --- GLOBAL COPYRIGHT CONTAINER (Shows on ALL domains) ---
       const rightContainer = document.createElement('div');
