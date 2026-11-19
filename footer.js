@@ -1,7 +1,9 @@
 (function() {
   function init() {
-    // --- UNIFIED STYLES (Bumped to v9 to clear cache) ---
-    if (!document.getElementById('pl-bottombar-styles-v9')) {
+    // --- UNIFIED STYLES (Bumped to v10 to clear cache) ---
+    if (!document.getElementById('pl-bottombar-styles-v10')) {
+      const old9 = document.getElementById('pl-bottombar-styles-v9');
+      if (old9) old9.remove();
       const old8 = document.getElementById('pl-bottombar-styles-v8');
       if (old8) old8.remove();
       const old = document.getElementById('pl-bottombar-styles-v7');
@@ -12,7 +14,7 @@
       if (old5) old5.remove();
 
       const style = document.createElement('style');
-      style.id = 'pl-bottombar-styles-v9';
+      style.id = 'pl-bottombar-styles-v10';
       style.textContent = `
         :root {
           --pl-bar-height: 30px;
@@ -102,24 +104,29 @@
           opacity: 0.9;
         }
 
-        /* --- Centered Home Icon --- */
-        #pl-bottombar a#pl-home {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          flex: none;
-          width: 32px;
-          height: 24px;
+        /* --- Top-Left Home Icon --- */
+        #pl-home {
+          position: fixed;
+          top: calc(12px + env(safe-area-inset-top, 0px));
+          left: 12px;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
           justify-content: center;
+          border-radius: 50%;
           font-size: 16px;
+          text-decoration: none;
           color: var(--pl-text);
-          opacity: 0.85;
-          transition: opacity 0.2s ease, transform 0.2s ease;
+          background: var(--pl-glass-bg);
+          -webkit-backdrop-filter: blur(14px) saturate(160%);
+          backdrop-filter: blur(14px) saturate(160%);
+          border: 1px solid var(--pl-glass-border);
+          z-index: 99999;
+          transition: transform 0.2s ease;
         }
-        #pl-bottombar a#pl-home:hover {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1.15);
+        #pl-home:hover {
+          transform: scale(1.1);
         }
       `;
       document.head.appendChild(style);
@@ -156,14 +163,14 @@
         document.head.appendChild(fa);
       }
 
-      // Centered home icon
+      // Top-left home icon
       const homeLink = document.createElement('a');
       homeLink.id = 'pl-home';
       homeLink.href = '/index.html';
       homeLink.title = 'Home';
       homeLink.setAttribute('aria-label', 'Home');
       homeLink.innerHTML = '<i class="fas fa-home"></i>';
-      bottombar.appendChild(homeLink);
+      document.body.appendChild(homeLink);
 
       // --- GLOBAL COPYRIGHT CONTAINER (Shows on ALL domains) ---
       const rightContainer = document.createElement('div');
