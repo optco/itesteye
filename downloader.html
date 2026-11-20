@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iTestEye.com Image Downloader - Download for Windows</title>
+<meta name="description" content="Paste a web page address and save every image on it. Free download for Windows 10 and 11.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{
+  --ink:#071a2b; --deep:#0c3b4a; --lagoon:#14524f;
+  --text:#e9f5f7; --muted:#a9c7cf; --amber:#f5a02e; --amber-hi:#ffc56b; --aqua:#2fb6b0;
+  --glass:rgba(255,255,255,.08); --edge:rgba(255,255,255,.16);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font:16px/1.6 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(60% 40% at 15% 8%, rgba(47,182,176,.35), transparent 70%),
+    radial-gradient(50% 40% at 90% 30%, rgba(245,160,46,.18), transparent 70%),
+    linear-gradient(140deg,var(--ink) 0%,var(--deep) 55%,var(--lagoon) 100%) fixed;
+}
+main{max-width:720px; margin:0 auto; padding:48px 20px 64px; display:flex; flex-direction:column; gap:22px; text-align:center}
+.glass{
+  background:var(--glass); border:1px solid var(--edge); border-radius:22px;
+  -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18), 0 18px 45px rgba(0,0,0,.28);
+  padding:28px 26px;
+}
+.hero{border-radius:32px; padding:40px 26px 34px}
+h1{margin:0 0 10px; font-size:clamp(1.9rem,5.5vw,2.6rem); line-height:1.15; font-weight:700; letter-spacing:-.02em}
+h2{margin:0 0 18px; font-size:1.35rem; font-weight:650}
+p{margin:0}
+.lead{color:var(--muted); max-width:46ch; margin:0 auto 26px; font-size:1.05rem}
+
+/* the one memorable thing: an iris that comes into focus */
+.iris{
+  width:132px; height:132px; border-radius:50%; margin:0 auto 24px; position:relative;
+  background:
+    radial-gradient(circle at 50% 50%, #04101a 0 17%, transparent 18%),
+    radial-gradient(circle at 50% 50%, rgba(255,190,90,.9) 0 24%, transparent 42%),
+    repeating-conic-gradient(from 0deg,#1f8a96 0 6deg,#2fb6b0 6deg 12deg,#145f7a 12deg 18deg);
+  box-shadow:0 0 0 6px rgba(255,255,255,.1),0 0 0 7px rgba(255,255,255,.2),0 18px 50px rgba(47,182,176,.38);
+  animation:focus 1s ease-out both;
+}
+.iris::after{content:"";position:absolute;top:24px;left:30px;width:30px;height:18px;border-radius:50%;
+  background:rgba(255,255,255,.55);filter:blur(2px);transform:rotate(-25deg)}
+@keyframes focus{from{transform:scale(.86);filter:blur(7px);opacity:.4}to{transform:none;filter:none;opacity:1}}
+
+.btn{
+  display:inline-flex; align-items:center; gap:12px; padding:16px 34px; border-radius:999px;
+  background:linear-gradient(180deg,var(--amber-hi),var(--amber)); color:#2a1800;
+  font-weight:650; font-size:1.08rem; text-decoration:none;
+  box-shadow:0 10px 28px rgba(245,160,46,.38), inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .15s, box-shadow .15s;
+}
+.btn:hover{transform:translateY(-2px); box-shadow:0 14px 34px rgba(245,160,46,.5), inset 0 1px 0 rgba(255,255,255,.6)}
+a:focus-visible,summary:focus-visible{outline:3px solid #fff; outline-offset:3px; border-radius:12px}
+.meta{margin-top:16px; color:var(--muted); font-size:.92rem}
+
+ol{list-style:none; counter-reset:s; margin:0; padding:0; display:flex; flex-direction:column; gap:20px; text-align:left}
+ol>li{counter-increment:s; display:grid; grid-template-columns:42px 1fr; gap:16px; align-items:start}
+ol>li::before{
+  content:counter(s); width:42px; height:42px; border-radius:50%; display:grid; place-items:center;
+  font-weight:700; background:rgba(255,255,255,.12); border:1px solid var(--edge);
+}
+li strong{display:block; font-size:1.05rem; margin-bottom:2px}
+li span.d{color:var(--muted)}
+code{background:rgba(0,0,0,.28); padding:2px 8px; border-radius:8px; font:.9em Consolas,"Cascadia Mono",monospace; color:#ffe2b3; word-break:break-all}
+
+.menu{margin-top:12px; max-width:280px; border-radius:12px; overflow:hidden; background:rgba(8,22,34,.78); border:1px solid var(--edge); font-size:.95rem}
+.menu div{padding:9px 14px; display:flex; align-items:center; gap:10px; color:var(--muted)}
+.menu .hit{background:rgba(245,160,46,.22); color:#fff; font-weight:600; box-shadow:inset 3px 0 0 var(--amber)}
+.menu .hit i{color:var(--amber-hi)}
+
+.warn{text-align:left; border-color:rgba(245,160,46,.4)}
+.warn h2 i{color:var(--amber-hi); margin-right:8px}
+.warn p+p{margin-top:10px}
+.warn .d, .faq .d{color:var(--muted)}
+
+.faq{text-align:left; padding:10px 26px}
+details{border-bottom:1px solid var(--edge); padding:14px 0}
+details:last-child{border-bottom:0}
+summary{cursor:pointer; font-weight:600; list-style:none; display:flex; justify-content:space-between; gap:12px; align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"\f078"; font-family:"Font Awesome 6 Free"; font-weight:900; font-size:.8rem; color:var(--muted); transition:transform .2s}
+details[open] summary::after{transform:rotate(180deg)}
+details p{margin-top:8px; color:var(--muted)}
+footer{color:var(--muted); font-size:.88rem}
+
+@media (max-width:520px){ main{padding-top:28px} .glass{padding:22px 18px} ol>li{grid-template-columns:36px 1fr; gap:12px} ol>li::before{width:36px;height:36px} }
+@media (prefers-reduced-motion:reduce){ .iris{animation:none} .btn{transition:none} html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+<main>
+
+  <section class="glass hero">
+    <div class="iris" role="img" aria-label="Stylised eye"></div>
+    <h1>iTestEye.com Image Downloader</h1>
+    <p class="lead">Paste any web page address and save every image on it to your computer in one click.</p>
+    <a class="btn" href="apps/iTestEye_Setup.zip" download><i class="fa-solid fa-download"></i> Download for Windows</a>
+    <p class="meta"><i class="fa-brands fa-windows"></i> Windows 10 and 11 &nbsp;|&nbsp; Free &nbsp;|&nbsp; Needs a Windows PC</p>
+  </section>
+
+  <section class="glass" id="install">
+    <h2>Install in 5 steps</h2>
+    <ol>
+      <li><div><strong>Download the ZIP</strong><span class="d">Click the button above and save <code>iTestEye_Setup.zip</code>.</span></div></li>
+      <li><div><strong>Unzip it</strong><span class="d">Right-click the ZIP, choose <b>Extract All</b>, then <b>Extract</b>. Don't run the installer from inside the ZIP.</span></div></li>
+      <li><div><strong>Run as administrator</strong><span class="d">Right-click <code>iTestEye_Setup.bat</code> and choose <b>Run as administrator</b>. On Windows 11, click <b>Show more options</b> first. Click <b>Yes</b> when Windows asks for permission.</span>
+        <div class="menu" aria-hidden="true">
+          <div><i class="fa-regular fa-folder-open"></i> Open</div>
+          <div><i class="fa-regular fa-pen-to-square"></i> Edit</div>
+          <div class="hit"><i class="fa-solid fa-shield-halved"></i> Run as administrator</div>
+          <div><i class="fa-regular fa-clipboard"></i> Properties</div>
+        </div></div></li>
+      <li><div><strong>Wait for the installer</strong><span class="d">If your PC doesn't have Python, the installer adds it. This can take a few minutes. It's finished when the window says <b>All done</b>.</span></div></li>
+      <li><div><strong>Open the app</strong><span class="d">Double-click <b>iTestEye Image Downloader</b> on your Desktop, paste a page address, and click <b>Download</b>. Images are saved in <code>Downloads\iTestEye Images</code>.</span></div></li>
+    </ol>
+  </section>
+
+  <section class="glass warn">
+    <h2><i class="fa-solid fa-triangle-exclamation"></i>If Windows shows a warning</h2>
+    <p class="d">Because the installer isn't digitally signed, Windows or your browser may ask you to confirm.</p>
+    <p><b>Browser:</b> choose <b>Keep</b> when it says the file isn't commonly downloaded.</p>
+    <p><b>Windows protected your PC:</b> click <b>More info</b>, then <b>Run anyway</b>.</p>
+  </section>
+
+  <section class="glass faq">
+    <details>
+      <summary>Why a .bat installer and not an .exe?</summary>
+      <p>Windows Smart App Control blocks unsigned .exe programs with no way to override it. A script installer isn't blocked.</p>
+    </details>
+    <details>
+      <summary>What does the installer change on my PC?</summary>
+      <p>It installs Python 3.12 only if you don't already have it, copies the app to <code>C:\Program Files\iTestEye Image Downloader</code>, and adds shortcuts to your Desktop and Start menu.</p>
+    </details>
+    <details>
+      <summary>How do I uninstall it?</summary>
+      <p>Delete the Desktop shortcut and the <code>iTestEye Image Downloader</code> folder in <code>C:\Program Files</code>.</p>
+    </details>
+    <details>
+      <summary>Does it work on Mac or phones?</summary>
+      <p>No. It's for Windows PCs only.</p>
+    </details>
+  </section>
+
+  <footer>Only download images you have the right to use. Photos on websites belong to their owners.</footer>
+</main>
+</body>
+</html>
