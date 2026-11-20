@@ -66,7 +66,7 @@ A collection of free, browser-based tools and reference pages for optometrists a
 └── fav/site.webmanifest  # Web app manifest
 ```
 
-Assets referenced by the pages but kept alongside them: `img/` (letter logos), `src/` (Chromia logo), `favicons/`, `profile.jpeg`, and `apps/iTestEye_Setup.zip` (the downloader installer).
+Assets referenced by the pages but kept alongside them: `img/` (letter logos), `src/` (Chromia logo), `favicons/`, `profile.jpeg`, and `apps/iteid.zip` (the downloader installer).
 
 ### How the shared pieces fit together
 
