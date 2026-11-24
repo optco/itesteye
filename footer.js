@@ -220,7 +220,7 @@
         }
       };
       probe.onerror = function() { /* missing logo: render nothing */ };
-      probe.src = '/logo.png';
+      probe.src = '/fav/android-chrome-192x192.png';
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
