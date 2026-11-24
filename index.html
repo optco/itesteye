@@ -141,6 +141,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <body>
 
 <main>
+    <div class="timebar" id="timebar" aria-live="off">
+  <div class="tb-date" id="tbDate"></div>
+  <div class="tb-clock" id="tbClock"></div>
+  <div class="tb-off"><span id="tbLabel">Time to knock off</span><strong id="tbLeft">--</strong></div>
+</div>
 <a class="back" href="more.html"><span aria-hidden="true">←</span> More</a> <a class="back" href="letter.html">Letter Maker</a> <a class="back" href="codes.html">Tarrif Codes</a>
 <h1>Spectacle ⇄ Contact Lens Calculator</h1>
 <p class="sub">Vertex-distance compensated, power rounded to 0.25 D, axis rounded to the nearest 10°.</p>
@@ -346,6 +351,44 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     q("#vd").value=12;
     all();
   });
+    /* ---- Time strip ---- */
+(function(){
+  var elDate=document.getElementById("tbDate"),
+      elClock=document.getElementById("tbClock"),
+      elLeft=document.getElementById("tbLeft"),
+      elLabel=document.getElementById("tbLabel"),
+      bar=document.getElementById("timebar");
+  var p2=function(n){return (n<10?"0":"")+n};
+
+  function tick(){
+    var now=new Date();
+    elDate.textContent=now.toLocaleDateString("en-ZA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    elClock.textContent=p2(now.getHours())+":"+p2(now.getMinutes())+":"+p2(now.getSeconds());
+
+    var day=now.getDay();                       // 0 = Sun, 6 = Sat
+    var startH=9, endH=(day===0||day===6)?14:17;
+    var start=new Date(now.getFullYear(),now.getMonth(),now.getDate(),startH,0,0);
+    var end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),endH,0,0);
+
+    bar.classList.remove("done");
+    if(now<start){
+      elLabel.textContent="Work starts in";
+      elLeft.textContent=fmt(start-now);
+    }else if(now<end){
+      elLabel.textContent="Time to knock off";
+      elLeft.textContent=fmt(end-now);
+    }else{
+      elLabel.textContent="Knocked off";
+      elLeft.textContent="Enjoy! 🎉";
+      bar.classList.add("done");
+    }
+  }
+  function fmt(ms){
+    var s=Math.floor(ms/1000), h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60;
+    return h+"h "+p2(m)+"m "+p2(sec)+"s";
+  }
+  tick(); setInterval(tick,1000);
+})();
 })();
 </script>
 
