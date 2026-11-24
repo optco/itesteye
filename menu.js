@@ -186,7 +186,7 @@
             <div id="hamburgerMenu" class="hamburger-menu">
                 <div class="menu-links">
                 <a class="menu-item" href="https://itesteye.com/about" target="_self" rel="noopener noreferrer">
-                        <i class="fa fa-user" aria-hidden="true"></i> About Me
+                        <i class="fa fa-user" aria-hidden="true"></i> Contact Me
                     </a>
                     <a class="menu-item" href="https://itesteye.com/downloader" target="_self" rel="noopener noreferrer">
                         <i class="fa-solid fa-download"></i> Image Downloader
