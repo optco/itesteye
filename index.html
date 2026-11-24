@@ -389,15 +389,13 @@ window.addEventListener('load', () => {
       var start=new Date(now.getFullYear(),now.getMonth(),now.getDate(),startH,0,0);
       var end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),endH,0,0);
 
-      // progress: fills in 30-minute steps from start to end
-      var pct=0;
-      if(now>=end){ pct=100; }
-      else if(now>start){
-        var step=30*60000;
-        var done=Math.floor((now-start)/step)*step;
-        pct=Math.min(100,done/(end-start)*100);
-      }
-      bar.style.setProperty("--p",pct+"%");
+   // progress: fills smoothly from start to end
+var pct=0;
+if(now>=end){ pct=100; }
+else if(now>start){
+  pct = Math.min(100, ((now - start) / (end - start)) * 100);
+}
+bar.style.setProperty("--p",pct+"%");
 
       bar.classList.remove("done");
       if(now<start){
