@@ -142,7 +142,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 :root{--fill:rgba(34,197,94,.14)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fill:rgba(52,211,153,.16)}}
 :root[data-theme="dark"]{--fill:rgba(52,211,153,.16)}
-
+.timebar{border:1px solid #fff;box-shadow:0 0 0 1px var(--line)}
 .timebar{position:relative;overflow:hidden}
 .timebar::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:var(--fill);transition:width 1s linear;pointer-events:none}
 .timebar>*{position:relative}
