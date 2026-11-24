@@ -139,8 +139,12 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 @media (max-width:560px){.timebar{justify-content:center;text-align:center}.timebar .tb-date{font-size:1.05rem}}
 
 /* ---------- Time strip progress ---------- */
+:root{--fill:rgba(34,197,94,.14)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fill:rgba(52,211,153,.16)}}
+:root[data-theme="dark"]{--fill:rgba(52,211,153,.16)}
+
 .timebar{position:relative;overflow:hidden}
-.timebar::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:rgba(128,128,128,.18);transition:width 1s ease;pointer-events:none}
+.timebar::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:var(--fill);transition:width 1s linear;pointer-events:none}
 .timebar>*{position:relative}
 </style>
 </head>
