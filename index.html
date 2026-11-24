@@ -146,8 +146,21 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   <div class="tb-clock" id="tbClock"></div>
   <div class="tb-off"><span id="tbLabel"></span><i class="fa-solid fa-hourglass-start"></i> <strong id="tbLeft">--</strong></div>
 </div>
-<a class="back" href="more.html"><span aria-hidden="true">←</span> More</a> <a class="back" href="letter.html">Letter Maker</a> <a class="back" href="codes.html">Tarrif Codes</a>
-<h1>Spectacle ⇄ Contact Lens Calculator</h1>
+<div id="tool-header">
+    <a class="back" href="more.html"><span aria-hidden="true">←</span> More</a>
+    <a class="back" href="letter.html">Letter Maker</a>
+    <a class="back" href="codes.html">Tariff Codes</a>
+    <h1>Spectacle ⇄ Contact Lens Calculator</h1>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+    const header = document.getElementById('tool-header');
+    if (header) {
+        header.scrollIntoView();
+    }
+});
+</script>
 <p class="sub">Vertex-distance compensated, power rounded to 0.25 D, axis rounded to the nearest 10°.</p>
 
 <div class="card">
