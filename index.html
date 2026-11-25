@@ -55,7 +55,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap">
 <style>
 /* ---------- Theme ---------- */
-:root{--bg:#f4f6f8;--card:#fff;--text:#14202b;--muted:#5d6b78;--line:#d9e0e6;--accent:#0284C7;--accent-h:#0EA5E9;--accent-t:#fff;--res:#e6f4f5;
+:root{--bg:#f4f6f8;--card:#fff;--text:#14202b;--muted:#5d6b78;--line:#d9e0e6;--accent:#0284C7;--accent-h:#0EA5E9;--accent-t:#fff;--res:#e6f4f5;--glass-border: rgba(255, 255, 255, 0.7);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 
 /* ---------- Base & layout ---------- */
@@ -64,8 +64,8 @@ body{font:22px/1.4 'Barlow Condensed',sans-serif}
 main{max-width:1000px;margin:0 auto;padding:28px 20px 56px}
 h1{font-size:2.6rem;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.03em;line-height:1.1}
 .sub{color:var(--muted);margin:0 0 18px;font-size:1.2rem}
-.card{background:var(--card); border-radius:16px;padding:24px;margin-bottom:14px; box-shadow: 0 8px 28px rgba(31, 38, 70, 0.10), inset 0 1px 0 rgba(255,255,255,.8);}
-.eyes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--card);border: 1px solid var(--glass-border); border-radius:16px;padding:24px;margin-bottom:14px; box-shadow: 0 8px 28px rgba(31, 38, 70, 0.10), inset 0 1px 0 rgba(255,255,255,.8);}
+.eyes{display:grid;grid-template-columns:1fr 1fr;gap:14px} 
 .row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 18px}
 
@@ -135,7 +135,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   justify-content: space-between;
   gap: 8px 24px;
   background: var(--bg);
- 
+ border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 12px 22px;
   margin: 0 0 14px;
