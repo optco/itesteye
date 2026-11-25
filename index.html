@@ -370,50 +370,55 @@ window.addEventListener('load', () => {
   });
 
   /* ---- Time strip ---- */
-  (function(){
-    var elDate=document.getElementById("tbDate"),
-        elClock=document.getElementById("tbClock"),
-        elLeft=document.getElementById("tbLeft"),
-        elLabel=document.getElementById("tbLabel"),
-        bar=document.getElementById("timebar");
-    var p2=function(n){return (n<10?"0":"")+n};
+(function(){
+  var elDate=document.getElementById("tbDate"),
+      elClock=document.getElementById("tbClock"),
+      elLeft=document.getElementById("tbLeft"),
+      elLabel=document.getElementById("tbLabel"),
+      bar=document.getElementById("timebar");
+  var p2=function(n){return (n<10?"0":"")+n};
 
-    function tick(){
-      var now=new Date();
-      elDate.textContent=now.toLocaleDateString("en-ZA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-      elClock.textContent=p2(now.getHours())+":"+p2(now.getMinutes());
-      var day=now.getDay();                       // 0 = Sun, 6 = Sat
-      var startH=9, endH=(day===0||day===6)?14:17;
-      var start=new Date(now.getFullYear(),now.getMonth(),now.getDate(),startH,0,0);
-      var end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),endH,0,0);
+  function tick(){
+    var now=new Date();
+    elDate.textContent=now.toLocaleDateString("en-ZA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    elClock.textContent=p2(now.getHours())+":"+p2(now.getMinutes());
+    var day=now.getDay();
+    var startH=9, endH=(day===0||day===6)?14:17;
+    var start=new Date(now.getFullYear(),now.getMonth(),now.getDate(),startH,0,0);
+    var end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),endH,0,0);
 
-   // progress: fills smoothly from start to end
-var pct=0;
-if(now>=end){ pct=100; }
-else if(now>start){
-  pct = Math.min(100, ((now - start) / (end - start)) * 100);
-}
-bar.style.setProperty("--p",pct+"%");
-
-      bar.classList.remove("done");
-      if(now<start){
-        elLabel.textContent="Work starts in";
-        elLeft.textContent=fmt(start-now);
-      }else if(now<end){
-        elLabel.textContent="";
-        elLeft.textContent=fmt(end-now);
-      }else{
-        elLabel.textContent="Time's up";
-       elLeft.textContent="Enjoy! 🎉";
-        bar.classList.add("done");
-      }
+    // Progress: advances in discrete 1-minute increments
+    var pct=0;
+    if(now>=end){ 
+      pct=100; 
+    } else if(now>start){
+      var totalMinutes = (end - start) / 60000;
+      var elapsedMinutes = Math.floor((now - start) / 60000);
+      pct = Math.min(100, (elapsedMinutes / totalMinutes) * 100);
     }
-    function fmt(ms){
-      var m=Math.ceil(ms/60000), h=Math.floor(m/60);
-      return h+"h "+p2(m%60)+"m";
+    bar.style.setProperty("--p", pct + "%");
+
+    bar.classList.remove("done");
+    if(now<start){
+      elLabel.textContent="Work starts in";
+      elLeft.textContent=fmt(start-now);
+    }else if(now<end){
+      elLabel.textContent="";
+      elLeft.textContent=fmt(end-now);
+    }else{
+      elLabel.textContent="Time's up";
+      elLeft.textContent="Enjoy! 🎉";
+      bar.classList.add("done");
     }
-    tick(); setInterval(tick,1000);
-  })();
+  }
+  
+  function fmt(ms){
+    var m=Math.ceil(ms/60000), h=Math.floor(m/60);
+    return h+"h "+p2(m%60)+"m";
+  }
+  
+  tick(); 
+  setInterval(tick, 60000); // Update every minute instead of every second
 })();
 </script>
 
