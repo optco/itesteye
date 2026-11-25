@@ -411,7 +411,7 @@ bar.style.setProperty("--p",pct+"%");
       var m=Math.ceil(ms/60000), h=Math.floor(m/60);
       return h+"h "+p2(m%60)+"m";
     }
-    tick(); setInterval(tick,1000);
+    tick(); setInterval(tick,60000);
   })();
 })();
 </script>
