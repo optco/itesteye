@@ -28,7 +28,29 @@ html::before, body::before, body::after {
   /* Add transition for smooth movement and transform for JS control */
   transition: transform 0.4s ease-out;
 }
+body::before {
+  width: 500px; height: 500px;
+  top: -10%; left: -10%;
+  background: linear-gradient(135deg, var(--blob1-a), var(--blob1-b));
+  opacity: calc(.7 * var(--blob-opacity));
+  transform: translate(var(--b1-x, 0px), var(--b1-y, 0px));
+}
 
+body::after {
+  width: 400px; height: 400px;
+  bottom: 10%; right: -5%;
+  background: linear-gradient(135deg, var(--blob2-a), var(--blob2-b));
+  opacity: calc(.7 * var(--blob-opacity));
+  transform: translate(var(--b2-x, 0px), var(--b2-y, 0px));
+}
+
+html::before {
+  width: 300px; height: 300px;
+  top: 40%; left: 60%;
+  background: linear-gradient(135deg, var(--blob3-a), var(--blob3-b));
+  opacity: calc(.2 * var(--blob-opacity));
+  transform: translate(var(--b3-x, 0px), var(--b3-y, 0px));
+}
 
 @media print {
   html::before, body::before, body::after { display: none !important; }
