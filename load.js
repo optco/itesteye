@@ -25,19 +25,18 @@
         const x = (e.clientX / window.innerWidth - 0.5) * 2;
         const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
-        // Calculate parallax offsets. 
-        // Adjust the multipliers (30, -20, 15) to change the depth effect.
+        // Increased multipliers for highly visible movement
         // Blob 1 (Blue): moves with mouse
-        root.style.setProperty('--b1-x', (x * 30) + 'px');
-        root.style.setProperty('--b1-y', (y * 30) + 'px');
+        root.style.setProperty('--b1-x', (x * 80) + 'px');
+        root.style.setProperty('--b1-y', (y * 80) + 'px');
 
         // Blob 2 (Green): moves opposite to mouse for depth
-        root.style.setProperty('--b2-x', (x * -20) + 'px');
-        root.style.setProperty('--b2-y', (y * -20) + 'px');
+        root.style.setProperty('--b2-x', (x * -60) + 'px');
+        root.style.setProperty('--b2-y', (y * -60) + 'px');
 
-        // Blob 3 (Yellow): subtle movement
-        root.style.setProperty('--b3-x', (x * 15) + 'px');
-        root.style.setProperty('--b3-y', (y * 15) + 'px');
+        // Blob 3 (Yellow): moderate movement
+        root.style.setProperty('--b3-x', (x * 40) + 'px');
+        root.style.setProperty('--b3-y', (y * 40) + 'px');
 
         ticking = false;
       });
