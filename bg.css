@@ -1,28 +1,23 @@
 /* ==========================================================
-   bg.css - shared static background (colours only, no animation)
-   Based on the CV page: soft blue, green and yellow blobs.
-   Usage: <link rel="stylesheet" href="bg.css"> AFTER your other styles.
+   bg.css - shared static background with mouse parallax
    ========================================================== */
 
 :root {
   --bg-base: #F8FAFC;
-  --blob1-a: #BAE6FD; --blob1-b: #7DD3FC;   /* blue, top-left */
-  --blob2-a: #A7F3D0; --blob2-b: #6EE7B7;   /* green, bottom-right */
-  --blob3-a: #FDE68A; --blob3-b: #FCD34D;   /* yellow, middle-right */
-  --blob-opacity: 1;                        /* dims all blobs in dark mode */
+  --blob1-a: #BAE6FD; --blob1-b: #7DD3FC;
+  --blob2-a: #A7F3D0; --blob2-b: #6EE7B7;
+  --blob3-a: #FDE68A; --blob3-b: #FCD34D;
+  --blob-opacity: 1;
 }
 
-/* Dark mode (follows the same switches your index page uses) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) { --bg-base: #0e151b; --blob-opacity: .28; }
 }
 :root[data-theme="dark"] { --bg-base: #0e151b; --blob-opacity: .28; }
 
-/* Base colour goes on <html> so it sits behind everything */
 html { background: var(--bg-base) !important; }
 body { background: transparent !important; min-height: 100vh; }
 
-/* Three blobs: html::before, body::before, body::after */
 html::before, body::before, body::after {
   content: "";
   position: fixed;
@@ -30,28 +25,34 @@ html::before, body::before, body::after {
   border-radius: 50%;
   filter: blur(50px);
   pointer-events: none;
+  /* Add transition for smooth movement and transform for JS control */
+  transition: transform 0.4s ease-out;
 }
 
-body::before {            /* blue */
+body::before {
   width: 500px; height: 500px;
   top: -10%; left: -10%;
   background: linear-gradient(135deg, var(--blob1-a), var(--blob1-b));
   opacity: calc(.7 * var(--blob-opacity));
+  transform: translate(var(--b1-x, 0px), var(--b1-y, 0px));
 }
-body::after {             /* green */
+
+body::after {
   width: 400px; height: 400px;
   bottom: 10%; right: -5%;
   background: linear-gradient(135deg, var(--blob2-a), var(--blob2-b));
   opacity: calc(.7 * var(--blob-opacity));
+  transform: translate(var(--b2-x, 0px), var(--b2-y, 0px));
 }
-html::before {            /* yellow, subtle */
+
+html::before {
   width: 300px; height: 300px;
   top: 40%; left: 60%;
   background: linear-gradient(135deg, var(--blob3-a), var(--blob3-b));
   opacity: calc(.2 * var(--blob-opacity));
+  transform: translate(var(--b3-x, 0px), var(--b3-y, 0px));
 }
 
-/* Keep blobs off paper */
 @media print {
   html::before, body::before, body::after { display: none !important; }
   html { background: #fff !important; }
