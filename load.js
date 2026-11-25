@@ -14,7 +14,7 @@
     }
   });
 
-  // 2. Mouse parallax logic for background blobs
+  // 2. Mouse interaction logic
   let ticking = false;
   const root = document.documentElement;
 
@@ -25,18 +25,17 @@
         const x = (e.clientX / window.innerWidth - 0.5) * 2;
         const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
-        // Increased multipliers for highly visible movement
-        // Blob 1 (Blue): moves with mouse
-        root.style.setProperty('--b1-x', (x * 80) + 'px');
-        root.style.setProperty('--b1-y', (y * 80) + 'px');
+        // Yellow blob (Primary): Tracks mouse directly and strongly
+        root.style.setProperty('--b3-x', (x * 120) + 'px');
+        root.style.setProperty('--b3-y', (y * 120) + 'px');
 
-        // Blob 2 (Green): moves opposite to mouse for depth
-        root.style.setProperty('--b2-x', (x * -60) + 'px');
-        root.style.setProperty('--b2-y', (y * -60) + 'px');
+        // Blue blob (Secondary): Moves opposite to mouse, simulating displacement
+        root.style.setProperty('--b1-x', (x * -40) + 'px');
+        root.style.setProperty('--b1-y', (y * -40) + 'px');
 
-        // Blob 3 (Yellow): moderate movement
-        root.style.setProperty('--b3-x', (x * 40) + 'px');
-        root.style.setProperty('--b3-y', (y * 40) + 'px');
+        // Green blob (Secondary): Moves opposite to mouse, simulating displacement
+        root.style.setProperty('--b2-x', (x * -30) + 'px');
+        root.style.setProperty('--b2-y', (y * -30) + 'px');
 
         ticking = false;
       });
