@@ -14,32 +14,23 @@
     }
   });
 
-  // 2. Mouse interaction logic
-  let ticking = false;
+  // 2. Randomize blob positions on page load
   const root = document.documentElement;
 
-  document.addEventListener('mousemove', function(e) {
-    if (!ticking) {
-      window.requestAnimationFrame(function() {
-        // Normalize mouse position to a range of -1 to 1
-        const x = (e.clientX / window.innerWidth - 0.5) * 2;
-        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+  // Helper to generate a random percentage between a min and max value
+  function getRandomPosition(min, max) {
+    return (Math.random() * (max - min) + min) + '%';
+  }
 
-        // Yellow blob (Primary): Tracks mouse directly and strongly
-        root.style.setProperty('--b3-x', (x * 120) + 'px');
-        root.style.setProperty('--b3-y', (y * 120) + 'px');
+  // Apply random positions. 
+  // Capped between 0% and 60% to prevent them from going completely off-screen 
+  // given their large pixel widths (300px to 500px).
+  root.style.setProperty('--b1-top', getRandomPosition(0, 60));
+  root.style.setProperty('--b1-left', getRandomPosition(0, 60));
 
-        // Blue blob (Secondary): Moves opposite to mouse, simulating displacement
-        root.style.setProperty('--b1-x', (x * -40) + 'px');
-        root.style.setProperty('--b1-y', (y * -40) + 'px');
+  root.style.setProperty('--b2-top', getRandomPosition(0, 60));
+  root.style.setProperty('--b2-left', getRandomPosition(0, 60));
 
-        // Green blob (Secondary): Moves opposite to mouse, simulating displacement
-        root.style.setProperty('--b2-x', (x * -30) + 'px');
-        root.style.setProperty('--b2-y', (y * -30) + 'px');
-
-        ticking = false;
-      });
-      ticking = true;
-    }
-  });
+  root.style.setProperty('--b3-top', getRandomPosition(0, 60));
+  root.style.setProperty('--b3-left', getRandomPosition(0, 60));
 })();
