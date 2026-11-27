@@ -72,6 +72,24 @@
         .today-cond { font-size: 1.2rem; margin-top: 0.25rem; }
         .today-meta { display: grid; gap: 0.35rem; font-size: 1rem; }
 
+        /* Islamic prayer times inside the Today card */
+        .prayer { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.3); }
+        .prayer:empty { display: none; }
+        .prayer-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.4rem 1rem; }
+        .prayer-title { font-weight: 600; }
+        .prayer-hijri { margin-left: 0.6rem; font-size: 0.85rem; opacity: .85; }
+        .prayer-school { font-size: 0.8rem; opacity: .95; }
+        .prayer-school select { margin-left: 0.3rem; padding: 0.15rem 0.35rem; font-size: 0.8rem; color: #fff; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.45); border-radius: 6px; }
+        .prayer-school select option { color: #000; }
+        .prayer-now { margin-top: 0.5rem; font-size: 1.15rem; font-weight: 600; }
+        .prayer-next { font-size: 0.9rem; opacity: .9; }
+        .prayer-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem; margin-top: 0.7rem; }
+        .prayer-pill { text-align: center; padding: 0.45rem 0.2rem; border-radius: 8px; background: rgba(255,255,255,.12); font-size: 0.8rem; }
+        .prayer-pill b { display: block; font-size: 1rem; margin-top: 0.1rem; }
+        .prayer-pill.current { background: rgba(255,255,255,.3); outline: 1px solid rgba(255,255,255,.7); }
+        .prayer-pill.next { outline: 1px dashed rgba(255,255,255,.7); }
+        .prayer-foot { margin-top: 0.5rem; font-size: 0.72rem; opacity: .75; }
+
         /* Hour-by-hour strip with temperature graph (scrolls sideways) */
         .hourly-title { margin: 1.4rem 0 0.4rem; font-size: 1rem; font-weight: 600; opacity: .9; }
         .hourly-scroll { overflow-x: auto; padding-bottom: 0.4rem; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.5) transparent; }
@@ -354,6 +372,119 @@
         return wrap;
     }
 
+    /* ---------- Prayer times (Aladhan API, free, no key) ---------- */
+    const PRAYERS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    let prayerToken = 0;
+    let prayerState = null;
+
+    const toMin = str => { const [h, m] = String(str).slice(0, 5).split(':').map(Number); return h * 60 + m; };
+    const fmtDur = min => { const h = Math.floor(min / 60), m = min % 60; return h ? `${h}h ${m}m` : `${m}m`; };
+
+    async function loadPrayer(loc, fc) {
+        const box = document.getElementById('prayerBox');
+        if (!box) return;
+        const token = ++prayerToken;
+        let school = 0;
+        try { school = localStorage.getItem('asrSchool') === '1' ? 1 : 0; } catch (_) {}
+        const [y, m, d] = fc.daily.time[0].split('-');
+        try {
+            const res = await fetch(`https://api.aladhan.com/v1/timings/${d}-${m}-${y}?latitude=${loc.latitude}&longitude=${loc.longitude}&school=${school}`);
+            if (!res.ok) throw new Error('prayer request failed');
+            const json = await res.json();
+            if (token !== prayerToken || !document.getElementById('prayerBox')) return;
+            const t = json.data.timings;
+            const hijri = json.data.date && json.data.date.hijri;
+
+            // Build the panel once; renderPrayer() only updates text and highlights
+            box.replaceChildren();
+            const head = document.createElement('div');
+            head.className = 'prayer-head';
+            const title = document.createElement('div');
+            const tt = document.createElement('span');
+            tt.className = 'prayer-title';
+            tt.textContent = 'Prayer times';
+            title.appendChild(tt);
+            if (hijri) {
+                const hj = document.createElement('span');
+                hj.className = 'prayer-hijri';
+                hj.textContent = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
+                title.appendChild(hj);
+            }
+            const lab = document.createElement('label');
+            lab.className = 'prayer-school';
+            lab.append('Asr: ');
+            const sel = document.createElement('select');
+            [['0', 'Standard'], ['1', 'Hanafi']].forEach(([v, text]) => {
+                const o = document.createElement('option');
+                o.value = v; o.textContent = text;
+                if (Number(v) === school) o.selected = true;
+                sel.appendChild(o);
+            });
+            sel.addEventListener('change', () => {
+                try { localStorage.setItem('asrSchool', sel.value); } catch (_) {}
+                loadPrayer(loc, fc);
+            });
+            lab.appendChild(sel);
+            head.append(title, lab);
+
+            const nowEl = document.createElement('div');
+            nowEl.className = 'prayer-now';
+            const nextEl = document.createElement('div');
+            nextEl.className = 'prayer-next';
+
+            const row = document.createElement('div');
+            row.className = 'prayer-row';
+            const pills = {};
+            PRAYERS.forEach(name => {
+                const pill = document.createElement('div');
+                pill.className = 'prayer-pill';
+                pill.append(name);
+                const b = document.createElement('b');
+                b.textContent = String(t[name]).slice(0, 5);
+                pill.appendChild(b);
+                row.appendChild(pill);
+                pills[name] = pill;
+            });
+
+            const foot = document.createElement('div');
+            foot.className = 'prayer-foot';
+            const methodName = json.data.meta && json.data.meta.method && json.data.meta.method.name;
+            foot.textContent = `Calculated by Aladhan${methodName ? ` (${methodName})` : ''}. Confirm with your local mosque.`;
+
+            box.append(head, nowEl, nextEl, row, foot);
+            prayerState = { t, offset: fc.utc_offset_seconds || 0, nowEl, nextEl, pills };
+            renderPrayer();
+        } catch (e) {
+            if (token === prayerToken) { box.replaceChildren(); prayerState = null; }   // prayer times are optional
+        }
+    }
+
+    // Works out the current and next prayer in the searched city's own time
+    function renderPrayer() {
+        if (!prayerState || !document.body.contains(prayerState.nowEl)) return;
+        const { t, offset, nowEl, nextEl, pills } = prayerState;
+        const local = new Date(Date.now() + offset * 1000);
+        const now = local.getUTCHours() * 60 + local.getUTCMinutes();
+        const T = { Fajr: toMin(t.Fajr), Sunrise: toMin(t.Sunrise), Dhuhr: toMin(t.Dhuhr), Asr: toMin(t.Asr), Maghrib: toMin(t.Maghrib), Isha: toMin(t.Isha) };
+
+        let current, next, nextAt;
+        if (now < T.Fajr)         { current = 'Isha';    next = 'Fajr';    nextAt = T.Fajr; }
+        else if (now < T.Sunrise) { current = 'Fajr';    next = 'Dhuhr';   nextAt = T.Dhuhr; }
+        else if (now < T.Dhuhr)   { current = null;      next = 'Dhuhr';   nextAt = T.Dhuhr; }
+        else if (now < T.Asr)     { current = 'Dhuhr';   next = 'Asr';     nextAt = T.Asr; }
+        else if (now < T.Maghrib) { current = 'Asr';     next = 'Maghrib'; nextAt = T.Maghrib; }
+        else if (now < T.Isha)    { current = 'Maghrib'; next = 'Isha';    nextAt = T.Isha; }
+        else                      { current = 'Isha';    next = 'Fajr';    nextAt = T.Fajr + 1440; }
+
+        nowEl.textContent = current ? `Now: ${current}` : `Now: after sunrise (${String(t.Sunrise).slice(0, 5)})`;
+        nextEl.textContent = `Next: ${next}${nextAt >= 1440 ? ' (tomorrow)' : ''} in ${fmtDur(nextAt - now)}`;
+        PRAYERS.forEach(n => {
+            pills[n].classList.toggle('current', n === current);
+            pills[n].classList.toggle('next', n === next);
+        });
+    }
+    setInterval(renderPrayer, 30000);
+
     /* ---------- Map view (Leaflet + OpenStreetMap) ---------- */
     const forecastView = document.getElementById('calendar');
     const mapView = document.getElementById('mapView');
@@ -513,7 +644,7 @@
         setStatus('Loading…');
         try {
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}` +
-                        `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,wind_speed_10m_max` +
+                        `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset` +
                         `&current=temperature_2m,weather_code,is_day` +
                         `&hourly=temperature_2m,weather_code,precipitation_probability,is_day` +
                         `&forecast_days=14&timezone=auto`;
@@ -535,6 +666,8 @@
                     const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                     const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[i];
                     const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[i];
+                    const sunrise = fc.daily.sunrise && fc.daily.sunrise[i];
+                    const sunset = fc.daily.sunset && fc.daily.sunset[i];
                     card.className = 'today-card';
                     card.innerHTML = `
                         <div class="today-head">
@@ -550,8 +683,11 @@
                             <div class="today-meta">
                                 ${rain != null ? `<div>💧 Rain chance: ${rain}%</div>` : ''}
                                 ${wind != null ? `<div>💨 Max wind: ${Math.round(wind)} km/h</div>` : ''}
+                                ${sunrise ? `<div>🌅 Sunrise: ${sunrise.slice(11, 16)}</div>` : ''}
+                                ${sunset ? `<div>🌇 Sunset: ${sunset.slice(11, 16)}</div>` : ''}
                             </div>
-                        </div>`;
+                        </div>
+                        <div class="prayer" id="prayerBox"></div>`;
                     const hourly = buildHourly(fc, dateStr);
                     if (hourly) card.appendChild(hourly);
                 } else {
@@ -571,6 +707,7 @@
             if (nowBlock && scroller) scroller.scrollLeft = Math.max(0, nowBlock.offsetLeft - 16);
             setStatus(`14-day forecast for ${placeName(loc)}`);
             cityTitle.textContent = loc.name;
+            loadPrayer(loc, fc);
             onForecastLoaded(loc, fc);
         } catch (err) {
             if (err.name === 'AbortError') return;
