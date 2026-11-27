@@ -34,14 +34,16 @@
         .map-hint { margin: 0 0 0.5rem; font-size: 0.9rem; color: #666; }
         #map { height: 460px; border-radius: 12px; border: 1px solid #ccc; margin-bottom: 1rem; z-index: 0; }
         .leaflet-container { font: inherit; }
-        .wx-pop { min-width: 190px; }
-        .wx-pop h4 { margin: 0 0 0.35rem; font-size: 1rem; }
-        .wx-pop .wx-now { display: flex; align-items: center; gap: 0.6rem; }
-        .wx-pop .wx-icon { font-size: 2.2rem; line-height: 1; }
-        .wx-pop .wx-temp { font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
-        .wx-pop .wx-cond { color: #555; font-size: 0.85rem; }
-        .wx-pop .wx-meta { margin-top: 0.45rem; font-size: 0.82rem; color: #444; display: grid; gap: 0.15rem; }
-        .wx-pop button { margin-top: 0.6rem; padding: 0.4rem 0.8rem; font-size: 0.85rem; width: 100%; }
+        .wx-popup .leaflet-popup-content { margin: 8px 10px; line-height: 1.25; }
+        .wx-popup .leaflet-popup-content-wrapper { border-radius: 8px; }
+        .wx-pop { min-width: 105px; }
+        .wx-pop h4 { margin: 0 0 0.2rem; font-size: 0.8rem; }
+        .wx-pop .wx-now { display: flex; align-items: center; gap: 0.35rem; }
+        .wx-pop .wx-icon { font-size: 1.2rem; line-height: 1; }
+        .wx-pop .wx-temp { font-size: 1rem; font-weight: 700; line-height: 1.1; }
+        .wx-pop .wx-cond { color: #555; font-size: 0.68rem; }
+        .wx-pop .wx-meta { margin-top: 0.25rem; font-size: 0.68rem; color: #444; display: grid; gap: 0.05rem; }
+        .wx-pop button { margin-top: 0.35rem; padding: 0.22rem 0.4rem; font-size: 0.68rem; width: 100%; border-radius: 4px; }
         .calendar { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; }
         .day-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 0.9rem 0.4rem; text-align: center; background: #fafafa; }
         .day-card .date { font-weight: bold; margin-bottom: 0.5rem; font-size: 0.9rem; }
@@ -458,7 +460,7 @@
 
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.textContent = 'See 14-day forecast';
+        btn.textContent = '14-day forecast';
         btn.addEventListener('click', () => { map.closePopup(); setView('forecast'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
         box.append(h, now, meta, btn);
@@ -469,7 +471,7 @@
         if (!map || !lastLoc || !lastFc) return;
         if (marker) marker.remove();
         marker = L.marker([lastLoc.latitude, lastLoc.longitude]).addTo(map);
-        marker.bindPopup(buildPopup());
+        marker.bindPopup(buildPopup(), { className: 'wx-popup', minWidth: 105, maxWidth: 160 });
         if (flyNext) map.flyTo([lastLoc.latitude, lastLoc.longitude], 9, { duration: 1 });
         flyNext = true;
         marker.openPopup();
