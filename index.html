@@ -260,45 +260,6 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   font-size: .8rem;
   color: var(--muted);
 }
-.wx-prayers {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.wx-prayer-dot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  font-size: .75rem;
-  color: var(--muted);
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  line-height: 1.2;
-}
-.wx-prayer-dot .name {
-  font-weight: 600;
-  color: var(--accent);
-  font-size: .8rem;
-}
-.wx-prayer-dot .time {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: .9rem;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-.wx-prayer-dot.current .name {
-  color: #fff;
-  background: var(--accent);
-  padding: 1px 6px;
-  border-radius: 4px;
-}
-.wx-prayer-dot.next .name {
-  outline: 1px dashed var(--accent);
-  border-radius: 4px;
-  padding: 1px 6px;
-}
 .wx-rain {
   display: flex;
   align-items: center;
@@ -310,13 +271,25 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .wx-rain .icon {
   font-size: 1rem;
 }
+.wx-rainchart{flex:1;min-width:160px;height:44px}
+.wx-rainchart svg{width:100%;height:100%;display:block;overflow:visible}
+.rc-area{fill:rgba(2,132,199,.12);stroke:none}
+.rc-line{fill:none;stroke:rgba(2,132,199,.55);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
+.rc-grid{stroke:rgba(0,0,0,.08);stroke-width:1;stroke-dasharray:2 3}
+.rc-now{stroke:#1e8e4e;stroke-width:1;stroke-dasharray:2 2}
+.rc-nowdot{fill:#1e8e4e}
+.rc-txt{fill:#9aa5b1;font:8px 'Share Tech Mono',monospace}
+.rc-peak{fill:var(--accent);font:600 8px 'Share Tech Mono',monospace}
 .wx-arc-wrap {
   position: relative;
   width: 100%;
-  height: 44px;
+  height: 62px;
   margin-top: 4px;
   display: none;
 }
+.wx-lbl{fill:#9aa5b1;font:600 10px 'Barlow Condensed',sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.wx-tm{fill:#9aa5b1;font:9px 'Share Tech Mono',monospace}
+.wx-lbl.active,.wx-tm.active{fill:#1e8e4e}
 @media (min-width: 700px) {
   .wx-arc-wrap {
     display: block;
@@ -344,10 +317,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     justify-content: center;
     width: 100%;
   }
-  .wx-prayers {
-    justify-content: center;
-    width: 100%;
-  }
+  .wx-rainchart{flex:none;width:100%}
 }
 </style>
 </head>
@@ -373,11 +343,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         </button>
       </div>
       <div class="wx-temps" id="wxTemps"></div>
-      <div class="wx-prayers" id="wxPrayers"></div>
       <div class="wx-rain" id="wxRain"></div>
+      <div class="wx-rainchart" id="wxRainChart"></div>
     </div>
     <div class="wx-arc-wrap" id="wxArcWrap">
-      <svg class="wx-arc-svg" viewBox="0 0 1000 44" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <svg class="wx-arc-svg" viewBox="0 0 1000 62" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
         <defs>
           <radialGradient id="wxSunGrad" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="#FFF59D" />
@@ -385,14 +355,15 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <stop offset="100%" stop-color="#FFB300" />
           </radialGradient>
         </defs>
-        <path d="M 10 40 Q 500 2 990 40" fill="none" stroke="rgba(2,132,199,0.2)" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
-        <circle id="wxDot-Fajr" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Fajr</title></circle>
-        <circle id="wxDot-Sunrise" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Sunrise</title></circle>
-        <circle id="wxDot-Dhuhr" cx="500" cy="2" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Dhuhr</title></circle>
-        <circle id="wxDot-Asr" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Asr</title></circle>
-        <circle id="wxDot-Maghrib" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Maghrib</title></circle>
-        <circle id="wxDot-Isha" cx="990" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Isha</title></circle>
-        <circle id="wxSun" cx="10" cy="40" r="7" fill="url(#wxSunGrad)" opacity="0"/>
+        <path d="M 10 44 Q 500 6 990 44" fill="none" stroke="rgba(2,132,199,0.2)" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
+        <circle id="wxDot-Fajr" cx="10" cy="44" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Fajr</title></circle>
+        <circle id="wxDot-Sunrise" cx="10" cy="44" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Sunrise</title></circle>
+        <circle id="wxDot-Dhuhr" cx="500" cy="6" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Dhuhr</title></circle>
+        <circle id="wxDot-Asr" cx="10" cy="44" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Asr</title></circle>
+        <circle id="wxDot-Maghrib" cx="10" cy="44" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Maghrib</title></circle>
+        <circle id="wxDot-Isha" cx="990" cy="44" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Isha</title></circle>
+        <g id="wxLabels"></g>
+        <circle id="wxSun" cx="10" cy="44" r="7" fill="url(#wxSunGrad)" opacity="0"/>
       </svg>
     </div>
   </div>
@@ -656,12 +627,12 @@ window.addEventListener('load', () => {
     var wxLocName = document.getElementById('wxLocName');
     var wxLocBtn = document.getElementById('wxLocBtn');
     var wxTemps = document.getElementById('wxTemps');
-    var wxPrayers = document.getElementById('wxPrayers');
     var wxRain = document.getElementById('wxRain');
     var currentLat = null, currentLon = null, currentLocLabel = '';
     var prayerTimes = null;
     var utcOffset = 0;
     var sunTimes = null;
+    var currentPrayer = null;
 
     var WMO = {
       0:['Clear sky','☀️'], 1:['Mainly clear','🌤️'], 2:['Partly cloudy','⛅'], 3:['Overcast','☁️'],
@@ -675,13 +646,12 @@ window.addEventListener('load', () => {
       85:['Snow showers','🌨️'], 86:['Heavy snow showers','❄️'],
       95:['Thunderstorm','⛈️'], 96:['Storm with hail','⛈️'], 99:['Heavy storm with hail','⛈️']
     };
-    var PRAYERS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
     var toMin = function(str){ var p = String(str).slice(0,5).split(':'); return parseInt(p[0],10)*60+parseInt(p[1],10); };
 
     function getPointOnCurve(t) {
-      var P0 = {x: 10, y: 40};
-      var P1 = {x: 500, y: 2};
-      var P2 = {x: 990, y: 40};
+      var P0 = {x: 10, y: 44};
+      var P1 = {x: 500, y: 6};
+      var P2 = {x: 990, y: 44};
       var x = (1-t)*(1-t)*P0.x + 2*(1-t)*t*P1.x + t*t*P2.x;
       var y = (1-t)*(1-t)*P0.y + 2*(1-t)*t*P1.y + t*t*P2.y;
       return {x, y};
@@ -741,19 +711,85 @@ window.addEventListener('load', () => {
         var dur = isha - fajr;
         if (dur <= 0) dur = 1440;
         var names = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+        var g = document.getElementById('wxLabels');
+        function setLbl(id, cls, txt, x, y, show) {
+          var el = document.getElementById(id);
+          if (!el) {
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            el.id = id;
+            el.setAttribute('text-anchor', 'middle');
+            g.appendChild(el);
+          }
+          el.setAttribute('class', cls);
+          el.textContent = txt;
+          el.setAttribute('x', x);
+          el.setAttribute('y', y);
+          el.setAttribute('opacity', show ? '1' : '0');
+        }
         names.forEach(function(name) {
           var dot = document.getElementById('wxDot-' + name);
           if (!dot) return;
-          var m = prayerTimes[name] ? toMin(prayerTimes[name]) : (sunTimes && name === 'Sunrise' ? toMin(sunTimes.sunrise.split('T')[1]) : null);
-          if (m == null) { dot.setAttribute('opacity', '0'); return; }
-          dot.setAttribute('opacity', '1');
-          var t = (m - fajr) / dur;
-          t = Math.max(0, Math.min(1, t));
+          var raw = prayerTimes[name] ? prayerTimes[name] : (sunTimes && name === 'Sunrise' ? sunTimes.sunrise.split('T')[1] : null);
+          if (raw == null) {
+            dot.setAttribute('opacity', '0');
+            setLbl('wxLbl-' + name, 'wx-lbl', name, 0, 0, false);
+            setLbl('wxTm-' + name, 'wx-tm', '', 0, 0, false);
+            return;
+          }
+          var active = (name === currentPrayer);
+          var m = toMin(raw);
+          var t = Math.max(0, Math.min(1, (m - fajr) / dur));
           var pt = getPointOnCurve(t);
+          dot.setAttribute('opacity', '1');
           dot.setAttribute('cx', pt.x);
           dot.setAttribute('cy', pt.y);
+          dot.setAttribute('fill', active ? '#1e8e4e' : '#9aa5b1');
+          dot.setAttribute('r', active ? 4 : 2.5);
+          var tx = Math.max(24, Math.min(976, pt.x));
+          var c = active ? ' active' : '';
+          setLbl('wxLbl-' + name, 'wx-lbl' + c, name, tx, pt.y - 6, true);
+          setLbl('wxTm-' + name, 'wx-tm' + c, String(raw).slice(0, 5), tx, pt.y + 13, true);
         });
       }
+    }
+
+    function renderRainChart(hourly) {
+      var box = document.getElementById('wxRainChart');
+      if (!box) return;
+      var v = hourly && hourly.precipitation_probability;
+      if (!v || !v.length) { box.innerHTML = ''; return; }
+      var W = 240, L = 6, R = 234, TOP = 8, BASE = 32;
+      var n = v.length;
+      var X = function(i){ return L + i * (R - L) / (n - 1); };
+      var Y = function(p){ return BASE - (p || 0) / 100 * (BASE - TOP); };
+
+      var pts = v.map(function(p, i){ return X(i).toFixed(1) + ',' + Y(p).toFixed(1); });
+      var line = 'M' + pts.join(' L');
+      var area = line + ' L' + R + ',' + BASE + ' L' + L + ',' + BASE + ' Z';
+
+      var peakI = 0;
+      v.forEach(function(p, i){ if ((p || 0) > (v[peakI] || 0)) peakI = i; });
+      var peak = v[peakI] || 0;
+
+      var nowH = new Date(Date.now() + utcOffset * 1000).getUTCHours();
+      var nx = X(Math.min(nowH, n - 1)), ny = Y(v[Math.min(nowH, n - 1)]);
+
+      var s = '<svg viewBox="0 0 ' + W + ' 44" preserveAspectRatio="none" aria-hidden="true">';
+      s += '<line class="rc-grid" x1="' + L + '" x2="' + R + '" y1="' + Y(50) + '" y2="' + Y(50) + '"/>';
+      s += '<line class="rc-grid" x1="' + L + '" x2="' + R + '" y1="' + BASE + '" y2="' + BASE + '"/>';
+      s += '<path class="rc-area" d="' + area + '"/><path class="rc-line" d="' + line + '"/>';
+      s += '<line class="rc-now" x1="' + nx + '" x2="' + nx + '" y1="' + TOP + '" y2="' + BASE + '"/>';
+      s += '<circle class="rc-nowdot" cx="' + nx + '" cy="' + ny + '" r="2"/>';
+      [0, 6, 12, 18].forEach(function(h){
+        s += '<text class="rc-txt" x="' + X(h) + '" y="42" text-anchor="middle">' + (h < 10 ? '0' : '') + h + 'h</text>';
+      });
+      s += '<text class="rc-txt" x="' + (R + 2) + '" y="' + (Y(50) + 3) + '">50%</text>';
+      if (peak > 0) {
+        var px = Math.max(24, Math.min(216, X(peakI)));
+        s += '<text class="rc-peak" x="' + px + '" y="' + (Y(peak) - 3) + '" text-anchor="middle">' + peak + '%</text>';
+      }
+      s += '</svg>';
+      box.innerHTML = s;
     }
 
     function renderWeather(data) {
@@ -786,6 +822,7 @@ window.addEventListener('load', () => {
       if (data.daily) {
         utcOffset = data.utc_offset_seconds || 0;
         sunTimes = { sunrise: data.daily.sunrise[0], sunset: data.daily.sunset[0] };
+        renderRainChart(data.hourly);
       }
       updateArc();
     }
@@ -810,17 +847,7 @@ window.addEventListener('load', () => {
       else if (nowMin < T.Isha)     { current = 'Maghrib'; next = 'Isha';    }
       else                          { current = 'Isha';    next = 'Fajr';    }
 
-      var html = '';
-      PRAYERS.forEach(function(name) {
-        var cls = '';
-        if (name === current) cls = 'current';
-        else if (name === next) cls = 'next';
-        html += '<div class="wx-prayer-dot ' + cls + '">' +
-                '<span class="name">' + name + '</span>' +
-                '<span class="time">' + String(timings[name]).slice(0,5) + '</span>' +
-                '</div>';
-      });
-      wxPrayers.innerHTML = html;
+      currentPrayer = current;
       updateArc();
     }
 
@@ -836,6 +863,7 @@ window.addEventListener('load', () => {
         var wxUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
           '&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,sunrise,sunset' +
           '&current=temperature_2m,weather_code,is_day' +
+          '&hourly=precipitation_probability' +
           '&timezone=auto&forecast_days=1';
         var wxRes = await fetch(wxUrl);
         if (!wxRes.ok) throw new Error('weather request failed');
@@ -867,7 +895,7 @@ window.addEventListener('load', () => {
       return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lon + '&localityLanguage=en')
         .then(function(r) { return r.json(); })
         .then(function(g) {
-          return g.city || g.locality || g.principalSubdivision || g.countryName || '';
+          return g.city || g.locality || '';
         })
         .catch(function() { return ''; });
     }
@@ -878,7 +906,7 @@ window.addEventListener('load', () => {
         if (!r.ok) throw new Error('geo failed');
         var d = await r.json();
         if (d.city && d.latitude != null) {
-          var label = d.city + (d.region ? ', ' + d.region : '');
+          var label = d.city;
           loadWeatherAndPrayer(d.latitude, d.longitude, label);
           return;
         }
@@ -888,7 +916,7 @@ window.addEventListener('load', () => {
         var r2 = await fetch('https://ipwho.is/');
         var d2 = await r2.json();
         if (d2.success && d2.city && d2.latitude != null) {
-          var label2 = d2.city + (d2.region ? ', ' + d2.region : '');
+          var label2 = d2.city;
           loadWeatherAndPrayer(d2.latitude, d2.longitude, label2);
           return;
         }
@@ -898,7 +926,7 @@ window.addEventListener('load', () => {
         var r3 = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en');
         var d3 = await r3.json();
         if (d3.latitude != null) {
-          var label3 = d3.city || d3.locality || d3.principalSubdivision || 'Your area';
+          var label3 = d3.city || d3.locality || 'Your area';
           loadWeatherAndPrayer(d3.latitude, d3.longitude, label3);
           return;
         }
