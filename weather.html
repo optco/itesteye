@@ -379,7 +379,23 @@
         }
     });
 
-    input.addEventListener('blur', hideSuggestions);
+    // Auto-clear the field when the user taps/clicks it to type a new city.
+    // Only clears when it is showing the currently loaded city name, so any
+    // custom text the user typed (but did not submit) is preserved.
+    input.addEventListener('focus', () => {
+        if (selectedLoc && input.value.trim() === placeName(selectedLoc)) {
+            input.value = '';
+            hideSuggestions();
+        }
+    });
+
+    input.addEventListener('blur', () => {
+        hideSuggestions();
+        // If the user tapped away without typing, restore the loaded city name.
+        if (!input.value.trim() && selectedLoc) {
+            input.value = placeName(selectedLoc);
+        }
+    });
     document.getElementById('goBtn').addEventListener('click', getWeather);
 
     locBtn.addEventListener('click', () => {
