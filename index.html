@@ -313,7 +313,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .wx-arc-wrap {
   position: relative;
   width: 100%;
-  height: 44px;
+  height: 56px;
   margin-top: 4px;
   display: none;
 }
@@ -326,6 +326,22 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   width: 100%;
   height: 100%;
   overflow: visible;
+}
+/* Prayer labels on the arc */
+.wx-arc-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--muted);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+.wx-arc-label.current {
+  fill: var(--accent);
+  font-weight: 700;
 }
 @media (max-width: 560px) {
   .wx-strip {
@@ -377,7 +393,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       <div class="wx-rain" id="wxRain"></div>
     </div>
     <div class="wx-arc-wrap" id="wxArcWrap">
-      <svg class="wx-arc-svg" viewBox="0 0 1000 44" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <svg class="wx-arc-svg" viewBox="0 0 1000 56" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
         <defs>
           <radialGradient id="wxSunGrad" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="#FFF59D" />
@@ -385,14 +401,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
             <stop offset="100%" stop-color="#FFB300" />
           </radialGradient>
         </defs>
-        <path d="M 10 40 Q 500 2 990 40" fill="none" stroke="rgba(2,132,199,0.2)" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
-        <circle id="wxDot-Fajr" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Fajr</title></circle>
-        <circle id="wxDot-Sunrise" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Sunrise</title></circle>
-        <circle id="wxDot-Dhuhr" cx="500" cy="2" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Dhuhr</title></circle>
-        <circle id="wxDot-Asr" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Asr</title></circle>
-        <circle id="wxDot-Maghrib" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Maghrib</title></circle>
-        <circle id="wxDot-Isha" cx="990" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Isha</title></circle>
-        <circle id="wxSun" cx="10" cy="40" r="7" fill="url(#wxSunGrad)" opacity="0"/>
+        <path d="M 10 50 Q 500 2 990 50" fill="none" stroke="rgba(2,132,199,0.2)" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
+        <g id="wxArcLabels"></g>
+        <circle id="wxSun" cx="10" cy="50" r="7" fill="url(#wxSunGrad)" opacity="0"/>
       </svg>
     </div>
   </div>
@@ -658,6 +669,7 @@ window.addEventListener('load', () => {
     var wxTemps = document.getElementById('wxTemps');
     var wxPrayers = document.getElementById('wxPrayers');
     var wxRain = document.getElementById('wxRain');
+    var wxArcLabels = document.getElementById('wxArcLabels');
     var currentLat = null, currentLon = null, currentLocLabel = '';
     var prayerTimes = null;
     var utcOffset = 0;
@@ -676,15 +688,54 @@ window.addEventListener('load', () => {
       95:['Thunderstorm','⛈️'], 96:['Storm with hail','⛈️'], 99:['Heavy storm with hail','⛈️']
     };
     var PRAYERS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    var ARC_PRAYERS = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
     var toMin = function(str){ var p = String(str).slice(0,5).split(':'); return parseInt(p[0],10)*60+parseInt(p[1],10); };
 
     function getPointOnCurve(t) {
-      var P0 = {x: 10, y: 40};
+      var P0 = {x: 10, y: 50};
       var P1 = {x: 500, y: 2};
-      var P2 = {x: 990, y: 40};
+      var P2 = {x: 990, y: 50};
       var x = (1-t)*(1-t)*P0.x + 2*(1-t)*t*P1.x + t*t*P2.x;
       var y = (1-t)*(1-t)*P0.y + 2*(1-t)*t*P1.y + t*t*P2.y;
       return {x, y};
+    }
+
+    function renderArcLabels() {
+      wxArcLabels.innerHTML = '';
+      if (!prayerTimes) return;
+      var fajr = toMin(prayerTimes.Fajr);
+      var isha = toMin(prayerTimes.Isha);
+      var dur = isha - fajr;
+      if (dur <= 0) dur = 1440;
+
+      var now = new Date();
+      var local = new Date(Date.now() + utcOffset * 1000);
+      var nowMin = local.getUTCHours() * 60 + local.getUTCMinutes();
+
+      var current, next;
+      if (nowMin < toMin(prayerTimes.Fajr))          { current = 'Isha';    next = 'Fajr';    }
+      else if (nowMin < toMin(prayerTimes.Sunrise))  { current = 'Fajr';    next = 'Dhuhr';   }
+      else if (nowMin < toMin(prayerTimes.Dhuhr))    { current = null;      next = 'Dhuhr';   }
+      else if (nowMin < toMin(prayerTimes.Asr))      { current = 'Dhuhr';   next = 'Asr';     }
+      else if (nowMin < toMin(prayerTimes.Maghrib))  { current = 'Asr';     next = 'Maghrib'; }
+      else if (nowMin < toMin(prayerTimes.Isha))     { current = 'Maghrib'; next = 'Isha';    }
+      else                                            { current = 'Isha';    next = 'Fajr';    }
+
+      ARC_PRAYERS.forEach(function(name) {
+        var timeStr = prayerTimes[name];
+        if (!timeStr && name === 'Sunrise' && sunTimes) timeStr = sunTimes.sunrise.split('T')[1];
+        if (!timeStr) return;
+        var m = toMin(timeStr);
+        var t = (m - fajr) / dur;
+        t = Math.max(0, Math.min(1, t));
+        var pt = getPointOnCurve(t);
+        var txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        txt.setAttribute('x', pt.x);
+        txt.setAttribute('y', pt.y - 9);
+        txt.setAttribute('class', 'wx-arc-label' + (name === current ? ' current' : ''));
+        txt.textContent = name;
+        wxArcLabels.appendChild(txt);
+      });
     }
 
     function updateArc() {
@@ -692,22 +743,15 @@ window.addEventListener('load', () => {
       if (!sun) return;
       if (!prayerTimes && !sunTimes) { sun.setAttribute('opacity', '0'); return; }
 
-      var nowMin = new Date().getUTCHours()*60 + new Date().getUTCMinutes() + utcOffset*60;
-      // fallback: use current local time if we have no api data
       var now = new Date();
-      if (utcOffset !== null) {
-        var local = new Date(Date.now() + utcOffset*1000);
-        nowMin = local.getUTCHours()*60 + local.getUTCMinutes();
-      } else {
-        nowMin = now.getHours()*60 + now.getMinutes();
-      }
+      var local = new Date(Date.now() + utcOffset * 1000);
+      var nowMin = local.getUTCHours()*60 + local.getUTCMinutes();
 
       var isDay = true;
       if (sunTimes) {
         var sr = toMin(sunTimes.sunrise.split('T')[1]);
         var ss = toMin(sunTimes.sunset.split('T')[1]);
         isDay = (nowMin >= sr && nowMin <= ss);
-        if (!isDay) { sun.setAttribute('opacity', '0'); }
       }
 
       if (isDay && prayerTimes) {
@@ -735,25 +779,7 @@ window.addEventListener('load', () => {
         sun.setAttribute('opacity', '0');
       }
 
-      if (prayerTimes) {
-        var fajr = toMin(prayerTimes.Fajr);
-        var isha = toMin(prayerTimes.Isha);
-        var dur = isha - fajr;
-        if (dur <= 0) dur = 1440;
-        var names = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-        names.forEach(function(name) {
-          var dot = document.getElementById('wxDot-' + name);
-          if (!dot) return;
-          var m = prayerTimes[name] ? toMin(prayerTimes[name]) : (sunTimes && name === 'Sunrise' ? toMin(sunTimes.sunrise.split('T')[1]) : null);
-          if (m == null) { dot.setAttribute('opacity', '0'); return; }
-          dot.setAttribute('opacity', '1');
-          var t = (m - fajr) / dur;
-          t = Math.max(0, Math.min(1, t));
-          var pt = getPointOnCurve(t);
-          dot.setAttribute('cx', pt.x);
-          dot.setAttribute('cy', pt.y);
-        });
-      }
+      renderArcLabels();
     }
 
     function renderWeather(data) {
