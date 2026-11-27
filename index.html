@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectacle to Contact Lens Converter | Vertex Distance Calculator – iTestEye</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 100px; /* Prevents overlap with the fixed bottom bar */
+            background: #f9f9f9;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        header p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .eye-section {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .eye-section h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        .input-group input, .input-group select {
+            margin-top: 4px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .result-box {
+            background: #eef6ff;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .controls button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .method-note {
+            font-size: 0.8rem;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+
+        /* Lifestyle Bar Styles */
+        #lifestyle-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            padding: 8px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1000;
+            font-family: system-ui, sans-serif;
+        }
+        #lifestyle-bar .prayer-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        #lifestyle-bar .weather-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #555;
+        }
+        #crosshair-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Spectacle ⇄ Contact Lens Calculator</h1>
+    <p>Vertex-distance compensated, power rounded to 0.25 D, axis rounded to the nearest 10°.</p>
+</header>
+
+<div class="nav-links">
+    <a href="more.html">← More</a>
+    <a href="letter.html">Letter Maker</a>
+    <a href="codes.html">Tariff Codes</a>
+</div>
+
+<div class="controls">
+    <label>Direction: 
+        <select id="direction">
+            <option value="specToCl">Spectacle → Contact lens</option>
+            <option value="clToSpec">Contact lens → Spectacle</option>
+        </select>
+    </label>
+    <label style="margin-left: 10px;">Vertex distance (mm): 
+        <input type="number" id="vd" value="12" min="0" max="20" step="0.1" style="width: 60px;">
+    </label>
+</div>
+
+<div class="eye-section">
+    <h2>Right eye (OD)</h2>
+    <div class="input-group">
+        <label>Sphere <input type="number" id="od_s" step="0.25" value="0"></label>
+        <label>Cylinder <input type="number" id="od_c" step="0.25" value="0"></label>
+        <label>Axis <input type="number" id="od_a" step="1" value="180" min="1" max="180"></label>
+    </div>
+    <div class="result-box" id="od_result">Contact lens Rx: —</div>
+</div>
+
+<div class="eye-section">
+    <h2>Left eye (OS)</h2>
+    <div class="input-group">
+        <label>Sphere <input type="number" id="os_s" step="0.25" value="0"></label>
+        <label>Cylinder <input type="number" id="os_c" step="0.25" value="0"></label>
+        <label>Axis <input type="number" id="os_a" step="1" value="180" min="1" max="180"></label>
+    </div>
+    <div class="result-box" id="os_result">Contact lens Rx: —</div>
+</div>
+
+<div class="controls">
+    <button class="btn-primary" onclick="calculate()">Calculate</button>
+    <button class="btn-secondary" onclick="copyResults()">Copy results</button>
+    <button class="btn-secondary" onclick="reset()">Reset</button>
+</div>
+
+<p class="method-note">Method: each principal meridian is converted with F′ = F ÷ (1 − d·F) (spectacle → CL) or F = F′ ÷ (1 + d·F′) (CL → spectacle), then the cylinder is the difference between meridians. Always verify against clinical judgement and the lens manufacturer’s available parameters.</p>
+
+<!-- Lifestyle Bar -->
+<div id="lifestyle-bar" onclick="window.location.href='weather.html'">
+    <div class="prayer-row">
+        <span>Fajr: <span id="fajr-time">--:--</span></span>
+        <span>Dhuhr: <span id="dhuhr-time">--:--</span></span>
+        <span>Asr: <span id="asr-time">--:--</span></span>
+        <span>Maghrib: <span id="maghrib-time">--:--</span></span>
+        <span>Isha: <span id="isha-time">--:--</span></span>
+    </div>
+    <div class="weather-row">
+        <span id="city-name">Locating...</span>
+        <span id="temperature">--°C</span>
+        <button id="crosshair-btn" onclick="event.stopPropagation(); getLocation(true);" title="Get precise location">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="2" x2="12" y2="6"></line>
+                <line x1="12" y1="18" x2="12" y2="22"></line>
+                <line x1="2" y1="12" x2="6" y2="12"></line>
+                <line x1="18" y1="12" x2="22" y2="12"></line>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Calculator Logic
+    function roundTo(val, step) {
+        return Math.round(val / step) * step;
+    }
+
+    function convertMeridian(F, d_mm, toCl) {
+        const d = d_mm / 1000;
+        if (toCl) return F / (1 - d * F);
+        return F / (1 + d * F);
+    }
+
+    function calculateEye(s, c, a, vd, toCl) {
+        if (s === 0 && c === 0) return { s: 0, c: 0, a: 180 };
+        
+        const meridian1 = s;
+        const meridian2 = s + c;
+        
+        const conv1 = convertMeridian(meridian1, vd, toCl);
+        const conv2 = convertMeridian(meridian2, vd, toCl);
+        
+        let newS = roundTo(conv1, 0.25);
+        let newC = roundTo(conv2 - conv1, 0.25);
+        let newA = a;
+        
+        if (newC < 0) {
+            newS = roundTo(newS + newC, 0.25);
+            newC = Math.abs(newC);
+            newA = (a + 90) % 180;
+            if (newA === 0) newA = 180;
+        }
+        
+        newA = roundTo(newA, 10);
+        if (newA === 0) newA = 180;
+        
+        return { s: newS, c: newC, a: newA };
+    }
+
+    function formatRx(rx) {
+        const s = rx.s > 0 ? `+${rx.s.toFixed(2)}` : rx.s.toFixed(2);
+        const c = rx.c === 0 ? '0.00' : rx.c.toFixed(2);
+        return `${s} / ${c} x ${rx.a}°`;
+    }
+
+    function calculate() {
+        const vd = parseFloat(document.getElementById('vd').value) || 12;
+        const toCl = document.getElementById('direction').value === 'specToCl';
+        
+        const od_s = parseFloat(document.getElementById('od_s').value) || 0;
+        const od_c = parseFloat(document.getElementById('od_c').value) || 0;
+        const od_a = parseFloat(document.getElementById('od_a').value) || 180;
+        
+        const os_s = parseFloat(document.getElementById('os_s').value) || 0;
+        const os_c = parseFloat(document.getElementById('os_c').value) || 0;
+        const os_a = parseFloat(document.getElementById('os_a').value) || 180;
+        
+        const odRx = calculateEye(od_s, od_c, od_a, vd, toCl);
+        const osRx = calculateEye(os_s, os_c, os_a, vd, toCl);
+        
+        document.getElementById('od_result').textContent = `Contact lens Rx: ${formatRx(odRx)}`;
+        document.getElementById('os_result').textContent = `Contact lens Rx: ${formatRx(osRx)}`;
+    }
+
+    function copyResults() {
+        const od = document.getElementById('od_result').textContent;
+        const os = document.getElementById('os_result').textContent;
+        const text = `${od}\n${os}`;
+        navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard'));
+    }
+
+    function reset() {
+        ['od_s', 'od_c', 'os_s', 'os_c'].forEach(id => document.getElementById(id).value = 0);
+        ['od_a', 'os_a'].forEach(id => document.getElementById(id).value = 180);
+        document.getElementById('od_result').textContent = 'Contact lens Rx: —';
+        document.getElementById('os_result').textContent = 'Contact lens Rx: —';
+    }
+
+    // Lifestyle Bar Logic
+    function getLocation(highAccuracy) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    fetchWeather(lat, lon);
+                    fetchPrayerTimes(lat, lon);
+                    fetchCityName(lat, lon);
+                },
+                error => {
+                    const fallbackLat = -26.2041;
+                    const fallbackLon = 28.0473;
+                    fetchWeather(fallbackLat, fallbackLon);
+                    fetchPrayerTimes(fallbackLat, fallbackLon);
+                    document.getElementById('city-name').textContent = 'Location denied (Default: JHB)';
+                },
+                { enableHighAccuracy: highAccuracy, timeout: 5000 }
+            );
+        } else {
+            document.getElementById('city-name').textContent = 'Geolocation not supported';
+        }
+    }
+
+    function fetchWeather(lat, lon) {
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('temperature').textContent = `${data.current_weather.temperature}°C`;
+            })
+            .catch(() => document.getElementById('temperature').textContent = 'Error');
+    }
+
+    function fetchCityName(lat, lon) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+            .then(res => res.json())
+            .then(data => {
+                const city = data.address.city || data.address.town || data.address.village || data.address.county || 'Unknown';
+                document.getElementById('city-name').textContent = city;
+            })
+            .catch(() => document.getElementById('city-name').textContent = 'Unknown City');
+    }
+
+    function fetchPrayerTimes(lat, lon) {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const dateStr = `${dd}-${mm}-${yyyy}`;
+        
+        fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lon}&method=2`)
+            .then(res => res.json())
+            .then(data => {
+                const timings = data.data.timings;
+                document.getElementById('fajr-time').textContent = timings.Fajr.split(' ')[0];
+                document.getElementById('dhuhr-time').textContent = timings.Dhuhr.split(' ')[0];
+                document.getElementById('asr-time').textContent = timings.Asr.split(' ')[0];
+                document.getElementById('maghrib-time').textContent = timings.Maghrib.split(' ')[0];
+                document.getElementById('isha-time').textContent = timings.Isha.split(' ')[0];
+            })
+            .catch(() => {
+                ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].forEach(p => {
+                    document.getElementById(`${p}-time`).textContent = 'Error';
+                });
+            });
+    }
+
+    // Initialize on load
+    window.onload = () => {
+        getLocation(false);
+    };
+</script>
+
+</body>
+</html>
