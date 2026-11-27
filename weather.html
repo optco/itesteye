@@ -174,6 +174,21 @@
         }
         .error { color: #d32f2f; margin-top: 1rem; font-weight: bold; }
         .status {color: #666; margin: 0.5rem 0 0.75rem 0; /* top right bottom left */ }
+
+        /* Rain chart overlay on city title */
+        .rain-chart{position:absolute;left:0;right:0;bottom:calc(100% + .25rem);height:clamp(70px,14vw,120px);pointer-events:none;z-index:2;display:flex;flex-direction:column}
+        .rain-chart:empty{display:none}
+        .rc-plot{position:relative;flex:1}
+        .rc-plot svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+        .rc-area{fill:rgba(0,86,179,.12)}
+        .rc-line{fill:none;stroke:rgba(0,86,179,.6);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+        .rc-guide{stroke:rgba(0,0,0,.15);stroke-width:1;stroke-dasharray:3 4;vector-effect:non-scaling-stroke}
+        .rc-now{position:absolute;top:0;bottom:0;width:0;border-left:1px dashed #1e8e4e}
+        .rc-dot{position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#1e8e4e}
+        .rc-t{position:absolute;font:600 10px/1 ui-monospace,Menlo,Consolas,monospace;color:rgba(0,86,179,.85);white-space:nowrap}
+        .rc-t.dim{color:#8a97a5;font-weight:400}
+        .rc-hours{position:relative;height:12px}
+        .rc-hours span{position:absolute;top:2px;font:9px/1 ui-monospace,Menlo,Consolas,monospace;color:#8a97a5;transform:translateX(-50%)}
     </style>
 </head>
 <body>
@@ -210,6 +225,7 @@
         
         <div class="search-box">
             <div class="input-wrap">
+                <div class="rain-chart" id="rainChart" aria-hidden="true"></div>
                 <input type="text" id="cityInput" placeholder="Enter city name (e.g., London)"
                        autocomplete="off" role="combobox" aria-expanded="false"
                        aria-controls="suggestions" aria-autocomplete="list" aria-label="City name">
@@ -724,11 +740,56 @@
         if (map && !mapView.hidden) showMarker();
     }
 
+    function renderRainChart(fc) {
+        const box = document.getElementById('rainChart');
+        if (!box) return;
+        box.innerHTML = '';
+        const h = fc.hourly;
+        if (!h || !h.time || !h.precipitation_probability) return;
+        const today = fc.daily.time[0];
+        const v = [];
+        h.time.forEach((t, i) => { if (t.startsWith(today)) v.push(h.precipitation_probability[i] || 0); });
+        if (v.length < 2) return;
+
+        const n = v.length;
+        const X = i => i / (n - 1) * 100;
+        const Y = p => 100 - p * 0.8;               // leaves headroom for the peak label
+        const line = 'M' + v.map((p, i) => X(i).toFixed(2) + ',' + Y(p).toFixed(2)).join(' L');
+        const area = line + ' L100,100 L0,100 Z';
+
+        let peakI = 0;
+        v.forEach((p, i) => { if (p > v[peakI]) peakI = i; });
+        const peak = v[peakI];
+
+        const nowH = Math.min(n - 1, new Date(Date.now() + (fc.utc_offset_seconds || 0) * 1000).getUTCHours());
+        const nx = X(nowH), ny = Y(v[nowH]);
+
+        let html = '<div class="rc-plot">' +
+            '<svg viewBox="0 0 100 100" preserveAspectRatio="none">' +
+            '<line class="rc-guide" x1="0" x2="100" y1="' + Y(50) + '" y2="' + Y(50) + '"/>' +
+            '<path class="rc-area" d="' + area + '"/><path class="rc-line" d="' + line + '"/></svg>' +
+            '<div class="rc-now" style="left:' + nx + '%"></div>' +
+            '<div class="rc-dot" style="left:' + nx + '%;top:' + ny + '%"></div>' +
+            '<div class="rc-t" style="left:0;top:0">RAIN % · NOW ' + v[nowH] + '%</div>' +
+            '<div class="rc-t dim" style="right:0;top:' + Y(50) + '%;transform:translateY(-120%)">50%</div>';
+        if (peak > 0) {
+            const px = Math.max(4, Math.min(96, X(peakI)));
+            html += '<div class="rc-t" style="left:' + px + '%;top:' + Y(peak) + '%;transform:translate(-50%,-130%)">' + peak + '%</div>';
+        }
+        html += '</div><div class="rc-hours">';
+        [0, 6, 12, 18].forEach(hr => {
+            html += '<span style="left:' + X(hr) + '%' + (hr === 0 ? ';transform:none' : '') + '">' + String(hr).padStart(2, '0') + 'h</span>';
+        });
+        html += '</div>';
+        box.innerHTML = html;
+    }
+
     async function loadForecast(loc) {
         if (forecastAbort) forecastAbort.abort();
         forecastAbort = new AbortController();
         errorDiv.textContent = '';
         calendarDiv.replaceChildren();
+        document.getElementById('rainChart').innerHTML = '';
         currentPrayerTimes = null;
         setStatus('Loading...');
         try {
@@ -795,6 +856,7 @@
             if (nowBlock && scroller) scroller.scrollLeft = Math.max(0, nowBlock.offsetLeft - 16);
             setStatus(`14-day forecast for ${placeName(loc)}`);
             cityTitle.textContent = loc.name;
+            renderRainChart(fc);
             loadPrayer(loc, fc);
             onForecastLoaded(loc, fc);
             updateSkyArc(fc);
