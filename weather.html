@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>14-Day Weather</title>
     <link rel="stylesheet" href="https://itesteye.com/bg.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
         .search-box { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
@@ -23,20 +24,24 @@
         .suggestions li { padding: 0.55rem 0.85rem; cursor: pointer; }
         .suggestions li small { display: block; color: #666; }
         .suggestions li:hover, .suggestions li.active { background: #e8f0fa; }
-        /* Nearby cities strip */
-        .nearby { margin-bottom: 1.25rem; }
-        .nearby[hidden] { display: none; }
-        .nearby-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; margin: 0 0 0.4rem; font-size: 0.9rem; font-weight: 600; color: #444; }
-        .nearby-title small { font-weight: 400; color: #888; font-size: 0.75rem; }
-        .nearby-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.6rem; }
-        .near-card { display: flex; align-items: center; gap: 0.55rem; min-width: 0; padding: 0.55rem 0.65rem; border: 1px solid #e0e0e0; border-radius: 8px; background: #fafafa; cursor: pointer; }
-        .near-card:hover { background: #e8f0fa; border-color: #b5cdee; }
-        .near-card:focus-visible { outline: 3px solid #0056b3; outline-offset: 2px; }
-        .near-icon { font-size: 1.6rem; line-height: 1; }
-        .near-text { min-width: 0; }
-        .near-name { font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .near-sub { font-size: 0.78rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Forecast / Map toggle */
+        .view-toggle { display: inline-flex; margin-bottom: 1rem; border: 1px solid #0056b3; border-radius: 8px; overflow: hidden; }
+        .view-toggle button { background: #fff; color: #0056b3; border-radius: 0; padding: 0.5rem 1.25rem; font-size: 0.95rem; }
+        .view-toggle button:hover:not([aria-pressed="true"]) { background: #e8f0fa; }
+        .view-toggle button[aria-pressed="true"] { background: #0056b3; color: #fff; }
 
+        /* Map view */
+        .map-hint { margin: 0 0 0.5rem; font-size: 0.9rem; color: #666; }
+        #map { height: 460px; border-radius: 12px; border: 1px solid #ccc; margin-bottom: 1rem; z-index: 0; }
+        .leaflet-container { font: inherit; }
+        .wx-pop { min-width: 190px; }
+        .wx-pop h4 { margin: 0 0 0.35rem; font-size: 1rem; }
+        .wx-pop .wx-now { display: flex; align-items: center; gap: 0.6rem; }
+        .wx-pop .wx-icon { font-size: 2.2rem; line-height: 1; }
+        .wx-pop .wx-temp { font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
+        .wx-pop .wx-cond { color: #555; font-size: 0.85rem; }
+        .wx-pop .wx-meta { margin-top: 0.45rem; font-size: 0.82rem; color: #444; display: grid; gap: 0.15rem; }
+        .wx-pop button { margin-top: 0.6rem; padding: 0.4rem 0.8rem; font-size: 0.85rem; width: 100%; }
         .calendar { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.75rem; }
         .day-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 0.9rem 0.4rem; text-align: center; background: #fafafa; }
         .day-card .date { font-weight: bold; margin-bottom: 0.5rem; font-size: 0.9rem; }
@@ -73,7 +78,6 @@
 
         /* Next 13 days fill two rows: 7 + 6, with the last card stretched to close the gap */
         @media (min-width: 760px) {
-            .nearby-row { grid-template-columns: repeat(5, 1fr); }
             .calendar { grid-template-columns: repeat(7, 1fr); }
             .calendar .day-card:last-child { grid-column: span 2; }
         }
@@ -98,11 +102,19 @@
         </div>
         <button type="button" id="goBtn">Get Forecast</button>
     </div>
+    <div class="view-toggle" role="group" aria-label="Choose view">
+        <button type="button" id="viewForecast" aria-pressed="true">Forecast</button>
+        <button type="button" id="viewMap" aria-pressed="false">Map</button>
+    </div>
     <div id="error" class="error"></div>
     <div id="status" class="status"></div>
-    <div id="nearby" class="nearby" hidden></div>
+    <div id="mapView" hidden>
+        <p class="map-hint">Click anywhere on the map to see the weather there. Use the target icon in the search box to jump to your location.</p>
+        <div id="map"></div>
+    </div>
     <div id="calendar" class="calendar"></div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
     // Free, key-less APIs: Open-Meteo (geocoding + forecast) and BigDataCloud (reverse geocoding).
     const WMO = {
@@ -242,6 +254,7 @@
                 }
             } catch (e) { /* keep fallback name */ }
             locBtn.classList.remove('busy');
+            setMyLocation(loc, false);
             selectedLoc = loc;
             input.value = loc.name === 'Your location' ? '' : placeName(loc);
             loadForecast(loc);
@@ -331,11 +344,16 @@
         return wrap;
     }
 
-    /* ---------- Nearby cities (OpenStreetMap via Overpass + Open-Meteo current weather) ---------- */
-    const nearbyDiv = document.getElementById('nearby');
-    const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
-    const nearbyCache = new Map();   // remembers which cities are near which spot, for this visit
-    let nearbyToken = 0;
+    /* ---------- Map view (Leaflet + OpenStreetMap) ---------- */
+    const forecastView = document.getElementById('calendar');
+    const mapView = document.getElementById('mapView');
+    const btnForecast = document.getElementById('viewForecast');
+    const btnMap = document.getElementById('viewMap');
+
+    let map = null, marker = null, myMarker = null;
+    let lastLoc = null, lastFc = null, myLoc = null;
+    let flyNext = true;          // fly to the place after search/location; just open the popup after a map click
+    let pickToken = 0;
 
     const iconFor = (code, isDay) => {
         let icon = (WMO[code] || ['', '❔'])[1];
@@ -343,104 +361,138 @@
         return icon;
     };
 
-    function distanceKm(lat1, lon1, lat2, lon2) {
-        const r = Math.PI / 180;
-        const a = Math.sin((lat2 - lat1) * r / 2) ** 2 +
-                  Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin((lon2 - lon1) * r / 2) ** 2;
-        return 12742 * Math.asin(Math.sqrt(a));
+    function scrollHourlyToNow() {
+        const nowBlock = calendarDiv.querySelector('.hour.now');
+        const scroller = calendarDiv.querySelector('.hourly-scroll');
+        if (nowBlock && scroller) scroller.scrollLeft = Math.max(0, nowBlock.offsetLeft - 16);
     }
 
-    async function overpass(query) {
-        for (const base of OVERPASS) {
-            try {
-                const r = await fetch(`${base}?data=${encodeURIComponent(query)}`, { signal: AbortSignal.timeout(9000) });
-                if (r.ok) return (await r.json()).elements || [];
-            } catch (e) { /* try the next server */ }
+    function setView(view) {
+        const isMap = view === 'map';
+        forecastView.hidden = isMap;
+        mapView.hidden = !isMap;
+        btnForecast.setAttribute('aria-pressed', String(!isMap));
+        btnMap.setAttribute('aria-pressed', String(isMap));
+        if (isMap) {
+            initMap();
+            if (map) setTimeout(() => { map.invalidateSize(); showMarker(); drawMyLocation(); }, 50);
+        } else {
+            scrollHourlyToNow();
         }
-        return null;
+    }
+    btnForecast.addEventListener('click', () => setView('forecast'));
+    btnMap.addEventListener('click', () => setView('map'));
+
+    function initMap() {
+        if (map) return;
+        if (typeof L === 'undefined') { showError('The map could not load. Check your connection and try again.'); return; }
+        map = L.map('map', { doubleClickZoom: false }).setView([20, 0], 2);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        map.on('click', e => pickFromMap(e.latlng.wrap()));
     }
 
-    async function loadNearby(loc) {
-        const token = ++nearbyToken;                       // lets us ignore out-of-date results
-        nearbyDiv.hidden = true;
-        nearbyDiv.replaceChildren();
-        const key = `${loc.latitude.toFixed(2)},${loc.longitude.toFixed(2)}`;
+    // Click on the map: name the place, then load its weather
+    async function pickFromMap(ll) {
+        const token = ++pickToken;
+        const { lat, lng } = ll;
+        errorDiv.textContent = '';
+        setStatus('Finding place…');
+        const loc = { name: `${lat.toFixed(2)}°, ${lng.toFixed(2)}°`, admin1: '', country: '', latitude: lat, longitude: lng };
         try {
-            let picks = nearbyCache.get(key);
-            if (!picks) {
-                const own = String(loc.name || '').toLowerCase();
-                for (const radius of [50000, 150000, 400000]) {      // widen the search if few cities nearby
-                    const q = `[out:json][timeout:10];node(around:${radius},${loc.latitude},${loc.longitude})[place~"^(city|town)$"][name];out 250;`;
-                    const els = await overpass(q);
-                    if (token !== nearbyToken) return;
-                    if (!els) return;                                  // servers unavailable: skip quietly
-                    const seen = new Set([own]);
-                    const cands = els
-                        .map(e => ({ name: e.tags['name:en'] || e.tags.name, latitude: e.lat, longitude: e.lon,
-                                     dist: distanceKm(loc.latitude, loc.longitude, e.lat, e.lon) }))
-                        .filter(c => c.name && c.dist > 5)             // drop the searched city itself
-                        .sort((a, b) => a.dist - b.dist)
-                        .filter(c => { const n = c.name.toLowerCase(); if (seen.has(n)) return false; seen.add(n); return true; });
-                    if (cands.length >= 5 || radius === 400000) { picks = cands.slice(0, 5); break; }
+            const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+            if (r.ok) {
+                const g = await r.json();
+                const name = g.city || g.locality || g.principalSubdivision || g.countryName;
+                if (name) {
+                    loc.name = name;
+                    loc.admin1 = g.principalSubdivision && g.principalSubdivision !== name ? g.principalSubdivision : '';
+                    loc.country = g.countryName && g.countryName !== name ? g.countryName : '';
                 }
-                nearbyCache.set(key, picks || []);
             }
-            if (!picks || !picks.length) return;
+        } catch (e) { /* keep the coordinates as the name */ }
+        if (token !== pickToken) return;                    // user clicked somewhere else meanwhile
+        selectedLoc = loc;
+        input.value = placeName(loc);
+        flyNext = false;
+        loadForecast(loc);
+    }
 
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${picks.map(p => p.latitude).join(',')}` +
-                        `&longitude=${picks.map(p => p.longitude).join(',')}` +
-                        `&current=temperature_2m,weather_code,is_day&timezone=auto`;
-            const res = await fetch(url);
-            if (!res.ok) return;
-            let data = await res.json();
-            if (!Array.isArray(data)) data = [data];
-            if (token !== nearbyToken) return;
+    function buildPopup() {
+        const loc = lastLoc, fc = lastFc;
+        const box = document.createElement('div');
+        box.className = 'wx-pop';
+        const cur = fc.current || {};
+        const code = cur.weather_code != null ? cur.weather_code : fc.daily.weather_code[0];
+        const [phrase] = WMO[code] || ['No data'];
+        const temp = cur.temperature_2m != null ? cur.temperature_2m : fc.daily.temperature_2m_max[0];
 
-            const title = document.createElement('div');
-            title.className = 'nearby-title';
-            title.innerHTML = '<span>Nearby cities</span><small>Places from OpenStreetMap contributors</small>';
-            const row = document.createElement('div');
-            row.className = 'nearby-row';
+        const h = document.createElement('h4');
+        h.textContent = placeName(loc);
+        const now = document.createElement('div');
+        now.className = 'wx-now';
+        const ic = document.createElement('div');
+        ic.className = 'wx-icon';
+        ic.textContent = iconFor(code, cur.is_day);
+        const tx = document.createElement('div');
+        const t = document.createElement('div');
+        t.className = 'wx-temp';
+        t.textContent = `${Math.round(temp)}°C`;
+        const c = document.createElement('div');
+        c.className = 'wx-cond';
+        c.textContent = phrase;
+        tx.append(t, c);
+        now.append(ic, tx);
 
-            picks.forEach((p, i) => {
-                const cur = data[i] && data[i].current;
-                if (!cur) return;
-                const [phrase] = WMO[cur.weather_code] || ['No data'];
-                const card = document.createElement('div');
-                card.className = 'near-card';
-                card.setAttribute('role', 'button');
-                card.tabIndex = 0;
-                card.title = `${p.name}, about ${Math.round(p.dist)} km away. Click to see its forecast.`;
+        const meta = document.createElement('div');
+        meta.className = 'wx-meta';
+        const hi = document.createElement('div');
+        hi.textContent = `Today: ${Math.round(fc.daily.temperature_2m_max[0])}° / ${Math.round(fc.daily.temperature_2m_min[0])}°`;
+        meta.appendChild(hi);
+        const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[0];
+        const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[0];
+        if (rain != null) { const d = document.createElement('div'); d.textContent = `💧 Rain chance: ${rain}%`; meta.appendChild(d); }
+        if (wind != null) { const d = document.createElement('div'); d.textContent = `💨 Max wind: ${Math.round(wind)} km/h`; meta.appendChild(d); }
 
-                const icon = document.createElement('div');
-                icon.className = 'near-icon';
-                icon.textContent = iconFor(cur.weather_code, cur.is_day);
-                const text = document.createElement('div');
-                text.className = 'near-text';
-                const name = document.createElement('div');
-                name.className = 'near-name';
-                name.textContent = p.name;
-                const sub = document.createElement('div');
-                sub.className = 'near-sub';
-                sub.textContent = `${Math.round(cur.temperature_2m)}°C · ${phrase}`;
-                text.append(name, sub);
-                card.append(icon, text);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'See 14-day forecast';
+        btn.addEventListener('click', () => { map.closePopup(); setView('forecast'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-                const open = () => {
-                    selectedLoc = { name: p.name, admin1: '', country: loc.country || '', latitude: p.latitude, longitude: p.longitude };
-                    input.value = placeName(selectedLoc);
-                    loadForecast(selectedLoc);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                };
-                card.addEventListener('click', open);
-                card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
-                row.appendChild(card);
-            });
+        box.append(h, now, meta, btn);
+        return box;
+    }
 
-            if (!row.children.length) return;
-            nearbyDiv.replaceChildren(title, row);
-            nearbyDiv.hidden = false;
-        } catch (e) { /* nearby cities are a bonus: fail silently */ }
+    function showMarker() {
+        if (!map || !lastLoc || !lastFc) return;
+        if (marker) marker.remove();
+        marker = L.marker([lastLoc.latitude, lastLoc.longitude]).addTo(map);
+        marker.bindPopup(buildPopup());
+        if (flyNext) map.flyTo([lastLoc.latitude, lastLoc.longitude], 9, { duration: 1 });
+        flyNext = true;
+        marker.openPopup();
+    }
+
+    // Blue dot for the visitor's own location (precise or approximate)
+    function drawMyLocation() {
+        if (!map || !myLoc) return;
+        if (myMarker) myMarker.remove();
+        myMarker = L.circleMarker([myLoc.latitude, myLoc.longitude], {
+            radius: 8, color: '#fff', weight: 2, fillColor: '#1a73e8', fillOpacity: 1
+        }).addTo(map).bindTooltip(myLoc.approx ? 'You are around here (approximate)' : 'You are here');
+    }
+
+    function setMyLocation(loc, approx) {
+        myLoc = { latitude: loc.latitude, longitude: loc.longitude, approx };
+        drawMyLocation();
+    }
+
+    // Called after every successful forecast load
+    function onForecastLoaded(loc, fc) {
+        lastLoc = loc; lastFc = fc;
+        if (map && !mapView.hidden) showMarker();
     }
 
     async function loadForecast(loc) {
@@ -452,6 +504,7 @@
         try {
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}` +
                         `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,wind_speed_10m_max` +
+                        `&current=temperature_2m,weather_code,is_day` +
                         `&hourly=temperature_2m,weather_code,precipitation_probability,is_day` +
                         `&forecast_days=14&timezone=auto`;
             const res = await fetch(url, { signal: forecastAbort.signal });
@@ -507,7 +560,7 @@
             const scroller = calendarDiv.querySelector('.hourly-scroll');
             if (nowBlock && scroller) scroller.scrollLeft = Math.max(0, nowBlock.offsetLeft - 16);
             setStatus(`14-day forecast for ${placeName(loc)}`);
-            loadNearby(loc);                                   // not awaited: forecast shows first
+            onForecastLoaded(loc, fc);
         } catch (err) {
             if (err.name === 'AbortError') return;
             setStatus('');
@@ -547,6 +600,7 @@
         // Give up quietly if lookup failed, or the user already typed/picked something meanwhile
         if (!loc || selectedLoc || input.value.trim()) { if (!selectedLoc) setStatus(''); return; }
 
+        setMyLocation(loc, true);
         selectedLoc = loc;
         input.value = placeName(loc);
         await loadForecast(loc);
