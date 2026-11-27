@@ -139,7 +139,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 /* ---------- Time strip ---------- */
 .timebar {
-  background: var(--res);
+  background: var(--bg);
   border: 2px solid var(--glass-border);
   display: flex;
   flex-wrap: wrap;
@@ -170,7 +170,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .timebar::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:rgba(2,132,199,.2);transition:width 1s linear;pointer-events:none}
 .timebar>*{position:relative}
 
-/* ---------- Weather strip ---------- */
+/* ---------- Weather + Prayer strip ---------- */
 .wx-strip {
   display: flex;
   flex-wrap: wrap;
@@ -260,6 +260,45 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   font-size: .8rem;
   color: var(--muted);
 }
+.wx-prayers {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.wx-prayer-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  font-size: .75rem;
+  color: var(--muted);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.wx-prayer-dot .name {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: .8rem;
+}
+.wx-prayer-dot .time {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .9rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.wx-prayer-dot.current .name {
+  color: #fff;
+  background: var(--accent);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.wx-prayer-dot.next .name {
+  outline: 1px dashed var(--accent);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
 .wx-rain {
   display: flex;
   align-items: center;
@@ -271,87 +310,23 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .wx-rain .icon {
   font-size: 1rem;
 }
-
-/* ---------- Straight Dotted Prayer Line ---------- */
-.wx-line-wrap {
+.wx-arc-wrap {
   position: relative;
   width: 100%;
+  height: 44px;
   margin-top: 4px;
-  padding: 28px 0 28px;   /* enough room above and below the line */
+  display: none;
 }
-.wx-line {
-  position: relative;
+@media (min-width: 700px) {
+  .wx-arc-wrap {
+    display: block;
+  }
+}
+.wx-arc-svg {
   width: 100%;
-  height: 0;
-  border-top: 2px dotted rgba(2,132,199,.45);
+  height: 100%;
+  overflow: visible;
 }
-.wx-prayer-marker {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  pointer-events: none;
-  line-height: 1;
-}
-.wx-prayer-marker .pname {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  order: 1;
-  margin-bottom: 0;
-}
-.wx-prayer-marker .ptime {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  order: 2;
-  margin-top: 0;
-}
-/* Push the name above the line and the time below the line using absolute offsets */
-.wx-prayer-marker {
-  transform: translate(-50%, -100%);
-}
-.wx-prayer-marker .ptime {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-}
-.wx-prayer-marker .pname {
-  margin-bottom: 6px;
-}
-.wx-prayer-marker.current .pname {
-  color: var(--accent);
-  font-weight: 700;
-}
-.wx-prayer-marker.next .pname {
-  color: var(--accent);
-  font-weight: 700;
-  text-decoration: underline dotted;
-}
-.wx-sun-marker {
-  position: absolute;
-  top: 0;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #FFF59D, #FFB300);
-  border: 1.5px solid #fff;
-  box-shadow: 0 0 8px rgba(255,179,0,.6);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: left 1s linear;
-  z-index: 2;
-}
-
 @media (max-width: 560px) {
   .wx-strip {
     gap: 8px 12px;
@@ -369,15 +344,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     justify-content: center;
     width: 100%;
   }
-  .wx-prayer-marker .pname,
-  .wx-prayer-marker .ptime {
-    font-size: 10px;
-  }
-  .wx-prayer-marker .ptime {
-    top: calc(100% + 4px);
-  }
-  .wx-line-wrap {
-    padding: 24px 0 24px;
+  .wx-prayers {
+    justify-content: center;
+    width: 100%;
   }
 }
 </style>
@@ -404,13 +373,27 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
         </button>
       </div>
       <div class="wx-temps" id="wxTemps"></div>
+      <div class="wx-prayers" id="wxPrayers"></div>
       <div class="wx-rain" id="wxRain"></div>
     </div>
-
-    <div class="wx-line-wrap" id="wxLineWrap">
-      <div class="wx-line" id="wxLine">
-        <div class="wx-sun-marker" id="wxSunMarker" style="left: 0%; display: none;"></div>
-      </div>
+    <div class="wx-arc-wrap" id="wxArcWrap">
+      <svg class="wx-arc-svg" viewBox="0 0 1000 44" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+        <defs>
+          <radialGradient id="wxSunGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFF59D" />
+            <stop offset="70%" stop-color="#FFD54F" />
+            <stop offset="100%" stop-color="#FFB300" />
+          </radialGradient>
+        </defs>
+        <path d="M 10 40 Q 500 2 990 40" fill="none" stroke="rgba(2,132,199,0.2)" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
+        <circle id="wxDot-Fajr" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Fajr</title></circle>
+        <circle id="wxDot-Sunrise" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Sunrise</title></circle>
+        <circle id="wxDot-Dhuhr" cx="500" cy="2" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Dhuhr</title></circle>
+        <circle id="wxDot-Asr" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Asr</title></circle>
+        <circle id="wxDot-Maghrib" cx="10" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Maghrib</title></circle>
+        <circle id="wxDot-Isha" cx="990" cy="40" r="2.5" fill="#111" stroke="#fff" stroke-width="1"><title>Isha</title></circle>
+        <circle id="wxSun" cx="10" cy="40" r="7" fill="url(#wxSunGrad)" opacity="0"/>
+      </svg>
     </div>
   </div>
 
@@ -673,9 +656,8 @@ window.addEventListener('load', () => {
     var wxLocName = document.getElementById('wxLocName');
     var wxLocBtn = document.getElementById('wxLocBtn');
     var wxTemps = document.getElementById('wxTemps');
+    var wxPrayers = document.getElementById('wxPrayers');
     var wxRain = document.getElementById('wxRain');
-    var wxLine = document.getElementById('wxLine');
-    var wxSunMarker = document.getElementById('wxSunMarker');
     var currentLat = null, currentLon = null, currentLocLabel = '';
     var prayerTimes = null;
     var utcOffset = 0;
@@ -693,71 +675,84 @@ window.addEventListener('load', () => {
       85:['Snow showers','🌨️'], 86:['Heavy snow showers','❄️'],
       95:['Thunderstorm','⛈️'], 96:['Storm with hail','⛈️'], 99:['Heavy storm with hail','⛈️']
     };
-    var ARC_PRAYERS = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    var PRAYERS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
     var toMin = function(str){ var p = String(str).slice(0,5).split(':'); return parseInt(p[0],10)*60+parseInt(p[1],10); };
 
-    function getCurrentAndNext(nowMin, T) {
-      var current, next;
-      if (nowMin < T.Fajr)          { current = 'Isha';    next = 'Fajr';    }
-      else if (nowMin < T.Sunrise)  { current = 'Fajr';    next = 'Dhuhr';   }
-      else if (nowMin < T.Dhuhr)    { current = null;      next = 'Dhuhr';   }
-      else if (nowMin < T.Asr)      { current = 'Dhuhr';   next = 'Asr';     }
-      else if (nowMin < T.Maghrib)  { current = 'Asr';     next = 'Maghrib'; }
-      else if (nowMin < T.Isha)     { current = 'Maghrib'; next = 'Isha';    }
-      else                          { current = 'Isha';    next = 'Fajr';    }
-      return { current: current, next: next };
+    function getPointOnCurve(t) {
+      var P0 = {x: 10, y: 40};
+      var P1 = {x: 500, y: 2};
+      var P2 = {x: 990, y: 40};
+      var x = (1-t)*(1-t)*P0.x + 2*(1-t)*t*P1.x + t*t*P2.x;
+      var y = (1-t)*(1-t)*P0.y + 2*(1-t)*t*P1.y + t*t*P2.y;
+      return {x, y};
     }
 
-    function renderLine() {
-      if (!prayerTimes) return;
-      wxLine.querySelectorAll('.wx-prayer-marker').forEach(function(m) { m.remove(); });
+    function updateArc() {
+      var sun = document.getElementById('wxSun');
+      if (!sun) return;
+      if (!prayerTimes && !sunTimes) { sun.setAttribute('opacity', '0'); return; }
 
-      var fajr = toMin(prayerTimes.Fajr);
-      var isha = toMin(prayerTimes.Isha);
-      var dur = isha - fajr;
-      if (dur <= 0) dur = 1440;
-
+      var nowMin = new Date().getUTCHours()*60 + new Date().getUTCMinutes() + utcOffset*60;
+      // fallback: use current local time if we have no api data
       var now = new Date();
-      var local = new Date(Date.now() + utcOffset * 1000);
-      var nowMin = local.getUTCHours() * 60 + local.getUTCMinutes();
-      var T = {
-        Fajr: toMin(prayerTimes.Fajr),
-        Sunrise: toMin(prayerTimes.Sunrise),
-        Dhuhr: toMin(prayerTimes.Dhuhr),
-        Asr: toMin(prayerTimes.Asr),
-        Maghrib: toMin(prayerTimes.Maghrib),
-        Isha: toMin(prayerTimes.Isha)
-      };
-      var state = getCurrentAndNext(nowMin, T);
-
-      ARC_PRAYERS.forEach(function(name) {
-        var timeStr = prayerTimes[name];
-        if (!timeStr && name === 'Sunrise' && sunTimes) timeStr = sunTimes.sunrise.split('T')[1];
-        if (!timeStr) return;
-        var m = toMin(timeStr);
-        var pct = (m - fajr) / dur;
-        pct = Math.max(0, Math.min(1, pct));
-        var marker = document.createElement('div');
-        marker.className = 'wx-prayer-marker' + (name === state.current ? ' current' : '') + (name === state.next ? ' next' : '');
-        marker.style.left = (pct * 100) + '%';
-        // Only name and time – no dot
-        marker.innerHTML = '<span class="pname">' + name + '</span><span class="ptime">' + String(timeStr).slice(0,5) + '</span>';
-        wxLine.appendChild(marker);
-      });
+      if (utcOffset !== null) {
+        var local = new Date(Date.now() + utcOffset*1000);
+        nowMin = local.getUTCHours()*60 + local.getUTCMinutes();
+      } else {
+        nowMin = now.getHours()*60 + now.getMinutes();
+      }
 
       var isDay = true;
       if (sunTimes) {
         var sr = toMin(sunTimes.sunrise.split('T')[1]);
         var ss = toMin(sunTimes.sunset.split('T')[1]);
         isDay = (nowMin >= sr && nowMin <= ss);
+        if (!isDay) { sun.setAttribute('opacity', '0'); }
       }
+
       if (isDay && prayerTimes) {
+        var fajr = toMin(prayerTimes.Fajr);
+        var isha = toMin(prayerTimes.Isha);
+        var dur = isha - fajr;
+        if (dur <= 0) dur = 1440;
         var t = (nowMin - fajr) / dur;
         t = Math.max(0, Math.min(1, t));
-        wxSunMarker.style.left = (t * 100) + '%';
-        wxSunMarker.style.display = 'block';
+        var pt = getPointOnCurve(t);
+        sun.setAttribute('cx', pt.x);
+        sun.setAttribute('cy', pt.y);
+        sun.setAttribute('opacity', '1');
+      } else if (isDay && sunTimes) {
+        var sr2 = toMin(sunTimes.sunrise.split('T')[1]);
+        var ss2 = toMin(sunTimes.sunset.split('T')[1]);
+        var t2 = (nowMin - sr2) / (ss2 - sr2);
+        t2 = Math.max(0, Math.min(1, t2));
+        var arcT = 0.15 + t2 * 0.7;
+        var pt2 = getPointOnCurve(arcT);
+        sun.setAttribute('cx', pt2.x);
+        sun.setAttribute('cy', pt2.y);
+        sun.setAttribute('opacity', '1');
       } else {
-        wxSunMarker.style.display = 'none';
+        sun.setAttribute('opacity', '0');
+      }
+
+      if (prayerTimes) {
+        var fajr = toMin(prayerTimes.Fajr);
+        var isha = toMin(prayerTimes.Isha);
+        var dur = isha - fajr;
+        if (dur <= 0) dur = 1440;
+        var names = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+        names.forEach(function(name) {
+          var dot = document.getElementById('wxDot-' + name);
+          if (!dot) return;
+          var m = prayerTimes[name] ? toMin(prayerTimes[name]) : (sunTimes && name === 'Sunrise' ? toMin(sunTimes.sunrise.split('T')[1]) : null);
+          if (m == null) { dot.setAttribute('opacity', '0'); return; }
+          dot.setAttribute('opacity', '1');
+          var t = (m - fajr) / dur;
+          t = Math.max(0, Math.min(1, t));
+          var pt = getPointOnCurve(t);
+          dot.setAttribute('cx', pt.x);
+          dot.setAttribute('cy', pt.y);
+        });
       }
     }
 
@@ -792,13 +787,41 @@ window.addEventListener('load', () => {
         utcOffset = data.utc_offset_seconds || 0;
         sunTimes = { sunrise: data.daily.sunrise[0], sunset: data.daily.sunset[0] };
       }
-      renderLine();
+      updateArc();
     }
 
     function renderPrayerTimes(timings) {
       if (!timings) return;
       prayerTimes = timings;
-      renderLine();
+      var now = new Date();
+      var local = new Date(Date.now() + utcOffset * 1000);
+      var nowMin = local.getUTCHours() * 60 + local.getUTCMinutes();
+      var T = {
+        Fajr: toMin(timings.Fajr), Sunrise: toMin(timings.Sunrise), Dhuhr: toMin(timings.Dhuhr),
+        Asr: toMin(timings.Asr), Maghrib: toMin(timings.Maghrib), Isha: toMin(timings.Isha)
+      };
+
+      var current, next;
+      if (nowMin < T.Fajr)          { current = 'Isha';    next = 'Fajr';    }
+      else if (nowMin < T.Sunrise)  { current = 'Fajr';    next = 'Dhuhr';   }
+      else if (nowMin < T.Dhuhr)    { current = null;      next = 'Dhuhr';   }
+      else if (nowMin < T.Asr)      { current = 'Dhuhr';   next = 'Asr';     }
+      else if (nowMin < T.Maghrib)  { current = 'Asr';     next = 'Maghrib'; }
+      else if (nowMin < T.Isha)     { current = 'Maghrib'; next = 'Isha';    }
+      else                          { current = 'Isha';    next = 'Fajr';    }
+
+      var html = '';
+      PRAYERS.forEach(function(name) {
+        var cls = '';
+        if (name === current) cls = 'current';
+        else if (name === next) cls = 'next';
+        html += '<div class="wx-prayer-dot ' + cls + '">' +
+                '<span class="name">' + name + '</span>' +
+                '<span class="time">' + String(timings[name]).slice(0,5) + '</span>' +
+                '</div>';
+      });
+      wxPrayers.innerHTML = html;
+      updateArc();
     }
 
     async function loadWeatherAndPrayer(lat, lon, label) {
@@ -925,8 +948,12 @@ window.addEventListener('load', () => {
     // Kick off auto load
     autoLoadWeather();
 
-    // Update line every minute
-    setInterval(renderLine, 60000);
+    // Update arc every minute
+    setInterval(updateArc, 60000);
+    // Update prayer "current/next" every 30s
+    setInterval(function() {
+      if (prayerTimes) renderPrayerTimes(prayerTimes);
+    }, 30000);
   })();
 })();
 </script>
