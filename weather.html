@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+        /* Big faded city name above the search box */
+        .city-title { margin: 0 0 0.5rem; font-size: clamp(3rem, 12vw, 6.5rem); font-weight: 800; line-height: 1;
+                      letter-spacing: -0.045em; overflow-wrap: anywhere;
+                      background: linear-gradient(180deg, rgba(0,86,179,.55) 0%, rgba(0,86,179,.10) 100%);
+                      -webkit-background-clip: text; background-clip: text;
+                      -webkit-text-fill-color: transparent; color: transparent; }
+        .city-title:empty { display: none; }
         .search-box { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
         .input-wrap { position: relative; flex: 1; }
         input { width: 100%; box-sizing: border-box; padding: 0.75rem 2.9rem 0.75rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
@@ -88,7 +95,7 @@
     </style>
 </head>
 <body>
-    <h1></h1>
+    <h1 id="cityTitle" class="city-title" aria-live="polite"></h1>
     <div class="search-box">
         <div class="input-wrap">
             <input type="text" id="cityInput" placeholder="Enter city name (e.g., London)"
@@ -138,6 +145,7 @@
     const statusDiv = document.getElementById('status');
     const calendarDiv = document.getElementById('calendar');
     const locBtn = document.getElementById('locBtn');
+    const cityTitle = document.getElementById('cityTitle');
 
     let selectedLoc = null;   // exact place chosen from suggestions or geolocation
     let suggestions = [];
@@ -562,6 +570,7 @@
             const scroller = calendarDiv.querySelector('.hourly-scroll');
             if (nowBlock && scroller) scroller.scrollLeft = Math.max(0, nowBlock.offsetLeft - 16);
             setStatus(`14-day forecast for ${placeName(loc)}`);
+            cityTitle.textContent = loc.name;
             onForecastLoaded(loc, fc);
         } catch (err) {
             if (err.name === 'AbortError') return;
