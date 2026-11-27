@@ -3,12 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>14-Day Weather</title>
+    <title>14-Day Weather Forecast & Prayer Times</title>
+    
+    <!-- Core SEO Meta Tags -->
+    <meta name="description" content="Free 14-day weather forecast with hourly temperature graphs, interactive maps, and local Islamic prayer times. Mobile-friendly and accurate global weather data.">
+    <meta name="keywords" content="14-day weather forecast, hourly weather, Islamic prayer times, weather map, global weather, free weather app">
+    <meta name="author" content="Tanvir">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="theme-color" content="#0056b3">
+    <link rel="canonical" href="https://yourdomain.com/weather">
+    
+    <!-- Open Graph / Facebook / AI Semantic Context -->
+    <meta property="og:title" content="14-Day Weather Forecast & Prayer Times">
+    <meta property="og:description" content="Free 14-day weather forecast with hourly temperature graphs, interactive maps, and local Islamic prayer times.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/weather">
+    <meta property="og:image" content="https://yourdomain.com/weather-og-image.jpg">
+    <meta property="og:site_name" content="14-Day Weather">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="14-Day Weather Forecast & Prayer Times">
+    <meta name="twitter:description" content="Free 14-day weather forecast with hourly temperature graphs, interactive maps, and local Islamic prayer times.">
+    
+    <!-- JSON-LD Structured Data for AI and Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "14-Day Weather Forecast",
+      "description": "Interactive weather application providing 14-day forecasts, hourly temperature graphs, map views, and Islamic prayer times.",
+      "applicationCategory": "WeatherApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": "14-day forecast, hourly temperature graph, interactive Leaflet map, Islamic prayer times (Aladhan API)"
+    }
+    </script>
+
     <link rel="stylesheet" href="https://itesteye.com/bg.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-        /* Big faded city name above the search box */
         .city-title { margin: 0 0 0.5rem; font-size: clamp(3rem, 12vw, 6.5rem); font-weight: 800; line-height: 1;
                       letter-spacing: -0.045em; overflow-wrap: anywhere;
                       background: linear-gradient(180deg, rgba(0,86,179,.55) 0%, rgba(0,86,179,.10) 100%);
@@ -31,13 +70,10 @@
         .suggestions li { padding: 0.55rem 0.85rem; cursor: pointer; }
         .suggestions li small { display: block; color: #666; }
         .suggestions li:hover, .suggestions li.active { background: #e8f0fa; }
-        /* Forecast / Map toggle */
         .view-toggle { display: inline-flex; margin-bottom: 1rem; border: 1px solid #0056b3; border-radius: 8px; overflow: hidden; }
         .view-toggle button { background: #fff; color: #0056b3; border-radius: 0; padding: 0.5rem 1.25rem; font-size: 0.95rem; }
         .view-toggle button:hover:not([aria-pressed="true"]) { background: #e8f0fa; }
         .view-toggle button[aria-pressed="true"] { background: #0056b3; color: #fff; }
-
-        /* Map view */
         .map-hint { margin: 0 0 0.5rem; font-size: 0.9rem; color: #666; }
         #map { height: 460px; border-radius: 12px; border: 1px solid #ccc; margin-bottom: 1rem; z-index: 0; }
         .leaflet-container { font: inherit; }
@@ -57,8 +93,6 @@
         .day-card .icon { font-size: 1.6rem; }
         .day-card .temp { font-size: 1rem; color: #333; margin: 0.5rem 0; }
         .day-card .condition { font-size: 0.8rem; color: #666; }
-
-        /* Today: one big card spanning the full width */
         .today-card { grid-column: 1 / -1; color: #fff; border-radius: 12px; padding: 1.5rem 1.75rem;
                       background: linear-gradient(135deg, #0056b3, #3a8dde); }
         .today-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1rem; margin-bottom: 1rem; }
@@ -71,8 +105,6 @@
         .today-temp span { font-size: 1.3rem; font-weight: 500; opacity: .85; }
         .today-cond { font-size: 1.2rem; margin-top: 0.25rem; }
         .today-meta { display: grid; gap: 0.35rem; font-size: 1rem; }
-
-        /* Islamic prayer times inside the Today card */
         .prayer { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.3); }
         .prayer:empty { display: none; }
         .prayer-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.4rem 1rem; }
@@ -89,11 +121,9 @@
         .prayer-pill.current { background: rgba(255,255,255,.3); outline: 1px solid rgba(255,255,255,.7); }
         .prayer-pill.next { outline: 1px dashed rgba(255,255,255,.7); }
         .prayer-foot { margin-top: 0.5rem; font-size: 0.72rem; opacity: .75; }
-
-        /* Hour-by-hour strip with temperature graph (scrolls sideways) */
         .hourly-title { margin: 1.4rem 0 0.4rem; font-size: 1rem; font-weight: 600; opacity: .9; }
         .hourly-scroll { overflow-x: auto; padding-bottom: 0.4rem; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.5) transparent; }
-        .hourly-inner { position: relative; width: 1536px; }          /* 24 hours x 64px */
+        .hourly-inner { position: relative; width: 1536px; }
         .hourly-graph { display: block; width: 1536px; height: 64px; }
         .hourly-row { display: flex; }
         .hour { flex: 0 0 64px; box-sizing: border-box; text-align: center; padding: 0.45rem 0; border-radius: 8px; font-size: 0.85rem; }
@@ -102,8 +132,6 @@
         .hour .h-temp { font-weight: 600; }
         .hour .h-rain { font-size: 0.75rem; opacity: .85; min-height: 1.1em; }
         .hour.now { background: rgba(255,255,255,.25); outline: 1px solid rgba(255,255,255,.6); }
-
-        /* Next 13 days fill two rows: 7 + 6, with the last card stretched to close the gap */
         @media (min-width: 760px) {
             .calendar { grid-template-columns: repeat(7, 1fr); }
             .calendar .day-card:last-child { grid-column: span 2; }
@@ -143,7 +171,6 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-    // Free, key-less APIs: Open-Meteo (geocoding + forecast) and BigDataCloud (reverse geocoding).
     const WMO = {
         0:['Clear sky','☀️'], 1:['Mainly clear','🌤️'], 2:['Partly cloudy','⛅'], 3:['Overcast','☁️'],
         45:['Fog','🌫️'], 48:['Rime fog','🌫️'],
@@ -165,7 +192,7 @@
     const locBtn = document.getElementById('locBtn');
     const cityTitle = document.getElementById('cityTitle');
 
-    let selectedLoc = null;   // exact place chosen from suggestions or geolocation
+    let selectedLoc = null;
     let suggestions = [];
     let activeIndex = -1;
     let debounceTimer = null;
@@ -176,7 +203,6 @@
     const setStatus = msg => { statusDiv.textContent = msg; };
     const showError = msg => { errorDiv.textContent = `Error: ${msg}`; };
 
-    /* ---------- Suggestions ---------- */
     function hideSuggestions() {
         clearTimeout(debounceTimer);
         if (suggestAbort) suggestAbort.abort();
@@ -224,7 +250,7 @@
             const data = await res.json();
             suggestions = data.results || [];
             renderSuggestions();
-        } catch (e) { /* aborted or offline: ignore */ }
+        } catch (e) { }
     }
 
     function chooseSuggestion(i) {
@@ -259,13 +285,12 @@
     input.addEventListener('blur', hideSuggestions);
     document.getElementById('goBtn').addEventListener('click', getWeather);
 
-    /* ---------- Current location ---------- */
     locBtn.addEventListener('click', () => {
         errorDiv.textContent = '';
         hideSuggestions();
         if (!navigator.geolocation) { showError('Geolocation is not supported by this browser.'); return; }
         locBtn.classList.add('busy');
-        setStatus('Finding your location…');
+        setStatus('Finding your location...');
         navigator.geolocation.getCurrentPosition(async pos => {
             const { latitude, longitude } = pos.coords;
             const loc = { name: 'Your location', latitude, longitude, admin1: '', country: '' };
@@ -280,7 +305,7 @@
                         loc.country = g.countryName || '';
                     }
                 }
-            } catch (e) { /* keep fallback name */ }
+            } catch (e) { }
             locBtn.classList.remove('busy');
             setMyLocation(loc, false);
             selectedLoc = loc;
@@ -295,7 +320,6 @@
         }, { timeout: 10000, maximumAge: 300000 });
     });
 
-    /* ---------- Weather ---------- */
     async function getWeather() {
         hideSuggestions();
         errorDiv.textContent = '';
@@ -304,7 +328,7 @@
         if (selectedLoc) { loadForecast(selectedLoc); return; }
 
         try {
-            setStatus('Loading…');
+            setStatus('Loading...');
             const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en`);
             if (!res.ok) throw new Error(`Geocoding failed (${res.status})`);
             const geo = await res.json();
@@ -317,7 +341,6 @@
         }
     }
 
-    // Builds today's 24 hour blocks with a temperature line graph above them
     function buildHourly(fc, todayStr) {
         const h = fc.hourly;
         if (!h || !h.time) return null;
@@ -325,9 +348,8 @@
         h.time.forEach((t, i) => { if (t.startsWith(todayStr)) idx.push(i); });
         if (!idx.length) return null;
 
-        // Current hour in the searched city's own time zone
         const local = new Date(Date.now() + (fc.utc_offset_seconds || 0) * 1000);
-        const nowKey = local.toISOString().slice(0, 13);              // "YYYY-MM-DDTHH"
+        const nowKey = local.toISOString().slice(0, 13);
 
         const W = 64, H = 64, PAD = 14;
         const temps = idx.map(i => h.temperature_2m[i]);
@@ -342,7 +364,7 @@
         const blocks = idx.map(i => {
             const code = h.weather_code[i];
             let icon = (WMO[code] || ['', '❔'])[1];
-            if (h.is_day && h.is_day[i] === 0) {                       // night icons
+            if (h.is_day && h.is_day[i] === 0) {
                 if (code === 0 || code === 1) icon = '🌙';
                 else if (code === 2) icon = '☁️';
             }
@@ -372,7 +394,6 @@
         return wrap;
     }
 
-    /* ---------- Prayer times (Aladhan API, free, no key) ---------- */
     const PRAYERS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
     let prayerToken = 0;
     let prayerState = null;
@@ -395,7 +416,6 @@
             const t = json.data.timings;
             const hijri = json.data.date && json.data.date.hijri;
 
-            // Build the panel once; renderPrayer() only updates text and highlights
             box.replaceChildren();
             const head = document.createElement('div');
             head.className = 'prayer-head';
@@ -455,11 +475,10 @@
             prayerState = { t, offset: fc.utc_offset_seconds || 0, nowEl, nextEl, pills };
             renderPrayer();
         } catch (e) {
-            if (token === prayerToken) { box.replaceChildren(); prayerState = null; }   // prayer times are optional
+            if (token === prayerToken) { box.replaceChildren(); prayerState = null; }
         }
     }
 
-    // Works out the current and next prayer in the searched city's own time
     function renderPrayer() {
         if (!prayerState || !document.body.contains(prayerState.nowEl)) return;
         const { t, offset, nowEl, nextEl, pills } = prayerState;
@@ -485,7 +504,6 @@
     }
     setInterval(renderPrayer, 30000);
 
-    /* ---------- Map view (Leaflet + OpenStreetMap) ---------- */
     const forecastView = document.getElementById('calendar');
     const mapView = document.getElementById('mapView');
     const btnForecast = document.getElementById('viewForecast');
@@ -493,7 +511,7 @@
 
     let map = null, marker = null, myMarker = null;
     let lastLoc = null, lastFc = null, myLoc = null;
-    let flyNext = true;          // fly to the place after search/location; just open the popup after a map click
+    let flyNext = true;
     let pickToken = 0;
 
     const iconFor = (code, isDay) => {
@@ -535,12 +553,11 @@
         map.on('click', e => pickFromMap(e.latlng.wrap()));
     }
 
-    // Click on the map: name the place, then load its weather
     async function pickFromMap(ll) {
         const token = ++pickToken;
         const { lat, lng } = ll;
         errorDiv.textContent = '';
-        setStatus('Finding place…');
+        setStatus('Finding place...');
         const loc = { name: `${lat.toFixed(2)}°, ${lng.toFixed(2)}°`, admin1: '', country: '', latitude: lat, longitude: lng };
         try {
             const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
@@ -553,8 +570,8 @@
                     loc.country = g.countryName && g.countryName !== name ? g.countryName : '';
                 }
             }
-        } catch (e) { /* keep the coordinates as the name */ }
-        if (token !== pickToken) return;                    // user clicked somewhere else meanwhile
+        } catch (e) { }
+        if (token !== pickToken) return;
         selectedLoc = loc;
         input.value = placeName(loc);
         flyNext = false;
@@ -616,7 +633,6 @@
         marker.openPopup();
     }
 
-    // Blue dot for the visitor's own location (precise or approximate)
     function drawMyLocation() {
         if (!map || !myLoc) return;
         if (myMarker) myMarker.remove();
@@ -630,7 +646,6 @@
         drawMyLocation();
     }
 
-    // Called after every successful forecast load
     function onForecastLoaded(loc, fc) {
         lastLoc = loc; lastFc = fc;
         if (map && !mapView.hidden) showMarker();
@@ -641,7 +656,7 @@
         forecastAbort = new AbortController();
         errorDiv.textContent = '';
         calendarDiv.replaceChildren();
-        setStatus('Loading…');
+        setStatus('Loading...');
         try {
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}` +
                         `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset` +
@@ -662,7 +677,6 @@
                 const card = document.createElement('div');
 
                 if (i === 0) {
-                    // Big "today" card: weekday + full date on top
                     const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                     const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[i];
                     const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[i];
@@ -716,15 +730,12 @@
         }
     }
 
-    /* ---------- Auto-load approximate location from IP (no permission prompt) ---------- */
-    // Route your geo Worker here. A relative path works if it's routed on the same domain as this page;
-    // otherwise use the full URL (and list this site in ALLOWED_ORIGINS inside the Worker).
     const GEO_URL = '/api/geo';
 
     async function autoLoadByIP() {
-        setStatus('Detecting your approximate location…');
+        setStatus('Detecting your approximate location...');
         const sources = [
-            async () => {   // 1st choice: your own Cloudflare Worker (see geo-worker.js)
+            async () => {
                 const r = await fetch(GEO_URL);
                 if (!r.ok) throw new Error('geo worker failed');
                 const d = await r.json();
@@ -735,7 +746,7 @@
                 if (!d.success) throw new Error('ipwho failed');
                 return { name: d.city, admin1: d.region, country: d.country, latitude: d.latitude, longitude: d.longitude };
             },
-            async () => {   // fallback: with no coordinates given, BigDataCloud uses the visitor's IP
+            async () => {
                 const d = await (await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en')).json();
                 if (d.latitude == null) throw new Error('bigdatacloud failed');
                 return { name: d.city || d.locality, admin1: d.principalSubdivision, country: d.countryName, latitude: d.latitude, longitude: d.longitude };
@@ -743,9 +754,8 @@
         ];
         let loc = null;
         for (const src of sources) {
-            try { const r = await src(); if (r && r.name && r.latitude != null) { loc = r; break; } } catch (e) { /* try next */ }
+            try { const r = await src(); if (r && r.name && r.latitude != null) { loc = r; break; } } catch (e) { }
         }
-        // Give up quietly if lookup failed, or the user already typed/picked something meanwhile
         if (!loc || selectedLoc || input.value.trim()) { if (!selectedLoc) setStatus(''); return; }
 
         setMyLocation(loc, true);
