@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>14-Day Weather Forecast & Prayer Times</title>
-    
+    <link rel="manifest" href="/manifest.webmanifest">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Weather">
+
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
     <meta name="description" content="Free 14-day weather forecast with hourly temperature graphs, interactive maps, and local Islamic prayer times. Mobile-friendly and accurate global weather data.">
     <meta name="keywords" content="14-day weather forecast, hourly weather, Islamic prayer times, weather map, global weather, free weather app">
     <meta name="author" content="Tanvir">
@@ -922,5 +929,49 @@
     autoLoadByIP();
     </script>
     <script src="https://itesteye.com/load.js"></script>
+<script>
+if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .catch(error => {
+                console.error('Service worker registration failed:', error);
+            });
+    });
+}
+
+let deferredInstallPrompt = null;
+const installAppBtn = document.getElementById('installAppBtn');
+
+window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+
+    if (installAppBtn) {
+        installAppBtn.hidden = false;
+    }
+});
+
+if (installAppBtn) {
+    installAppBtn.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+
+        deferredInstallPrompt.prompt();
+
+        const choice = await deferredInstallPrompt.userChoice;
+
+        if (choice.outcome === 'accepted') {
+            installAppBtn.hidden = true;
+        }
+
+        deferredInstallPrompt = null;
+    });
+}
+
+window.addEventListener('appinstalled', () => {
+    if (installAppBtn) {
+        installAppBtn.hidden = true;
+    }
+});
+</script>
 </body>
 </html>
