@@ -277,7 +277,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   position: relative;
   width: 100%;
   margin-top: 4px;
-  padding: 24px 0 24px;
+  padding: 28px 0 28px;   /* enough room above and below the line */
 }
 .wx-line {
   position: relative;
@@ -293,6 +293,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   flex-direction: column;
   align-items: center;
   pointer-events: none;
+  line-height: 1;
 }
 .wx-prayer-marker .pname {
   font-family: 'Barlow Condensed', sans-serif;
@@ -301,29 +302,31 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   color: var(--muted);
   letter-spacing: .04em;
   text-transform: uppercase;
-  line-height: 1;
   white-space: nowrap;
-  margin-bottom: 6px;
   order: 1;
+  margin-bottom: 0;
 }
 .wx-prayer-marker .ptime {
   font-family: 'Share Tech Mono', monospace;
   font-size: 12px;
   color: var(--text);
   font-variant-numeric: tabular-nums;
-  line-height: 1;
   white-space: nowrap;
-  margin-top: 6px;
-  order: 3;
-}
-.wx-prayer-marker .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 1px solid #fff;
-  box-shadow: 0 0 0 1px var(--accent);
   order: 2;
+  margin-top: 0;
+}
+/* Push the name above the line and the time below the line using absolute offsets */
+.wx-prayer-marker {
+  transform: translate(-50%, -100%);
+}
+.wx-prayer-marker .ptime {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.wx-prayer-marker .pname {
+  margin-bottom: 6px;
 }
 .wx-prayer-marker.current .pname {
   color: var(--accent);
@@ -333,14 +336,6 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   color: var(--accent);
   font-weight: 700;
   text-decoration: underline dotted;
-}
-.wx-prayer-marker.current .dot {
-  background: var(--accent);
-  box-shadow: 0 0 0 2px rgba(2,132,199,.3);
-}
-.wx-prayer-marker.next .dot {
-  background: #fff;
-  border-color: var(--accent);
 }
 .wx-sun-marker {
   position: absolute;
@@ -378,11 +373,11 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   .wx-prayer-marker .ptime {
     font-size: 10px;
   }
-  .wx-prayer-marker .pname {
-    margin-bottom: 4px;
-  }
   .wx-prayer-marker .ptime {
-    margin-top: 4px;
+    top: calc(100% + 4px);
+  }
+  .wx-line-wrap {
+    padding: 24px 0 24px;
   }
 }
 </style>
@@ -745,7 +740,8 @@ window.addEventListener('load', () => {
         var marker = document.createElement('div');
         marker.className = 'wx-prayer-marker' + (name === state.current ? ' current' : '') + (name === state.next ? ' next' : '');
         marker.style.left = (pct * 100) + '%';
-        marker.innerHTML = '<span class="pname">' + name + '</span><span class="dot"></span><span class="ptime">' + String(timeStr).slice(0,5) + '</span>';
+        // Only name and time – no dot
+        marker.innerHTML = '<span class="pname">' + name + '</span><span class="ptime">' + String(timeStr).slice(0,5) + '</span>';
         wxLine.appendChild(marker);
       });
 
