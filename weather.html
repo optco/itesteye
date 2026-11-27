@@ -194,6 +194,10 @@
         /* Sky arc label styles */
         .sky-lbl { fill: #9aa5b1; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; pointer-events: none; }
         .sky-lbl.active { fill: #1e8e4e; }
+
+        @media (max-width: 600px) {
+            .sky-arc-wrap { height: 170px; }
+        }
     </style>
 </head>
 <body>
@@ -230,8 +234,8 @@
         </div>
         
         <div class="search-box">
+            <div class="rain-chart" id="rainChart" aria-hidden="true"></div>
             <div class="input-wrap">
-                <div class="rain-chart" id="rainChart" aria-hidden="true"></div>
                 <input type="text" id="cityInput" placeholder="Enter city name (e.g., London)"
                        autocomplete="off" role="combobox" aria-expanded="false"
                        aria-controls="suggestions" aria-autocomplete="list" aria-label="City name">
@@ -780,7 +784,7 @@
             '<path class="rc-area" d="' + area + '"/><path class="rc-line" d="' + line + '"/></svg>' +
             '<div class="rc-now" style="left:' + nx + '%"></div>' +
             '<div class="rc-dot" style="left:' + nx + '%;top:' + ny + '%"></div>' +
-            '<div class="rc-t" style="left:0;top:0">RAIN % · NOW ' + v[nowH] + '%</div>' +
+            '<div class="rc-t" style="left:0;top:0">RAIN ' + v[nowH] + '%</div>' +
             '<div class="rc-t dim" style="right:0;top:' + Y(50) + '%;transform:translateY(-120%)">50%</div>';
         if (peak > 0) {
             const px = Math.max(4, Math.min(96, X(peakI)));
@@ -877,13 +881,28 @@
         }
     }
 
+    let sky = { w: 1000, h: 250 };
+
     function getPointOnCurve(t) {
-        const P0 = {x: 10, y: 248};
-        const P1 = {x: 500, y: 20};
-        const P2 = {x: 990, y: 248};
+        const y0 = sky.h - 2, cy = 2 * 22 - y0;       // curve peaks about 22px from the top
+        const P0 = { x: 10, y: y0 }, P1 = { x: sky.w / 2, y: cy }, P2 = { x: sky.w - 10, y: y0 };
         const x = (1-t)*(1-t)*P0.x + 2*(1-t)*t*P1.x + t*t*P2.x;
         const y = (1-t)*(1-t)*P0.y + 2*(1-t)*t*P1.y + t*t*P2.y;
-        return {x, y};
+        return { x, y };
+    }
+
+    function layoutSky() {
+        const wrap = document.querySelector('.sky-arc-wrap');
+        const svg = document.querySelector('.sky-arc');
+        const path = document.querySelector('.arc-path');
+        if (!wrap || !svg || !path) return;
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        if (!w || !h) return;
+        sky = { w, h };
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+        const y0 = h - 2, cy = 2 * 22 - y0;
+        path.setAttribute('d', `M 10 ${y0} Q ${w / 2} ${cy} ${w - 10} ${y0}`);
+        updateSkyArc(lastFc);
     }
 
     function paintPrayerDots() {
@@ -954,9 +973,7 @@
             let duration = ishaMin - fajrMin;
             if (duration <= 0) duration = 1440;
 
-            const svg = document.querySelector('.sky-arc');
-            const scale = Math.min((svg.getBoundingClientRect().width || 1000) / 1000, 1);
-            const fs = 9 / scale;                       // about 9px on screen at any width
+            const fs = 9;
             const g = document.getElementById('skyLabels');
             const prayers = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
@@ -983,7 +1000,7 @@
                 el.setAttribute('text-anchor', anchor);
                 el.setAttribute('font-size', fs);
                 el.setAttribute('x', pt.x + dx);
-                el.setAttribute('y', pt.y - 7 / scale);
+                el.setAttribute('y', pt.y - 7);
             });
             paintPrayerDots();
         }
@@ -1030,18 +1047,8 @@
     }
     autoLoadByIP();
 
-    function fitSkyArc() {
-        const wrap = document.querySelector('.sky-arc-wrap');
-        const iw = document.querySelector('.input-wrap');
-        const sw = document.querySelector('.search-wrapper');
-        if (!wrap || !iw || !sw) return;
-        const a = iw.getBoundingClientRect(), b = sw.getBoundingClientRect();
-        wrap.style.left = (a.left - b.left) + 'px';
-        wrap.style.width = a.width + 'px';
-        updateSkyArc(lastFc);
-    }
-    fitSkyArc();
-    window.addEventListener('resize', fitSkyArc);
+    layoutSky();
+    window.addEventListener('resize', layoutSky);
     </script>
     <script src="https://itesteye.com/load.js"></script>
 
