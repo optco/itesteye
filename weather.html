@@ -842,34 +842,39 @@
                 const card = document.createElement('div');
 
                 if (i === 0) {
-                    const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                    const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[i];
-                    const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[i];
-                    const sunrise = fc.daily.sunrise && fc.daily.sunrise[i];
-                    const sunset = fc.daily.sunset && fc.daily.sunset[i];
-                    card.className = 'today-card';
-                    card.innerHTML = `
-                        <div class="today-head">
-                            <span class="today-label">Today</span>
-                            <span class="today-date">${fullDate}</span>
-                        </div>
-                        <div class="today-body">
-                            <div class="today-icon">${icon}</div>
-                            <div class="today-main">
-                                <div class="today-temp">${Math.round(max)}°<span> / ${Math.round(min)}°C</span></div>
-                                <div class="today-cond">${phrase}</div>
-                            </div>
-                            <div class="today-meta">
-                                ${rain != null ? `<div>💧 Rain chance: ${rain}%</div>` : ''}
-                                ${wind != null ? `<div>💨 Max wind: ${Math.round(wind)} km/h</div>` : ''}
-                                ${sunrise ? `<div>🌅 Sunrise: ${sunrise.slice(11, 16)}</div>` : ''}
-                                ${sunset ? `<div>🌇 Sunset: ${sunset.slice(11, 16)}</div>` : ''}
-                            </div>
-                        </div>
-                        <div class="prayer" id="prayerBox"></div>`;
-                    const hourly = buildHourly(fc, dateStr);
-                    if (hourly) card.appendChild(hourly);
-                } else {
+    const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[i];
+    const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[i];
+    const sunrise = fc.daily.sunrise && fc.daily.sunrise[i];
+    const sunset = fc.daily.sunset && fc.daily.sunset[i];
+    const cur = fc.current || {};
+    const curTemp = cur.temperature_2m != null ? cur.temperature_2m : max;
+    const curCode = cur.weather_code != null ? cur.weather_code : fc.daily.weather_code[i];
+    const [curPhrase, curIcon] = WMO[curCode] || ['No data', '❔'];
+    card.className = 'today-card';
+    card.innerHTML = `
+        <div class="today-head">
+            <span class="today-label">Today</span>
+            <span class="today-date">${fullDate}</span>
+        </div>
+        <div class="today-body">
+            <div class="today-icon">${curIcon}</div>
+            <div class="today-main">
+                <div class="today-temp">${Math.round(curTemp)}°<span> / ${Math.round(min)}°C</span></div>
+                <div class="today-cond">${curPhrase} · High ${Math.round(max)}°</div>
+            </div>
+            <div class="today-meta">
+                ${rain != null ? `<div>💧 Rain chance: ${rain}%</div>` : ''}
+                ${wind != null ? `<div>💨 Max wind: ${Math.round(wind)} km/h</div>` : ''}
+                ${sunrise ? `<div>🌅 Sunrise: ${sunrise.slice(11, 16)}</div>` : ''}
+                ${sunset ? `<div>🌇 Sunset: ${sunset.slice(11, 16)}</div>` : ''}
+            </div>
+        </div>
+        <div class="prayer" id="prayerBox"></div>`;
+    const hourly = buildHourly(fc, dateStr);
+    if (hourly) card.appendChild(hourly);
+                }
+                else {
                     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
                     const dateNum = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
                     card.className = 'day-card';
