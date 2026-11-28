@@ -1,0 +1,89 @@
+/* ==========================================================
+   bg.css - weather-driven top "half disc" background
+   Set <html data-weather="sunny|partly|cloudy|fog|rain|rain-dark|storm|snow|night">
+   ========================================================== */
+
+@property --d1 { syntax: '<color>'; inherits: true; initial-value: #BAE6FD; }
+@property --d2 { syntax: '<color>'; inherits: true; initial-value: #A7F3D0; }
+
+:root {
+  --bg-base: #F8FAFC;
+  --blob-opacity: 1;
+
+  /* default (before weather loads) */
+  --d1: #BAE6FD;
+  --d2: #E0F2FE;
+
+  /* disc geometry: centres sit on the top edge, so exactly half shows */
+  --disc1: min(1000px, 150vw);
+  --disc2: min(620px, 95vw);
+  --d2-left: 75%;
+
+  transition: --d1 1.2s ease, --d2 1.2s ease;
+}
+
+/* ---------- weather palettes ---------- */
+:root[data-weather="sunny"]     { --d1: #FFF1A6; --d2: #FFE680; --d2-left: 75%; }
+:root[data-weather="partly"]    { --d1: #FFF1A6; --d2: #C9D0D8; --d2-left: 72%; } /* yellow + grey mix */
+:root[data-weather="cloudy"]    { --d1: #D3D8DE; --d2: #E6E9ED; }
+:root[data-weather="fog"]       { --d1: #E0E3E7; --d2: #EEF0F2; }
+:root[data-weather="rain"]      { --d1: #A9D6F5; --d2: #CFE8FA; }                  /* light blue */
+:root[data-weather="rain-dark"] { --d1: #8C97A3; --d2: #B2BBC5; }                  /* rain + dark cloud */
+:root[data-weather="storm"]     { --d1: #77818D; --d2: #5B6572; }
+:root[data-weather="snow"]      { --d1: #E1EFFA; --d2: #F3F8FC; }
+:root[data-weather="night"]     { --d1: #C5CBEF; --d2: #DADFF6; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg-base: #0e151b; --blob-opacity: .35; }
+}
+:root[data-theme="dark"] { --bg-base: #0e151b; --blob-opacity: .35; }
+
+html { background: var(--bg-base) !important; }
+body { background: transparent !important; min-height: 100vh; }
+
+html::before, body::before, body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* main disc: top centre, half cut off, fades out to the page colour */
+body::before {
+  width: var(--disc1);
+  height: var(--disc1);
+  top: calc(var(--disc1) / -2);
+  left: 50%;
+  margin-left: calc(var(--disc1) / -2);
+  background: radial-gradient(circle, var(--d1) 0%, var(--d1) 30%, transparent 70%);
+  opacity: calc(.95 * var(--blob-opacity));
+}
+
+/* secondary disc: smaller, offset to the right, gives the mixed looks */
+body::after {
+  width: var(--disc2);
+  height: var(--disc2);
+  top: calc(var(--disc2) / -2);
+  left: var(--d2-left);
+  margin-left: calc(var(--disc2) / -2);
+  background: radial-gradient(circle, var(--d2) 0%, var(--d2) 30%, transparent 70%);
+  opacity: calc(.85 * var(--blob-opacity));
+}
+
+/* soft wide glow behind everything */
+html::before {
+  width: min(1500px, 200vw);
+  height: min(1500px, 200vw);
+  top: calc(min(1500px, 200vw) / -2);
+  left: 50%;
+  margin-left: calc(min(1500px, 200vw) / -2);
+  background: radial-gradient(circle, var(--d1) 0%, transparent 65%);
+  opacity: calc(.3 * var(--blob-opacity));
+}
+
+@media print {
+  html::before, body::before, body::after { display: none !important; }
+  html { background: #fff !important; }
+}
