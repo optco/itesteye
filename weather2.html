@@ -46,7 +46,6 @@
 
     <link rel="stylesheet" href="https://itesteye.com/bg.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
         
@@ -169,9 +168,7 @@
         .hour .h-icon { font-size: 1.4rem; margin: 0.2rem 0; }
         .hour .h-temp { font-weight: 600; }
         .hour .h-rain { font-size: 0.75rem; opacity: .85; min-height: 1.1em; }
-        .hour .h-rain .fas { margin-right: .2rem; }
         .hour.now { background: rgba(255,255,255,.25); outline: 1px solid rgba(255,255,255,.6); }
-        .meta-icon { margin-right: .35rem; }
         @media (min-width: 760px) {
             .calendar { grid-template-columns: repeat(7, 1fr); }
             .calendar .day-card:last-child { grid-column: span 2; }
@@ -269,16 +266,16 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
     const WMO = {
-        0:['Clear sky','fa-sun'], 1:['Mainly clear','fa-cloud-sun'], 2:['Partly cloudy','fa-cloud-sun'], 3:['Overcast','fa-cloud'],
-        45:['Fog','fa-smog'], 48:['Rime fog','fa-smog'],
-        51:['Light drizzle','fa-cloud-rain'], 53:['Drizzle','fa-cloud-rain'], 55:['Heavy drizzle','fa-cloud-showers-heavy'],
-        56:['Freezing drizzle','fa-cloud-rain'], 57:['Heavy freezing drizzle','fa-cloud-showers-heavy'],
-        61:['Light rain','fa-cloud-rain'], 63:['Rain','fa-cloud-rain'], 65:['Heavy rain','fa-cloud-showers-heavy'],
-        66:['Freezing rain','fa-cloud-rain'], 67:['Heavy freezing rain','fa-cloud-showers-heavy'],
-        71:['Light snow','fa-snowflake'], 73:['Snow','fa-snowflake'], 75:['Heavy snow','fa-snowflake'], 77:['Snow grains','fa-snowflake'],
-        80:['Light showers','fa-cloud-rain'], 81:['Showers','fa-cloud-showers-heavy'], 82:['Heavy showers','fa-cloud-bolt'],
-        85:['Snow showers','fa-snowflake'], 86:['Heavy snow showers','fa-snowflake'],
-        95:['Thunderstorm','fa-cloud-bolt'], 96:['Storm with hail','fa-cloud-bolt'], 99:['Heavy storm with hail','fa-cloud-bolt']
+        0:['Clear sky','☀️'], 1:['Mainly clear','🌤️'], 2:['Partly cloudy','⛅'], 3:['Overcast','☁️'],
+        45:['Fog','🌫️'], 48:['Rime fog','🌫️'],
+        51:['Light drizzle','🌦️'], 53:['Drizzle','🌦️'], 55:['Heavy drizzle','🌧️'],
+        56:['Freezing drizzle','🌧️'], 57:['Heavy freezing drizzle','🌧️'],
+        61:['Light rain','🌦️'], 63:['Rain','🌧️'], 65:['Heavy rain','🌧️'],
+        66:['Freezing rain','🌧️'], 67:['Heavy freezing rain','🌧️'],
+        71:['Light snow','🌨️'], 73:['Snow','🌨️'], 75:['Heavy snow','❄️'], 77:['Snow grains','❄️'],
+        80:['Light showers','🌦️'], 81:['Showers','🌧️'], 82:['Heavy showers','⛈️'],
+        85:['Snow showers','🌨️'], 86:['Heavy snow showers','❄️'],
+        95:['Thunderstorm','⛈️'], 96:['Storm with hail','⛈️'], 99:['Heavy storm with hail','⛈️']
     };
 
     const input = document.getElementById('cityInput');
@@ -383,6 +380,8 @@
     });
 
     // Auto-clear the field when the user taps/clicks it to type a new city.
+    // Only clears when it is showing the currently loaded city name, so any
+    // custom text the user typed (but did not submit) is preserved.
     input.addEventListener('focus', () => {
         if (selectedLoc && input.value.trim() === placeName(selectedLoc)) {
             input.value = '';
@@ -392,6 +391,7 @@
 
     input.addEventListener('blur', () => {
         hideSuggestions();
+        // If the user tapped away without typing, restore the loaded city name.
         if (!input.value.trim() && selectedLoc) {
             input.value = placeName(selectedLoc);
         }
@@ -476,18 +476,18 @@
 
         const blocks = idx.map(i => {
             const code = h.weather_code[i];
-            let icon = (WMO[code] || ['', 'fa-question'])[1];
+            let icon = (WMO[code] || ['', '❔'])[1];
             if (h.is_day && h.is_day[i] === 0) {
-                if (code === 0 || code === 1) icon = 'fa-moon';
-                else if (code === 2) icon = 'fa-cloud-moon';
+                if (code === 0 || code === 1) icon = '🌙';
+                else if (code === 2) icon = '☁️';
             }
             const rain = h.precipitation_probability ? h.precipitation_probability[i] : null;
             const isNow = h.time[i].slice(0, 13) === nowKey;
             return `<div class="hour${isNow ? ' now' : ''}">
                         <div class="h-time">${h.time[i].slice(11, 16)}</div>
-                        <div class="h-icon"><i class="fas ${icon}"></i></div>
+                        <div class="h-icon">${icon}</div>
                         <div class="h-temp">${Math.round(h.temperature_2m[i])}°</div>
-                        <div class="h-rain">${rain ? '<i class="fas fa-droplet"></i>' + rain + '%' : ''}</div>
+                        <div class="h-rain">${rain ? '💧' + rain + '%' : ''}</div>
                     </div>`;
         }).join('');
 
@@ -634,8 +634,8 @@
     let pickToken = 0;
 
     const iconFor = (code, isDay) => {
-        let icon = (WMO[code] || ['', 'fa-question'])[1];
-        if (isDay === 0) { if (code === 0 || code === 1) icon = 'fa-moon'; else if (code === 2) icon = 'fa-cloud-moon'; }
+        let icon = (WMO[code] || ['', '❔'])[1];
+        if (isDay === 0) { if (code === 0 || code === 1) icon = '🌙'; else if (code === 2) icon = '☁️'; }
         return icon;
     };
 
@@ -712,7 +712,7 @@
         now.className = 'wx-now';
         const ic = document.createElement('div');
         ic.className = 'wx-icon';
-        ic.innerHTML = `<i class="fas ${iconFor(code, cur.is_day)}"></i>`;
+        ic.textContent = iconFor(code, cur.is_day);
         const tx = document.createElement('div');
         const t = document.createElement('div');
         t.className = 'wx-temp';
@@ -730,8 +730,8 @@
         meta.appendChild(hi);
         const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[0];
         const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[0];
-        if (rain != null) { const d = document.createElement('div'); d.innerHTML = `<i class="fas fa-droplet meta-icon"></i>Rain chance: ${rain}%`; meta.appendChild(d); }
-        if (wind != null) { const d = document.createElement('div'); d.innerHTML = `<i class="fas fa-wind meta-icon"></i>Max wind: ${Math.round(wind)} km/h`; meta.appendChild(d); }
+        if (rain != null) { const d = document.createElement('div'); d.textContent = `💧 Rain chance: ${rain}%`; meta.appendChild(d); }
+        if (wind != null) { const d = document.createElement('div'); d.textContent = `💨 Max wind: ${Math.round(wind)} km/h`; meta.appendChild(d); }
 
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -814,6 +814,21 @@
         box.innerHTML = html;
     }
 
+    // ========== WEATHER BACKGROUND ==========
+    function setWeatherBg(code, isDay) {
+        let w;
+        if (code === 0 || code === 1)                        w = (isDay === 0) ? 'night' : 'sunny';
+        else if (code === 2)                                 w = (isDay === 0) ? 'night' : 'partly';
+        else if (code === 3)                                 w = 'cloudy';
+        else if (code === 45 || code === 48)                 w = 'fog';
+        else if ([51,53,55,56,57,61,80].includes(code))      w = 'rain';
+        else if ([63,65,66,67,81,82].includes(code))         w = 'rain-dark';
+        else if (code >= 95)                                 w = 'storm';
+        else if ([71,73,75,77,85,86].includes(code))         w = 'snow';
+        else                                                 w = 'cloudy';
+        document.documentElement.dataset.weather = w;
+    }
+
     async function loadForecast(loc) {
         if (forecastAbort) forecastAbort.abort();
         forecastAbort = new AbortController();
@@ -838,48 +853,49 @@
                 const d = new Date(dateStr + 'T12:00:00');
                 const min = fc.daily.temperature_2m_min[i];
                 const max = fc.daily.temperature_2m_max[i];
-                const [phrase, icon] = WMO[fc.daily.weather_code[i]] || ['No data', 'fa-question'];
+                const [phrase, icon] = WMO[fc.daily.weather_code[i]] || ['No data', '❔'];
                 const card = document.createElement('div');
 
                 if (i === 0) {
-                    const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                    const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[i];
-                    const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[i];
-                    const sunrise = fc.daily.sunrise && fc.daily.sunrise[i];
-                    const sunset = fc.daily.sunset && fc.daily.sunset[i];
-                    const cur = fc.current || {};
-                    const curTemp = cur.temperature_2m != null ? cur.temperature_2m : max;
-                    const curCode = cur.weather_code != null ? cur.weather_code : fc.daily.weather_code[i];
-                    const [curPhrase, curIcon] = WMO[curCode] || ['No data', 'fa-question'];
-                    card.className = 'today-card';
-                    card.innerHTML = `
-                        <div class="today-head">
-                            <span class="today-label">Today</span>
-                            <span class="today-date">${fullDate}</span>
-                        </div>
-                        <div class="today-body">
-                            <div class="today-icon"><i class="fas ${curIcon}"></i></div>
-                            <div class="today-main">
-                                <div class="today-temp">${Math.round(curTemp)}°<span> / ${Math.round(min)}°C</span></div>
-                                <div class="today-cond">${curPhrase} · High ${Math.round(max)}°</div>
-                            </div>
-                            <div class="today-meta">
-                                ${rain != null ? `<div><i class="fas fa-droplet meta-icon"></i>Rain chance: ${rain}%</div>` : ''}
-                                ${wind != null ? `<div><i class="fas fa-wind meta-icon"></i>Max wind: ${Math.round(wind)} km/h</div>` : ''}
-                                ${sunrise ? `<div><i class="fas fa-sun meta-icon" style="color:#f59e0b"></i>Sunrise: ${sunrise.slice(11, 16)}</div>` : ''}
-                                ${sunset ? `<div><i class="fas fa-sun meta-icon" style="color:#ea580c"></i>Sunset: ${sunset.slice(11, 16)}</div>` : ''}
-                            </div>
-                        </div>
-                        <div class="prayer" id="prayerBox"></div>`;
-                    const hourly = buildHourly(fc, dateStr);
-                    if (hourly) card.appendChild(hourly);
-                } else {
+    const fullDate = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const rain = fc.daily.precipitation_probability_max && fc.daily.precipitation_probability_max[i];
+    const wind = fc.daily.wind_speed_10m_max && fc.daily.wind_speed_10m_max[i];
+    const sunrise = fc.daily.sunrise && fc.daily.sunrise[i];
+    const sunset = fc.daily.sunset && fc.daily.sunset[i];
+    const cur = fc.current || {};
+    const curTemp = cur.temperature_2m != null ? cur.temperature_2m : max;
+    const curCode = cur.weather_code != null ? cur.weather_code : fc.daily.weather_code[i];
+    const [curPhrase, curIcon] = WMO[curCode] || ['No data', '❔'];
+    card.className = 'today-card';
+    card.innerHTML = `
+        <div class="today-head">
+            <span class="today-label">Today</span>
+            <span class="today-date">${fullDate}</span>
+        </div>
+        <div class="today-body">
+            <div class="today-icon">${curIcon}</div>
+            <div class="today-main">
+                <div class="today-temp">${Math.round(curTemp)}°<span> / ${Math.round(min)}°C</span></div>
+                <div class="today-cond">${curPhrase} · High ${Math.round(max)}°</div>
+            </div>
+            <div class="today-meta">
+                ${rain != null ? `<div>💧 Rain chance: ${rain}%</div>` : ''}
+                ${wind != null ? `<div>💨 Max wind: ${Math.round(wind)} km/h</div>` : ''}
+                ${sunrise ? `<div>🌅 Sunrise: ${sunrise.slice(11, 16)}</div>` : ''}
+                ${sunset ? `<div>🌇 Sunset: ${sunset.slice(11, 16)}</div>` : ''}
+            </div>
+        </div>
+        <div class="prayer" id="prayerBox"></div>`;
+    const hourly = buildHourly(fc, dateStr);
+    if (hourly) card.appendChild(hourly);
+                }
+                else {
                     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
                     const dateNum = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
                     card.className = 'day-card';
                     card.innerHTML = `
                         <div class="date">${dayName}, ${dateNum}</div>
-                        <div class="icon"><i class="fas ${icon}"></i></div>
+                        <div class="icon">${icon}</div>
                         <div class="temp">${Math.round(min)}° to ${Math.round(max)}°C</div>
                         <div class="condition">${phrase}</div>`;
                 }
@@ -891,6 +907,9 @@
             setStatus(`14-day forecast for ${placeName(loc)}`);
             cityTitle.textContent = loc.name;
             renderRainChart(fc);
+            // Set weather background based on current conditions
+            const cur = fc.current || {};
+            setWeatherBg(cur.weather_code != null ? cur.weather_code : fc.daily.weather_code[0], cur.is_day);
             loadPrayer(loc, fc);
             onForecastLoaded(loc, fc);
             updateSkyArc(fc);
@@ -1014,6 +1033,7 @@
                     el.textContent = name;
                     g.appendChild(el);
                 }
+                // Keep the first and last labels inside the arc's width
                 const anchor = name === 'Fajr' ? 'start' : name === 'Isha' ? 'end' : 'middle';
                 const dx = name === 'Fajr' ? -4 : name === 'Isha' ? 4 : 0;
                 el.setAttribute('text-anchor', anchor);
